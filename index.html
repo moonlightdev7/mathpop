@@ -2771,15 +2771,24 @@ function loadAchievements(data) {
     achData.equippedTitle = data.equippedTitle;
   }
 }
-window.loadAchievements = (data) => { loadAchievements(data); updateRankBanner(); };
+window.loadAchievements = (data) => {
+  loadAchievements(data);
+  updateRankBanner();
+  // Write merged result back to localStorage so next refresh is instant
+  try { localStorage.setItem('mathpop_ach', JSON.stringify(achData)); } catch(e) {}
+};
 window.getAchData = () => achData;
 
 // Try loading from localStorage on boot, then refresh banner
 try {
   const saved = localStorage.getItem('mathpop_ach');
-  if (saved) loadAchievements(JSON.parse(saved));
+  if (saved) {
+    loadAchievements(JSON.parse(saved));
+    updateRankBanner(); // show immediately — don't wait for timeout
+  }
 } catch(e){}
-setTimeout(updateRankBanner, 50);
+// Fallback update in case localStorage was empty (Firestore will fill it in shortly)
+setTimeout(updateRankBanner, 100);
 
 // Save everything to localStorage (and Firestore if signed in) on page close/refresh
 window.addEventListener('beforeunload', () => {
