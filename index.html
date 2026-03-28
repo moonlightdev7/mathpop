@@ -249,8 +249,32 @@
   }
   .modal-signin-gate strong { color: var(--text); }
 
+  /* save theme btn */
+  .save-theme-btn {
+    display: block;
+    margin: 12px auto 0;
+    padding: 7px 20px;
+    border-radius: 20px;
+    border: 2px solid var(--primary);
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .save-theme-btn:hover { background: var(--primary); color: white; }
+
   /* paypal containers */
-  .paypal-container { margin-top: 12px; min-height: 45px; }
+  .paypal-container { margin-top: 12px; }
+  .paypal-or {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 8px 0;
+    letter-spacing: 0.5px;
+  }
 
   .modal-close {
     background: transparent; border: none; color: var(--muted);
@@ -411,7 +435,11 @@
         Sign in with Google
       </button>
     </div>
-    <div class="paypal-container" id="paypal-wheel"><div class="paypal-loading">Loading checkout...</div></div>
+    <div class="paypal-container" id="paypal-section-wheel">
+      <div id="paypal-wheel"></div>
+      <div class="paypal-or">— or pay with card —</div>
+      <div id="paypal-wheel-card"></div>
+    </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
 </div>
@@ -437,7 +465,11 @@
         Sign in with Google
       </button>
     </div>
-    <div class="paypal-container" id="paypal-neon"><div class="paypal-loading">Loading checkout...</div></div>
+    <div class="paypal-container" id="paypal-section-neon">
+      <div id="paypal-neon"></div>
+      <div class="paypal-or">— or pay with card —</div>
+      <div id="paypal-neon-card"></div>
+    </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
 </div>
@@ -501,6 +533,7 @@
           <button class="reset-btn" onclick="resetColors()">↺ Reset</button>
         </div>
       </div>
+      <button class="save-theme-btn" id="saveThemeBtn" onclick="saveCurrentTheme()">💾 Save Theme</button>
     </div>
   </div>
 
@@ -662,42 +695,67 @@ function applyThemeVars(t) {
   s.setProperty('--accent-grad', t.grad || `linear-gradient(90deg, ${t.primary}, ${t.primaryLight || adj(t.primary,40)})`);
 }
 
+// ── THEME STATE TRACKING ──
+let currentTheme = { mode: 'light', color: 'orange' };
+
+function saveCurrentTheme() {
+  if (!window.saveTheme) {
+    const btn = document.getElementById('saveThemeBtn');
+    if (btn) { const orig = btn.textContent; btn.textContent = '🔒 Sign in to save'; setTimeout(() => btn.textContent = orig, 2000); }
+    return;
+  }
+  window.saveTheme(currentTheme).then(() => {
+    const btn = document.getElementById('saveThemeBtn');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Saved!';
+      btn.style.borderColor = 'var(--correct)';
+      btn.style.color = 'var(--correct)';
+      setTimeout(() => { btn.textContent = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+    }
+  });
+}
+
 function setTheme(mode, color) {
   applyThemeVars(mode === 'dark' ? DARK[color] : LIGHT[color]);
   clearActive();
   const rows = document.querySelectorAll('.theme-row');
   const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(color);
   rows[mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
-  if (window.saveTheme) window.saveTheme({ mode, color });
+  currentTheme = { mode, color };
 }
 
 function setNeon(name) {
   applyThemeVars(NEON[name]);
   clearActive();
   document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(name)]?.classList.add('active');
-  if (window.saveTheme) window.saveTheme({ mode: 'neon', color: name });
+  currentTheme = { mode: 'neon', color: name };
 }
 
 function clearActive() { document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active')); }
 
-// Restore theme saved in Firestore
+// Restore theme saved in Firestore (does NOT auto-save back)
 window.applyThemeFromFirestore = function(t) {
   if (!t) return;
-  if (t.mode === 'neon') {
-    setNeon(t.color);
+  if (t.mode === 'neon' && t.color) {
+    applyThemeVars(NEON[t.color]);
+    clearActive();
+    document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(t.color)]?.classList.add('active');
+    currentTheme = t;
   } else if (t.mode === 'custom' && t.customColors) {
     Object.entries(t.customColors).forEach(([k, v]) => {
       applyColor(k, v);
       const el = document.getElementById('cp-' + k);
       if (el) el.value = v;
     });
+    currentTheme = t;
   } else if (t.mode && t.color) {
-    // Call applyThemeVars directly to avoid re-saving to Firestore on restore
     applyThemeVars(t.mode === 'dark' ? DARK[t.color] : LIGHT[t.color]);
     clearActive();
     const rows = document.querySelectorAll('.theme-row');
     const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(t.color);
     rows[t.mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
+    currentTheme = t;
   }
 };
 
@@ -748,8 +806,8 @@ function openWheel() {
   } else {
     // Check if signed in
     const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-    document.getElementById('wheelSigninGate').style.display = isSignedIn ? 'none' : 'block';
-    document.getElementById('paypal-wheel').style.display    = isSignedIn ? 'block' : 'none';
+    document.getElementById('wheelSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
+    document.getElementById('paypal-section-wheel').style.display = isSignedIn ? 'block' : 'none';
     document.getElementById('modalWheel').classList.add('open');
     if (isSignedIn && !paypalWheelRendered) { renderPayPalWheel(); paypalWheelRendered = true; }
   }
@@ -758,8 +816,8 @@ function openWheel() {
 function openNeon() {
   if (neonUnlocked) return;
   const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-  document.getElementById('neonSigninGate').style.display = isSignedIn ? 'none' : 'block';
-  document.getElementById('paypal-neon').style.display    = isSignedIn ? 'block' : 'none';
+  document.getElementById('neonSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
+  document.getElementById('paypal-section-neon').style.display = isSignedIn ? 'block' : 'none';
   document.getElementById('modalNeon').classList.add('open');
   if (isSignedIn && !paypalNeonRendered) { renderPayPalNeon(); paypalNeonRendered = true; }
 }
@@ -768,36 +826,43 @@ function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m =
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModals(); }));
 
 // ── PAYPAL ──
-function renderPayPalWheel() {
-  document.getElementById('paypal-wheel').innerHTML = '';
-  paypal.Buttons({
-    style: { layout: 'vertical', color: 'blue', shape: 'pill', label: 'checkout' },
+function renderPayPalButtons(containerId, cardContainerId, description, onSuccess) {
+  const orderCfg = {
     createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Color Wheel' }]
+      purchase_units: [{ amount: { value: '2.99' }, description }]
     }),
     onApprove: async (data, actions) => {
       await actions.order.capture();
-      if (window.savePurchase) await window.savePurchase('colorWheel');
-      window.unlockWheel();
+      await onSuccess();
     },
     onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
-  }).render('#paypal-wheel');
+  };
+  // PayPal account login button
+  const ppBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
+  if (ppBtn.isEligible()) ppBtn.render('#' + containerId);
+  else document.getElementById(containerId).style.display = 'none';
+  // Card button
+  const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
+  if (cardBtn.isEligible()) cardBtn.render('#' + cardContainerId);
+  else { document.getElementById(cardContainerId).style.display = 'none'; document.querySelector('#' + containerId + ' ~ .paypal-or')?.remove(); }
+}
+
+function renderPayPalWheel() {
+  document.getElementById('paypal-wheel').innerHTML = '';
+  document.getElementById('paypal-wheel-card').innerHTML = '';
+  renderPayPalButtons('paypal-wheel', 'paypal-wheel-card', 'Mathpop Color Wheel', async () => {
+    if (window.savePurchase) await window.savePurchase('colorWheel');
+    window.unlockWheel();
+  });
 }
 
 function renderPayPalNeon() {
   document.getElementById('paypal-neon').innerHTML = '';
-  paypal.Buttons({
-    style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'checkout' },
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Neon Pack' }]
-    }),
-    onApprove: async (data, actions) => {
-      await actions.order.capture();
-      if (window.savePurchase) await window.savePurchase('neonPack');
-      window.unlockNeon();
-    },
-    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
-  }).render('#paypal-neon');
+  document.getElementById('paypal-neon-card').innerHTML = '';
+  renderPayPalButtons('paypal-neon', 'paypal-neon-card', 'Mathpop Neon Pack', async () => {
+    if (window.savePurchase) await window.savePurchase('neonPack');
+    window.unlockNeon();
+  });
 }
 
 // ── CUSTOM COLORS ──
@@ -812,16 +877,14 @@ function applyColor(prop, val) {
   else if (prop === 'card')   { s.setProperty('--card', val); }
   else if (prop === 'correct'){ s.setProperty('--correct', val); s.setProperty('--correct-bg', hexToRgba(val,.12)); s.setProperty('--correct-border', hexToRgba(val,.35)); }
   else if (prop === 'wrong')  { s.setProperty('--wrong', val);   s.setProperty('--wrong-bg',   hexToRgba(val,.12)); s.setProperty('--wrong-border',   hexToRgba(val,.35)); }
-  // Save custom colors to Firestore
-  if (window.saveTheme) {
-    const customColors = {};
-    ['primary','correct','wrong','bg','card'].forEach(k => {
-      const el = document.getElementById('cp-' + k);
-      if (el) customColors[k] = el.value;
-    });
-    customColors[prop] = val; // include the current change before input updates
-    window.saveTheme({ mode: 'custom', customColors });
-  }
+  // Track custom colors in currentTheme (saved only when user clicks Save Theme)
+  const customColors = {};
+  ['primary','correct','wrong','bg','card'].forEach(k => {
+    const el = document.getElementById('cp-' + k);
+    if (el) customColors[k] = el.value;
+  });
+  customColors[prop] = val;
+  currentTheme = { mode: 'custom', customColors };
 }
 
 function resetColors() {
