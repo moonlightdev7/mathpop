@@ -276,6 +276,30 @@
     letter-spacing: 0.5px;
   }
 
+  /* promo code */
+  .promo-section { margin-top: 14px; }
+  .promo-toggle {
+    background: none; border: none; color: var(--muted);
+    font-family: 'Nunito', sans-serif; font-size: 0.78rem;
+    cursor: pointer; text-decoration: underline; padding: 0;
+  }
+  .promo-toggle:hover { color: var(--text); }
+  .promo-row { display: none; align-items: center; gap: 6px; margin-top: 8px; }
+  .promo-row.open { display: flex; }
+  .promo-input {
+    flex: 1; padding: 7px 10px; border: 2px solid var(--border);
+    border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 0.85rem;
+    background: var(--bg); color: var(--text); outline: none;
+    text-transform: uppercase; letter-spacing: 1px; transition: border-color 0.15s;
+  }
+  .promo-apply {
+    padding: 7px 14px; border-radius: 12px; border: none;
+    background: var(--primary); color: white;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.82rem; cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
+  }
+  .promo-apply:hover { opacity: 0.85; }
+
   .modal-close {
     background: transparent; border: none; color: var(--muted);
     font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem;
@@ -440,6 +464,13 @@
       <div class="paypal-or">— or pay with card —</div>
       <div id="paypal-wheel-card"></div>
     </div>
+    <div class="promo-section">
+      <button class="promo-toggle" onclick="this.nextElementSibling.classList.toggle('open')">🎁 Have a promo code?</button>
+      <div class="promo-row">
+        <input class="promo-input" type="text" placeholder="ENTER CODE" id="promo-input-wheel">
+        <button class="promo-apply" onclick="applyPromo('promo-input-wheel')">Apply</button>
+      </div>
+    </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
 </div>
@@ -469,6 +500,13 @@
       <div id="paypal-neon"></div>
       <div class="paypal-or">— or pay with card —</div>
       <div id="paypal-neon-card"></div>
+    </div>
+    <div class="promo-section">
+      <button class="promo-toggle" onclick="this.nextElementSibling.classList.toggle('open')">🎁 Have a promo code?</button>
+      <div class="promo-row">
+        <input class="promo-input" type="text" placeholder="ENTER CODE" id="promo-input-neon">
+        <button class="promo-apply" onclick="applyPromo('promo-input-neon')">Apply</button>
+      </div>
     </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
@@ -823,6 +861,51 @@ function openNeon() {
 }
 
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
+
+// ── PROMO CODES ──
+// To add/change codes, edit the list below and push a new version
+const PROMO_CODES = ['MATHPOPFAM', 'FRIENDS100'];
+
+async function applyPromo(inputId) {
+  const input = document.getElementById(inputId);
+  const code = input.value.trim().toUpperCase();
+
+  if (!PROMO_CODES.includes(code)) {
+    input.style.borderColor = 'var(--wrong)';
+    input.value = '';
+    input.placeholder = 'Invalid code ✗';
+    setTimeout(() => { input.style.borderColor = ''; input.placeholder = 'ENTER CODE'; }, 2000);
+    return;
+  }
+
+  // Must be signed in to save the unlock
+  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
+  if (!isSignedIn) {
+    input.placeholder = 'Sign in first!';
+    input.value = '';
+    setTimeout(() => { input.placeholder = 'ENTER CODE'; }, 2000);
+    return;
+  }
+
+  // Valid! Unlock everything for free
+  input.disabled = true;
+  const applyBtn = input.nextElementSibling;
+  applyBtn.textContent = '🎉 Unlocked!';
+  applyBtn.style.background = 'var(--correct)';
+
+  if (window.savePurchase) {
+    await window.savePurchase('colorWheel');
+    await window.savePurchase('neonPack');
+  }
+  window.unlockWheel(true);
+  window.unlockNeon(true);
+
+  setTimeout(() => {
+    closeModals();
+    document.getElementById('themePanelWrap').classList.add('open');
+    document.getElementById('themeToggleBtn').classList.add('open');
+  }, 900);
+}
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModals(); }));
 
 // ── PAYPAL ──
