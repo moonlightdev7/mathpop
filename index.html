@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Times Tables Practice</title>
+<title>Mathpop — Times Tables Practice</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- PayPal SDK (sandbox — switch client-id to live before launch) -->
+<script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,9 +15,75 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 24px 16px 64px;
+    padding: 0 0 64px;
     transition: background 0.3s, color 0.3s;
   }
+
+  /* ── AUTH BAR ── */
+  .auth-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+    gap: 10px;
+  }
+
+  #signedOut { display: flex; align-items: center; gap: 8px; }
+  #signedIn  { display: none; align-items: center; gap: 10px; }
+
+  .google-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: #444;
+    transition: all 0.15s;
+  }
+  .google-btn:hover { border-color: #4285f4; color: #4285f4; }
+  .google-logo { width: 16px; height: 16px; }
+
+  .user-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    object-fit: cover;
+  }
+  .user-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+  .signout-btn {
+    padding: 5px 12px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .signout-btn:hover { border-color: var(--wrong); color: var(--wrong); }
+
+  .auth-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* ── PAGE CONTENT ── */
+  .page { padding: 24px 16px 0; }
 
   h1 {
     font-family: 'Fredoka One', cursive;
@@ -28,7 +96,7 @@
   }
   .subtitle { text-align: center; color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
 
-  /* ── THEME TOGGLE BUTTON ── */
+  /* ── THEME TOGGLE ── */
   .theme-toggle-btn {
     display: flex;
     align-items: center;
@@ -47,10 +115,7 @@
     transition: all 0.15s;
   }
   .theme-toggle-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .theme-toggle-btn .arrow {
-    font-size: 0.7rem;
-    transition: transform 0.25s;
-  }
+  .theme-toggle-btn .arrow { font-size: 0.7rem; transition: transform 0.25s; }
   .theme-toggle-btn.open .arrow { transform: rotate(180deg); }
 
   /* ── COLLAPSIBLE PANEL ── */
@@ -62,10 +127,7 @@
     transition: max-height 0.35s ease, opacity 0.25s ease;
     opacity: 0;
   }
-  .theme-panel-wrap.open {
-    max-height: 400px;
-    opacity: 1;
-  }
+  .theme-panel-wrap.open { max-height: 500px; opacity: 1; }
 
   .theme-panel {
     background: var(--card);
@@ -137,18 +199,13 @@
     transition: all 0.15s;
   }
 
-  /* ── CUSTOM COLOR PANEL ── */
+  /* custom color pickers */
   #colorPanel {
     display: none;
-    max-width: 700px;
-    margin: 0 auto 16px;
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 18px;
-    transition: background 0.3s;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid var(--border);
   }
-  #colorPanel.open { display: block; }
   .color-panel-grid { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
   .color-picker-item {
     display: flex; align-items: center; gap: 7px;
@@ -174,27 +231,38 @@
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--card); border-radius: 24px; padding: 36px 28px;
-    max-width: 360px; width: 100%; text-align: center;
+    background: var(--card); border-radius: 24px; padding: 32px 28px;
+    max-width: 380px; width: 100%; text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     animation: popIn 0.2s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
   }
-  .modal-emoji { font-size: 3rem; margin-bottom: 10px; }
-  .modal-title { font-family: 'Fredoka One', cursive; font-size: 1.7rem; color: var(--primary); margin-bottom: 8px; }
-  .modal-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 18px; }
-  .neon-preview { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+  .modal-emoji { font-size: 2.6rem; margin-bottom: 8px; }
+  .modal-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--primary); margin-bottom: 6px; }
+  .modal-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 14px; }
+  .neon-preview { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
   .neon-pill { height: 20px; width: 50px; border-radius: 10px; }
-  .modal-btn {
-    display: block; width: 100%; padding: 14px;
-    background: var(--primary); color: white; border: none; border-radius: 14px;
-    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
-    cursor: pointer; box-shadow: 0 4px 0 var(--primary-shadow);
-    transition: all 0.15s; margin-bottom: 10px;
+
+  /* sign-in gate inside modal */
+  .modal-signin-gate {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
   }
-  .modal-btn:hover { transform: translateY(-2px); }
+  .modal-signin-gate strong { color: var(--text); }
+
+  /* paypal containers */
+  .paypal-container { margin-top: 12px; min-height: 45px; }
+
   .modal-close {
     background: transparent; border: none; color: var(--muted);
-    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; padding: 8px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; padding: 8px; margin-top: 6px; display: block; width: 100%;
   }
   .modal-close:hover { color: var(--text); }
 
@@ -305,16 +373,37 @@
   }
   .play-again-btn:hover { transform: translateY(-2px); }
   .no-select { user-select: none; }
+
+  /* loading spinner for paypal */
+  .paypal-loading {
+    color: var(--muted); font-size: 0.82rem; padding: 10px 0; text-align: center;
+  }
 </style>
 </head>
 <body>
 
-<!-- MODALS -->
+<!-- ── AUTH BAR ── -->
+<div class="auth-bar">
+  <div id="signedOut">
+    <span class="auth-note">Sign in to save purchases across devices</span>
+    <button class="google-btn" onclick="signIn()">
+      <svg class="google-logo" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+  </div>
+  <div id="signedIn">
+    <img class="user-avatar" id="userAvatar" src="" alt="avatar">
+    <span class="user-name" id="userName"></span>
+    <button class="signout-btn" onclick="signOut()">Sign out</button>
+  </div>
+</div>
+
+<!-- ── MODALS ── -->
 <div class="modal-overlay" id="modalWheel">
   <div class="modal">
     <div class="modal-emoji">🎨</div>
     <div class="modal-title">Color Wheel</div>
-    <div class="modal-desc">Pick any color for every part of the page. Yours forever.</div>
+    <div class="modal-desc">Pick any color for every part of the page. One purchase, yours forever across all your devices.</div>
     <div class="neon-preview">
       <div class="neon-pill" style="background:#ff6b35"></div>
       <div class="neon-pill" style="background:#a78bfa"></div>
@@ -322,7 +411,15 @@
       <div class="neon-pill" style="background:#f59e0b"></div>
       <div class="neon-pill" style="background:#ec4899"></div>
     </div>
-    <button class="modal-btn" onclick="unlockWheel()">✨ Unlock for $2.99</button>
+    <div id="wheelSigninGate" class="modal-signin-gate" style="display:none">
+      <strong>Sign in first!</strong> We save your purchase to your account so you never lose it.
+      <br><br>
+      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
+        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z"/></svg>
+        Sign in with Google
+      </button>
+    </div>
+    <div class="paypal-container" id="paypal-wheel"><div class="paypal-loading">Loading checkout...</div></div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
 </div>
@@ -331,7 +428,7 @@
   <div class="modal">
     <div class="modal-emoji">⚡</div>
     <div class="modal-title">Neon Pack</div>
-    <div class="modal-desc">Six electric gradient themes — Cyber, Synthwave, Sunset, Arctic, Toxic, Candy.</div>
+    <div class="modal-desc">Six electric gradient themes — Cyber, Synthwave, Sunset, Arctic, Toxic, Candy. One purchase, yours forever.</div>
     <div class="neon-preview">
       <div class="neon-pill" style="background:linear-gradient(90deg,#00ff87,#00cfff)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#f72585,#7209b7)"></div>
@@ -340,22 +437,29 @@
       <div class="neon-pill" style="background:linear-gradient(90deg,#ccff00,#00ff87)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff85a1,#74c69d)"></div>
     </div>
-    <button class="modal-btn" onclick="unlockNeon()">⚡ Unlock for $2.99</button>
+    <div id="neonSigninGate" class="modal-signin-gate" style="display:none">
+      <strong>Sign in first!</strong> We save your purchase to your account so you never lose it.
+      <br><br>
+      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
+        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z"/></svg>
+        Sign in with Google
+      </button>
+    </div>
+    <div class="paypal-container" id="paypal-neon"><div class="paypal-loading">Loading checkout...</div></div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
 </div>
 
-<!-- SETUP -->
+<!-- ── SETUP ── -->
+<div class="page">
 <div id="setup-screen">
-  <h1>✖️ Times Tables</h1>
+  <h1>✖️ Mathpop</h1>
   <p class="subtitle">Pick your tables and start practicing!</p>
 
-  <!-- TOGGLE BUTTON -->
   <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
     🎨 Customize Theme <span class="arrow">▼</span>
   </button>
 
-  <!-- COLLAPSIBLE PANEL -->
   <div class="theme-panel-wrap" id="themePanelWrap">
     <div class="theme-panel">
       <div class="theme-row">
@@ -395,9 +499,7 @@
           <button class="swatch-btn" title="Candy"     style="background:linear-gradient(135deg,#ff85a1,#74c69d)" onclick="setNeon('candy')"></button>
         </span>
       </div>
-
-      <!-- Custom color pickers (wheel unlocked) -->
-      <div id="colorPanel" style="display:none; margin-top:12px; padding-top:12px; border-top: 2px solid var(--border);">
+      <div id="colorPanel">
         <div class="color-panel-grid">
           <div class="color-picker-item"><input type="color" id="cp-primary" value="#ff6b35" oninput="applyColor('primary',this.value)">Primary</div>
           <div class="color-picker-item"><input type="color" id="cp-correct" value="#2ec27e" oninput="applyColor('correct',this.value)">Correct</div>
@@ -418,13 +520,12 @@
     <button class="quick-btn" onclick="selectRange(21,30)">21–30</button>
     <button class="quick-btn" onclick="clearAll()">Clear</button>
   </div>
-
   <p class="section-label">Choose Tables</p>
   <div class="table-grid" id="tableGrid"></div>
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
 </div>
 
-<!-- GAME -->
+<!-- ── GAME ── -->
 <div id="game-screen">
   <div class="score-bar no-select">
     <div class="score-item"><div class="score-num correct" id="correctCount">0</div><div class="score-label">Correct</div></div>
@@ -443,7 +544,7 @@
   <button class="stop-btn" onclick="stopGame()">⏹ Stop &amp; See Results</button>
 </div>
 
-<!-- END -->
+<!-- ── END ── -->
 <div id="end-screen">
   <div class="end-card">
     <div class="end-emoji" id="endEmoji">🎉</div>
@@ -452,7 +553,63 @@
     <button class="play-again-btn" onclick="playAgain()">Play Again</button>
   </div>
 </div>
+</div><!-- end .page -->
 
+<!-- ── FIREBASE ── -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCiyIdj0ATLrzf8EpppuG0ZVhAgs9YdkBE",
+    authDomain: "math-pop-8a663.firebaseapp.com",
+    projectId: "math-pop-8a663",
+    storageBucket: "math-pop-8a663.firebasestorage.app",
+    messagingSenderId: "876963832340",
+    appId: "1:876963832340:web:7a436c46c41b81053bfd01",
+    measurementId: "G-BQ2YKJCY4V"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Expose to global scope so regular scripts can call them
+  window.signIn = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
+  window.signOut = () => fbSignOut(auth);
+
+  window.savePurchase = async (product) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    await setDoc(doc(db, 'users', user.uid), { [product]: true }, { merge: true });
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      document.getElementById('userAvatar').src = user.photoURL || '';
+      document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Friend';
+      document.getElementById('signedOut').style.display = 'none';
+      document.getElementById('signedIn').style.display  = 'flex';
+
+      // Load saved purchases
+      try {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.colorWheel) window.unlockWheel(true);
+          if (data.neonPack)   window.unlockNeon(true);
+        }
+      } catch(e) { console.error('Firestore error', e); }
+
+    } else {
+      document.getElementById('signedOut').style.display = 'flex';
+      document.getElementById('signedIn').style.display  = 'none';
+    }
+  });
+</script>
+
+<!-- ── MAIN SCRIPT ── -->
 <script>
 // ── THEME DATA ──
 const LIGHT = {
@@ -508,21 +665,18 @@ function setTheme(mode, color) {
   applyThemeVars(mode === 'dark' ? DARK[color] : LIGHT[color]);
   clearActive();
   const rows = document.querySelectorAll('.theme-row');
-  const rowIdx = mode === 'dark' ? 1 : 0;
   const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(color);
-  rows[rowIdx].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
+  rows[mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
 }
 
 function setNeon(name) {
   applyThemeVars(NEON[name]);
   clearActive();
-  const names = ['cyber','synthwave','sunset','arctic','toxic','candy'];
-  document.querySelectorAll('#neonSwatches .swatch-btn')[names.indexOf(name)]?.classList.add('active');
+  document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(name)]?.classList.add('active');
 }
 
 function clearActive() { document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active')); }
 
-// ── TOGGLE ──
 function toggleThemePanel() {
   const wrap = document.getElementById('themePanelWrap');
   const btn  = document.getElementById('themeToggleBtn');
@@ -532,45 +686,95 @@ function toggleThemePanel() {
 
 // ── UNLOCK ──
 let wheelUnlocked = false, neonUnlocked = false;
+let paypalWheelRendered = false, paypalNeonRendered = false;
+
+window.unlockWheel = function(silent = false) {
+  wheelUnlocked = true;
+  const b = document.getElementById('priceWheel');
+  b.textContent = '✓'; b.style.background = '#2ec27e';
+  document.getElementById('chipWheel').classList.add('unlocked');
+  document.getElementById('colorPanel').style.display = 'block';
+  if (!silent) {
+    closeModals();
+    document.getElementById('themePanelWrap').classList.add('open');
+    document.getElementById('themeToggleBtn').classList.add('open');
+  }
+};
+
+window.unlockNeon = function(silent = false) {
+  neonUnlocked = true;
+  const b = document.getElementById('priceNeon');
+  b.textContent = '✓'; b.style.background = '#2ec27e';
+  document.getElementById('chipNeon').classList.add('unlocked');
+  const ns = document.getElementById('neonSwatches');
+  ns.style.display = 'flex';
+  if (!silent) {
+    closeModals();
+    document.getElementById('themePanelWrap').classList.add('open');
+    document.getElementById('themeToggleBtn').classList.add('open');
+  }
+};
 
 function openWheel() {
   if (wheelUnlocked) {
     const p = document.getElementById('colorPanel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('themePanelWrap').classList.add('open');
+    document.getElementById('themeToggleBtn').classList.add('open');
   } else {
+    // Check if signed in
+    const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
+    document.getElementById('wheelSigninGate').style.display = isSignedIn ? 'none' : 'block';
+    document.getElementById('paypal-wheel').style.display    = isSignedIn ? 'block' : 'none';
     document.getElementById('modalWheel').classList.add('open');
+    if (isSignedIn && !paypalWheelRendered) { renderPayPalWheel(); paypalWheelRendered = true; }
   }
 }
 
 function openNeon() {
-  if (!neonUnlocked) document.getElementById('modalNeon').classList.add('open');
-}
-
-function unlockWheel() {
-  wheelUnlocked = true;
-  const b = document.getElementById('priceWheel');
-  b.textContent = '✓'; b.style.background = '#2ec27e';
-  document.getElementById('chipWheel').classList.add('unlocked');
-  closeModals();
-  document.getElementById('colorPanel').style.display = 'block';
-  document.getElementById('themePanelWrap').classList.add('open');
-  document.getElementById('themeToggleBtn').classList.add('open');
-}
-
-function unlockNeon() {
-  neonUnlocked = true;
-  const b = document.getElementById('priceNeon');
-  b.textContent = '✓'; b.style.background = '#2ec27e';
-  document.getElementById('chipNeon').classList.add('unlocked');
-  closeModals();
-  const ns = document.getElementById('neonSwatches');
-  ns.style.display = 'flex';
-  document.getElementById('themePanelWrap').classList.add('open');
-  document.getElementById('themeToggleBtn').classList.add('open');
+  if (neonUnlocked) return;
+  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
+  document.getElementById('neonSigninGate').style.display = isSignedIn ? 'none' : 'block';
+  document.getElementById('paypal-neon').style.display    = isSignedIn ? 'block' : 'none';
+  document.getElementById('modalNeon').classList.add('open');
+  if (isSignedIn && !paypalNeonRendered) { renderPayPalNeon(); paypalNeonRendered = true; }
 }
 
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModals(); }));
+
+// ── PAYPAL ──
+function renderPayPalWheel() {
+  document.getElementById('paypal-wheel').innerHTML = '';
+  paypal.Buttons({
+    style: { layout: 'vertical', color: 'blue', shape: 'pill', label: 'pay' },
+    createOrder: (data, actions) => actions.order.create({
+      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Color Wheel' }]
+    }),
+    onApprove: async (data, actions) => {
+      await actions.order.capture();
+      if (window.savePurchase) await window.savePurchase('colorWheel');
+      window.unlockWheel();
+    },
+    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
+  }).render('#paypal-wheel');
+}
+
+function renderPayPalNeon() {
+  document.getElementById('paypal-neon').innerHTML = '';
+  paypal.Buttons({
+    style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' },
+    createOrder: (data, actions) => actions.order.create({
+      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Neon Pack' }]
+    }),
+    onApprove: async (data, actions) => {
+      await actions.order.capture();
+      if (window.savePurchase) await window.savePurchase('neonPack');
+      window.unlockNeon();
+    },
+    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
+  }).render('#paypal-neon');
+}
 
 // ── CUSTOM COLORS ──
 function applyColor(prop, val) {
@@ -580,25 +784,17 @@ function applyColor(prop, val) {
     s.setProperty('--primary-light', adj(val, 40));
     s.setProperty('--primary-shadow', adj(val, -30));
     s.setProperty('--accent-grad', `linear-gradient(90deg, ${val}, ${adj(val,40)})`);
-  } else if (prop === 'bg') {
-    s.setProperty('--bg', val); s.setProperty('--input-bg', val);
-  } else if (prop === 'card') {
-    s.setProperty('--card', val);
-  } else if (prop === 'correct') {
-    s.setProperty('--correct', val);
-    s.setProperty('--correct-bg', hexToRgba(val, 0.12));
-    s.setProperty('--correct-border', hexToRgba(val, 0.35));
-  } else if (prop === 'wrong') {
-    s.setProperty('--wrong', val);
-    s.setProperty('--wrong-bg', hexToRgba(val, 0.12));
-    s.setProperty('--wrong-border', hexToRgba(val, 0.35));
-  }
+  } else if (prop === 'bg')   { s.setProperty('--bg', val); s.setProperty('--input-bg', val); }
+  else if (prop === 'card')   { s.setProperty('--card', val); }
+  else if (prop === 'correct'){ s.setProperty('--correct', val); s.setProperty('--correct-bg', hexToRgba(val,.12)); s.setProperty('--correct-border', hexToRgba(val,.35)); }
+  else if (prop === 'wrong')  { s.setProperty('--wrong', val);   s.setProperty('--wrong-bg',   hexToRgba(val,.12)); s.setProperty('--wrong-border',   hexToRgba(val,.35)); }
 }
 
 function resetColors() {
-  setTheme('light', 'orange');
-  const def = { primary:'#ff6b35', correct:'#2ec27e', wrong:'#e5334b', bg:'#fdf6ec', card:'#ffffff' };
-  Object.entries(def).forEach(([k,v]) => { const el = document.getElementById('cp-'+k); if(el) el.value = v; });
+  setTheme('light','orange');
+  ({primary:'#ff6b35', correct:'#2ec27e', wrong:'#e5334b', bg:'#fdf6ec', card:'#ffffff'});
+  Object.entries({primary:'#ff6b35', correct:'#2ec27e', wrong:'#e5334b', bg:'#fdf6ec', card:'#ffffff'})
+    .forEach(([k,v]) => { const el=document.getElementById('cp-'+k); if(el) el.value=v; });
 }
 
 function adj(hex, amt) {
@@ -628,7 +824,7 @@ function clearAll()      { selected.clear(); document.querySelectorAll('.table-b
 
 function updateStartBtn() {
   const btn = document.getElementById('startBtn');
-  if (selected.size > 0) { btn.disabled=false; btn.textContent=`Start Practicing! (${selected.size} table${selected.size>1?'s':''} selected)`; }
+  if (selected.size>0){ btn.disabled=false; btn.textContent=`Start Practicing! (${selected.size} table${selected.size>1?'s':''} selected)`; }
   else { btn.disabled=true; btn.textContent='Choose at least one table to start!'; }
 }
 
