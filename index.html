@@ -1393,7 +1393,7 @@
     </div>
     <div style="position:relative">
       <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
-      <canvas id="textCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;touch-action:none;cursor:crosshair"></canvas>
+      <canvas id="textCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;touch-action:none;cursor:crosshair;pointer-events:none"></canvas>
     </div>
   </div>
   <button class="stop-btn" onclick="stopGame()">⏹ Stop &amp; See Results</button>
@@ -2388,7 +2388,11 @@ function toggleWbMove() {
   btn.classList.toggle('move-on', wbMoveMode);
   btn.textContent = wbMoveMode ? '✏️ Draw' : '✋ Move';
   const tc = document.getElementById('textCanvas');
-  if (tc) tc.style.cursor = wbMoveMode ? 'grab' : 'default';
+  if (tc) {
+    // In draw mode, pass pointer events through to the draw canvas below
+    tc.style.pointerEvents = wbMoveMode ? 'auto' : 'none';
+    tc.style.cursor = wbMoveMode ? 'grab' : 'default';
+  }
   if (wbMoveMode) {
     // turn off eraser and type mode when entering move mode
     const area = document.getElementById('wbTextArea');
