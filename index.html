@@ -492,10 +492,10 @@
       <div class="theme-row">
         <span class="row-label">✨ Plus</span>
         <button class="premium-chip" id="chipWheel" onclick="openWheel()">
-          🎨 Color Wheel <span class="chip-price" id="priceWheel">$2.99</span>
+          🎨 Color Wheel <span class="chip-price" id="priceWheel">$0.99</span>
         </button>
         <button class="premium-chip" id="chipNeon" onclick="openNeon()">
-          ⚡ Neon Pack <span class="chip-price" id="priceNeon">$2.99</span>
+          ⚡ Neon Pack <span class="chip-price" id="priceNeon">$0.99</span>
         </button>
         <span id="neonSwatches" style="display:none; gap:6px; align-items:center;">
           <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
@@ -800,7 +800,7 @@ document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('cli
 function renderPayPalButtons(containerId, cardContainerId, description, onSuccess) {
   const orderCfg = {
     createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '2.99' }, description }]
+      purchase_units: [{ amount: { value: '0.99' }, description }]
     }),
     onApprove: async (data, actions) => {
       await actions.order.capture();
