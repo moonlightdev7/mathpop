@@ -422,6 +422,47 @@
   .paypal-loading {
     color: var(--muted); font-size: 0.82rem; padding: 10px 0; text-align: center;
   }
+
+  /* ── MODE SELECTOR ── */
+  .mode-selector {
+    display: flex; gap: 8px; justify-content: center;
+    margin-bottom: 22px; flex-wrap: wrap;
+  }
+  .mode-btn {
+    padding: 9px 20px; border-radius: 22px; border: 2px solid var(--border);
+    background: var(--card); font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.9rem; cursor: pointer; transition: all 0.15s; color: var(--muted);
+  }
+  .mode-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .mode-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* ── DIVISION TYPE GRID ── */
+  .div-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px;
+  }
+  .div-type-btn {
+    padding: 20px 14px; border-radius: 16px; border: 2px solid var(--border);
+    background: var(--card); font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 1rem; cursor: pointer; transition: all 0.15s; color: var(--text);
+    text-align: center; line-height: 1.5;
+  }
+  .div-type-btn:hover { border-color: var(--primary-light); transform: scale(1.02); }
+  .div-type-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+  .div-type-btn small { display: block; font-size: 0.75rem; opacity: 0.8; font-weight: 600; margin-top: 4px; }
+
+  /* ── DIGIT CONFIG GRID ── */
+  .digit-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 8px; margin-bottom: 28px;
+  }
+  .digit-btn {
+    padding: 13px 10px; border-radius: 14px; border: 2px solid var(--border);
+    background: var(--card); font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.85rem; cursor: pointer; transition: all 0.15s; color: var(--text);
+    text-align: center;
+  }
+  .digit-btn:hover { border-color: var(--primary-light); transform: scale(1.03); }
+  .digit-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
 </style>
 </head>
 <body>
@@ -504,8 +545,8 @@
 <!-- ── SETUP ── -->
 <div class="page">
 <div id="setup-screen">
-  <h1>✖️ Mathpop</h1>
-  <p class="subtitle">Pick your tables and start practicing!</p>
+  <h1><span id="modeEmoji">✖️</span> Mathpop</h1>
+  <p class="subtitle" id="modeSubtitle">Pick your tables and start practicing!</p>
 
   <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
     🎨 Customize Theme <span class="arrow">▼</span>
@@ -563,16 +604,53 @@
     </div>
   </div>
 
-  <p class="section-label">Quick Select</p>
-  <div class="quick-btns">
-    <button class="quick-btn" onclick="selectAll()">All (1–30)</button>
-    <button class="quick-btn" onclick="selectRange(1,10)">1–10</button>
-    <button class="quick-btn" onclick="selectRange(11,20)">11–20</button>
-    <button class="quick-btn" onclick="selectRange(21,30)">21–30</button>
-    <button class="quick-btn" onclick="clearAll()">Clear</button>
+  <!-- ── MODE SELECTOR ── -->
+  <div class="mode-selector">
+    <button class="mode-btn active" id="modeBtn-multiply" onclick="setMode('multiply')">✖️ Multiply</button>
+    <button class="mode-btn" id="modeBtn-divide" onclick="setMode('divide')">➗ Divide</button>
+    <button class="mode-btn" id="modeBtn-add" onclick="setMode('add')">➕ Add</button>
+    <button class="mode-btn" id="modeBtn-subtract" onclick="setMode('subtract')">➖ Subtract</button>
   </div>
-  <p class="section-label">Choose Tables</p>
-  <div class="table-grid" id="tableGrid"></div>
+
+  <!-- ── MULTIPLY SETUP ── -->
+  <div id="setup-multiply">
+    <p class="section-label">Quick Select</p>
+    <div class="quick-btns">
+      <button class="quick-btn" onclick="selectAll()">All (1–30)</button>
+      <button class="quick-btn" onclick="selectRange(1,10)">1–10</button>
+      <button class="quick-btn" onclick="selectRange(11,20)">11–20</button>
+      <button class="quick-btn" onclick="selectRange(21,30)">21–30</button>
+      <button class="quick-btn" onclick="clearAll()">Clear</button>
+    </div>
+    <p class="section-label">Choose Tables</p>
+    <div class="table-grid" id="tableGrid"></div>
+  </div>
+
+  <!-- ── DIVIDE SETUP ── -->
+  <div id="setup-divide" style="display:none">
+    <p class="section-label">Division Type</p>
+    <div class="div-grid">
+      <button class="div-type-btn selected" id="divBtn-small" onclick="toggleDivType('small')">
+        🔢 Small Division<small>Facts up to 12 × 12</small>
+      </button>
+      <button class="div-type-btn" id="divBtn-long" onclick="toggleDivType('long')">
+        📐 Long Division<small>Numbers up to 2,000+</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── ADD SETUP ── -->
+  <div id="setup-add" style="display:none">
+    <p class="section-label">Number Sizes</p>
+    <div class="digit-grid" id="addDigitGrid"></div>
+  </div>
+
+  <!-- ── SUBTRACT SETUP ── -->
+  <div id="setup-subtract" style="display:none">
+    <p class="section-label">Number Sizes</p>
+    <div class="digit-grid" id="subDigitGrid"></div>
+  </div>
+
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
 </div>
 
@@ -866,7 +944,8 @@ function renderPayPalWheel() {
   document.getElementById('paypal-wheel').innerHTML = '';
   document.getElementById('paypal-wheel-card').innerHTML = '';
   renderPayPalButtons('paypal-wheel', 'paypal-wheel-card', 'Mathpop Color Wheel', async () => {
-    if (window.savePurchase) await window.savePurchase('colorWheel');
+    try { if (window.savePurchase) await window.savePurchase('colorWheel'); }
+    catch (err) { console.error('Failed to save colorWheel purchase:', err); }
     window.unlockWheel();
   });
 }
@@ -875,7 +954,8 @@ function renderPayPalNeon() {
   document.getElementById('paypal-neon').innerHTML = '';
   document.getElementById('paypal-neon-card').innerHTML = '';
   renderPayPalButtons('paypal-neon', 'paypal-neon-card', 'Mathpop Neon Pack', async () => {
-    if (window.savePurchase) await window.savePurchase('neonPack');
+    try { if (window.savePurchase) await window.savePurchase('neonPack'); }
+    catch (err) { console.error('Failed to save neonPack purchase:', err); }
     window.unlockNeon();
   });
 }
@@ -927,6 +1007,80 @@ function hexToRgba(hex, a) {
   } catch(e) {}
 })();
 
+// ── MODE & DIGIT CONFIG ──
+let currentMode = 'multiply';
+const divTypes = new Set(['small']);
+const selectedDigits = new Set();
+
+const DIGIT_CONFIGS = [
+  { id:'1+1', addLabel:'1-digit + 1-digit', subLabel:'1-digit − 1-digit', aMin:1,     aMax:9,     bMin:1,     bMax:9     },
+  { id:'2+1', addLabel:'2-digit + 1-digit', subLabel:'2-digit − 1-digit', aMin:10,    aMax:99,    bMin:1,     bMax:9     },
+  { id:'2+2', addLabel:'2-digit + 2-digit', subLabel:'2-digit − 2-digit', aMin:10,    aMax:99,    bMin:10,    bMax:99    },
+  { id:'3+2', addLabel:'3-digit + 2-digit', subLabel:'3-digit − 2-digit', aMin:100,   aMax:999,   bMin:10,    bMax:99    },
+  { id:'3+3', addLabel:'3-digit + 3-digit', subLabel:'3-digit − 3-digit', aMin:100,   aMax:999,   bMin:100,   bMax:999   },
+  { id:'4+3', addLabel:'4-digit + 3-digit', subLabel:'4-digit − 3-digit', aMin:1000,  aMax:9999,  bMin:100,   bMax:999   },
+  { id:'4+4', addLabel:'4-digit + 4-digit', subLabel:'4-digit − 4-digit', aMin:1000,  aMax:9999,  bMin:1000,  bMax:9999  },
+  { id:'5+5', addLabel:'5-digit + 5-digit', subLabel:'5-digit − 5-digit', aMin:10000, aMax:99999, bMin:10000, bMax:99999 },
+];
+
+function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function setMode(mode) {
+  currentMode = mode;
+  selectedDigits.clear();
+  ['multiply','divide','add','subtract'].forEach(m => {
+    document.getElementById('modeBtn-' + m).classList.toggle('active', m === mode);
+    document.getElementById('setup-' + m).style.display = m === mode ? 'block' : 'none';
+  });
+  document.querySelectorAll('.digit-btn').forEach(b => b.classList.remove('selected'));
+  const info = {
+    multiply: { emoji:'✖️', sub:'Pick your tables and start practicing!' },
+    divide:   { emoji:'➗', sub:'Practice division with small or long problems!' },
+    add:      { emoji:'➕', sub:'Pick number sizes and start adding!' },
+    subtract: { emoji:'➖', sub:'Pick number sizes and start subtracting!' },
+  };
+  document.getElementById('modeEmoji').textContent = info[mode].emoji;
+  document.getElementById('modeSubtitle').textContent = info[mode].sub;
+  updateStartBtn();
+}
+
+function toggleDivType(type) {
+  const btn = document.getElementById('divBtn-' + type);
+  if (divTypes.has(type) && divTypes.size > 1) {
+    divTypes.delete(type); btn.classList.remove('selected');
+  } else if (!divTypes.has(type)) {
+    divTypes.add(type); btn.classList.add('selected');
+  }
+  updateStartBtn();
+}
+
+function toggleDigit(id, gridId) {
+  const btn = document.querySelector('#' + gridId + ' [data-config="' + id + '"]');
+  if (selectedDigits.has(id)) { selectedDigits.delete(id); btn.classList.remove('selected'); }
+  else { selectedDigits.add(id); btn.classList.add('selected'); }
+  updateStartBtn();
+}
+
+function buildDigitGrids() {
+  ['add','subtract'].forEach(mode => {
+    const grid = document.getElementById(mode + 'DigitGrid');
+    DIGIT_CONFIGS.forEach(cfg => {
+      const btn = document.createElement('button');
+      btn.className = 'digit-btn'; btn.dataset.config = cfg.id;
+      btn.textContent = mode === 'add' ? cfg.addLabel : cfg.subLabel;
+      btn.onclick = () => toggleDigit(cfg.id, grid.id);
+      grid.appendChild(btn);
+    });
+  });
+}
+
+function setQuestion(text) {
+  const el = document.getElementById('questionText');
+  el.textContent = text;
+  const len = text.length;
+  el.style.fontSize = len > 20 ? '1.8rem' : len > 13 ? '2.4rem' : '3.2rem';
+}
+
 // ── TABLE GRID ──
 const selected = new Set();
 let correct=0, wrong=0, total=0, currentAnswer=0;
@@ -945,8 +1099,27 @@ function clearAll()      { selected.clear(); document.querySelectorAll('.table-b
 
 function updateStartBtn() {
   const btn = document.getElementById('startBtn');
-  if (selected.size>0){ btn.disabled=false; btn.textContent=`Start Practicing! (${selected.size} table${selected.size>1?'s':''} selected)`; }
-  else { btn.disabled=true; btn.textContent='Choose at least one table to start!'; }
+  const ready = currentMode === 'multiply' ? selected.size > 0
+              : currentMode === 'divide'   ? divTypes.size > 0
+              : selectedDigits.size > 0;
+  btn.disabled = !ready;
+  if (!ready) {
+    const hints = {
+      multiply: 'Choose at least one table to start!',
+      divide:   'Choose a division type to start!',
+      add:      'Choose at least one number size!',
+      subtract: 'Choose at least one number size!',
+    };
+    btn.textContent = hints[currentMode];
+  } else {
+    const labels = {
+      multiply: `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
+      divide:   `Start Dividing! (${[...divTypes].map(t=>t==='small'?'Small':'Long').join(' + ')})`,
+      add:      `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+      subtract: `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+    };
+    btn.textContent = labels[currentMode];
+  }
 }
 
 // ── GAME ──
@@ -960,12 +1133,38 @@ function startGame() {
 }
 
 function nextQuestion() {
-  const tables=Array.from(selected);
-  const table=tables[Math.floor(Math.random()*tables.length)];
-  const mult=Math.floor(Math.random()*12)+1;
-  currentAnswer=table*mult;
-  document.getElementById('questionText').textContent=`${table} × ${mult} = ?`;
-  document.getElementById('answerInput').value='';
+  if (currentMode === 'multiply') {
+    const tables = Array.from(selected);
+    const table = tables[Math.floor(Math.random() * tables.length)];
+    const mult = rnd(1, 12);
+    currentAnswer = table * mult;
+    setQuestion(`${table} × ${mult} = ?`);
+  } else if (currentMode === 'divide') {
+    const typeArr = Array.from(divTypes);
+    const type = typeArr[Math.floor(Math.random() * typeArr.length)];
+    if (type === 'small') {
+      const a = rnd(1, 12), b = rnd(1, 12);
+      currentAnswer = b;
+      setQuestion(`${a * b} ÷ ${a} = ?`);
+    } else {
+      const divisor = rnd(2, 25), quotient = rnd(2, 80);
+      currentAnswer = quotient;
+      setQuestion(`${divisor * quotient} ÷ ${divisor} = ?`);
+    }
+  } else {
+    const cfgId = Array.from(selectedDigits)[Math.floor(Math.random() * selectedDigits.size)];
+    const cfg = DIGIT_CONFIGS.find(c => c.id === cfgId);
+    let a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
+    if (currentMode === 'subtract') {
+      if (a < b) [a, b] = [b, a];
+      currentAnswer = a - b;
+      setQuestion(`${a} − ${b} = ?`);
+    } else {
+      currentAnswer = a + b;
+      setQuestion(`${a} + ${b} = ?`);
+    }
+  }
+  document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
 }
 
@@ -1004,6 +1203,7 @@ function playAgain() { document.getElementById('end-screen').style.display='none
 
 // Init
 setTheme('light','orange');
+buildDigitGrids();
 </script>
 </body>
 </html>
