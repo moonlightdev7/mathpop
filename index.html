@@ -463,6 +463,37 @@
   }
   .digit-btn:hover { border-color: var(--primary-light); transform: scale(1.03); }
   .digit-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* ── WHITEBOARD ── */
+  .whiteboard-wrap {
+    background: var(--card); border-radius: 18px; padding: 14px;
+    border: 2px solid var(--border); margin-top: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s, border-color 0.3s;
+  }
+  .wb-toolbar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .wb-label {
+    font-weight: 800; font-size: 0.78rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px; flex: 1;
+  }
+  .wb-select {
+    padding: 5px 10px; border-radius: 10px; border: 2px solid var(--border);
+    background: var(--card); font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.8rem; color: var(--text); cursor: pointer;
+  }
+  .wb-btn {
+    padding: 5px 14px; border-radius: 10px; border: 2px solid var(--border);
+    background: transparent; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.8rem; color: var(--muted);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .wb-btn:hover { border-color: var(--wrong); color: var(--wrong); }
+  .whiteboard-canvas {
+    width: 100%; height: 220px; border-radius: 12px;
+    border: 2px solid var(--border); background: #fff;
+    cursor: crosshair; display: block; touch-action: none;
+  }
 </style>
 </head>
 <body>
@@ -606,10 +637,11 @@
 
   <!-- ── MODE SELECTOR ── -->
   <div class="mode-selector">
-    <button class="mode-btn active" id="modeBtn-multiply" onclick="setMode('multiply')">✖️ Multiply</button>
-    <button class="mode-btn" id="modeBtn-divide" onclick="setMode('divide')">➗ Divide</button>
-    <button class="mode-btn" id="modeBtn-add" onclick="setMode('add')">➕ Add</button>
-    <button class="mode-btn" id="modeBtn-subtract" onclick="setMode('subtract')">➖ Subtract</button>
+    <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
+    <button class="mode-btn"        id="modeBtn-shortdivide" onclick="setMode('shortdivide')">➗ Short ÷</button>
+    <button class="mode-btn"        id="modeBtn-longdivide"  onclick="setMode('longdivide')">📐 Long ÷</button>
+    <button class="mode-btn"        id="modeBtn-add"         onclick="setMode('add')">➕ Add</button>
+    <button class="mode-btn"        id="modeBtn-subtract"    onclick="setMode('subtract')">➖ Subtract</button>
   </div>
 
   <!-- ── MULTIPLY SETUP ── -->
@@ -626,17 +658,24 @@
     <div class="table-grid" id="tableGrid"></div>
   </div>
 
-  <!-- ── DIVIDE SETUP ── -->
-  <div id="setup-divide" style="display:none">
-    <p class="section-label">Division Type</p>
-    <div class="div-grid">
-      <button class="div-type-btn selected" id="divBtn-small" onclick="toggleDivType('small')">
-        🔢 Small Division<small>Facts up to 12 × 12</small>
-      </button>
-      <button class="div-type-btn" id="divBtn-long" onclick="toggleDivType('long')">
-        📐 Long Division<small>Numbers up to 2,000+</small>
-      </button>
+  <!-- ── SHORT DIVIDE SETUP ── -->
+  <div id="setup-shortdivide" style="display:none">
+    <p class="section-label">Quick Select</p>
+    <div class="quick-btns">
+      <button class="quick-btn" onclick="selectAllDivisors()">All (1–30)</button>
+      <button class="quick-btn" onclick="selectDivisorRange(1,10)">1–10</button>
+      <button class="quick-btn" onclick="selectDivisorRange(11,20)">11–20</button>
+      <button class="quick-btn" onclick="selectDivisorRange(21,30)">21–30</button>
+      <button class="quick-btn" onclick="clearAllDivisors()">Clear</button>
     </div>
+    <p class="section-label">Choose Divisors</p>
+    <div class="table-grid" id="divisorGrid"></div>
+  </div>
+
+  <!-- ── LONG DIVIDE SETUP ── -->
+  <div id="setup-longdivide" style="display:none">
+    <p class="section-label">Problem Size</p>
+    <div class="digit-grid" id="longDivGrid"></div>
   </div>
 
   <!-- ── ADD SETUP ── -->
@@ -648,7 +687,7 @@
   <!-- ── SUBTRACT SETUP ── -->
   <div id="setup-subtract" style="display:none">
     <p class="section-label">Number Sizes</p>
-    <div class="digit-grid" id="subDigitGrid"></div>
+    <div class="digit-grid" id="subtractDigitGrid"></div>
   </div>
 
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
@@ -669,6 +708,23 @@
     <div class="question-text" id="questionText">? × ? = ?</div>
     <input type="number" class="answer-input" id="answerInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleKey(event)"/>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
+  </div>
+  <div class="whiteboard-wrap" id="whiteboardWrap" style="display:none">
+    <div class="wb-toolbar">
+      <span class="wb-label">🖊️ Scratch Pad</span>
+      <select class="wb-select" id="wbColor">
+        <option value="#1a1a1a">Black</option>
+        <option value="#2563eb">Blue</option>
+        <option value="#dc2626">Red</option>
+      </select>
+      <select class="wb-select" id="wbSize">
+        <option value="2">Fine</option>
+        <option value="4" selected>Medium</option>
+        <option value="8">Thick</option>
+      </select>
+      <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear</button>
+    </div>
+    <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
   </div>
   <button class="stop-btn" onclick="stopGame()">⏹ Stop &amp; See Results</button>
 </div>
@@ -1009,49 +1065,112 @@ function hexToRgba(hex, a) {
 
 // ── MODE & DIGIT CONFIG ──
 let currentMode = 'multiply';
-const divTypes = new Set(['small']);
-const selectedDigits = new Set();
+const selectedDivisors = new Set();
+const selectedDigits   = new Set();
+const selectedLongDiv  = new Set();
+
+function fmtN(n) { return n.toLocaleString('en-US'); }
 
 const DIGIT_CONFIGS = [
-  { id:'1+1', addLabel:'1-digit + 1-digit', subLabel:'1-digit − 1-digit', aMin:1,     aMax:9,     bMin:1,     bMax:9     },
-  { id:'2+1', addLabel:'2-digit + 1-digit', subLabel:'2-digit − 1-digit', aMin:10,    aMax:99,    bMin:1,     bMax:9     },
-  { id:'2+2', addLabel:'2-digit + 2-digit', subLabel:'2-digit − 2-digit', aMin:10,    aMax:99,    bMin:10,    bMax:99    },
-  { id:'3+2', addLabel:'3-digit + 2-digit', subLabel:'3-digit − 2-digit', aMin:100,   aMax:999,   bMin:10,    bMax:99    },
-  { id:'3+3', addLabel:'3-digit + 3-digit', subLabel:'3-digit − 3-digit', aMin:100,   aMax:999,   bMin:100,   bMax:999   },
-  { id:'4+3', addLabel:'4-digit + 3-digit', subLabel:'4-digit − 3-digit', aMin:1000,  aMax:9999,  bMin:100,   bMax:999   },
-  { id:'4+4', addLabel:'4-digit + 4-digit', subLabel:'4-digit − 4-digit', aMin:1000,  aMax:9999,  bMin:1000,  bMax:9999  },
-  { id:'5+5', addLabel:'5-digit + 5-digit', subLabel:'5-digit − 5-digit', aMin:10000, aMax:99999, bMin:10000, bMax:99999 },
+  { id:'1+1',   addLabel:'1-digit + 1-digit',   subLabel:'1-digit − 1-digit',   aMin:1,          aMax:9,          bMin:1,          bMax:9          },
+  { id:'2+1',   addLabel:'2-digit + 1-digit',   subLabel:'2-digit − 1-digit',   aMin:10,         aMax:99,         bMin:1,          bMax:9          },
+  { id:'2+2',   addLabel:'2-digit + 2-digit',   subLabel:'2-digit − 2-digit',   aMin:10,         aMax:99,         bMin:10,         bMax:99         },
+  { id:'3+2',   addLabel:'3-digit + 2-digit',   subLabel:'3-digit − 2-digit',   aMin:100,        aMax:999,        bMin:10,         bMax:99         },
+  { id:'3+3',   addLabel:'3-digit + 3-digit',   subLabel:'3-digit − 3-digit',   aMin:100,        aMax:999,        bMin:100,        bMax:999        },
+  { id:'4+3',   addLabel:'4-digit + 3-digit',   subLabel:'4-digit − 3-digit',   aMin:1000,       aMax:9999,       bMin:100,        bMax:999        },
+  { id:'4+4',   addLabel:'4-digit + 4-digit',   subLabel:'4-digit − 4-digit',   aMin:1000,       aMax:9999,       bMin:1000,       bMax:9999       },
+  { id:'5+4',   addLabel:'5-digit + 4-digit',   subLabel:'5-digit − 4-digit',   aMin:10000,      aMax:99999,      bMin:1000,       bMax:9999       },
+  { id:'5+5',   addLabel:'5-digit + 5-digit',   subLabel:'5-digit − 5-digit',   aMin:10000,      aMax:99999,      bMin:10000,      bMax:99999      },
+  { id:'6+5',   addLabel:'6-digit + 5-digit',   subLabel:'6-digit − 5-digit',   aMin:100000,     aMax:999999,     bMin:10000,      bMax:99999      },
+  { id:'6+6',   addLabel:'6-digit + 6-digit',   subLabel:'6-digit − 6-digit',   aMin:100000,     aMax:999999,     bMin:100000,     bMax:999999     },
+  { id:'7+6',   addLabel:'7-digit + 6-digit',   subLabel:'7-digit − 6-digit',   aMin:1000000,    aMax:9999999,    bMin:100000,     bMax:999999     },
+  { id:'7+7',   addLabel:'7-digit + 7-digit',   subLabel:'7-digit − 7-digit',   aMin:1000000,    aMax:9999999,    bMin:1000000,    bMax:9999999    },
+  { id:'8+7',   addLabel:'8-digit + 7-digit',   subLabel:'8-digit − 7-digit',   aMin:10000000,   aMax:99999999,   bMin:1000000,    bMax:9999999    },
+  { id:'8+8',   addLabel:'8-digit + 8-digit',   subLabel:'8-digit − 8-digit',   aMin:10000000,   aMax:99999999,   bMin:10000000,   bMax:99999999   },
+  { id:'9+8',   addLabel:'9-digit + 8-digit',   subLabel:'9-digit − 8-digit',   aMin:100000000,  aMax:999999999,  bMin:10000000,   bMax:99999999   },
+  { id:'9+9',   addLabel:'9-digit + 9-digit',   subLabel:'9-digit − 9-digit',   aMin:100000000,  aMax:999999999,  bMin:100000000,  bMax:999999999  },
+  { id:'10+9',  addLabel:'10-digit + 9-digit',  subLabel:'10-digit − 9-digit',  aMin:1000000000, aMax:9999999999, bMin:100000000,  bMax:999999999  },
+  { id:'10+10', addLabel:'10-digit + 10-digit', subLabel:'10-digit − 10-digit', aMin:1000000000, aMax:9999999999, bMin:1000000000, bMax:9999999999 },
 ];
 
+const LONG_DIV_CONFIGS = [
+  { id:'ld1', label:'3-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:100,        dividendMax:999        },
+  { id:'ld2', label:'4-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:1000,       dividendMax:9999       },
+  { id:'ld3', label:'4-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:1000,       dividendMax:9999       },
+  { id:'ld4', label:'5-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:10000,      dividendMax:99999      },
+  { id:'ld5', label:'6-digit ÷ 3-digit',  divisorMin:101,   divisorMax:999,   dividendMin:100000,     dividendMax:999999     },
+  { id:'ld6', label:'7-digit ÷ 3-digit',  divisorMin:101,   divisorMax:999,   dividendMin:1000000,    dividendMax:9999999    },
+  { id:'ld7', label:'8-digit ÷ 4-digit',  divisorMin:1001,  divisorMax:9999,  dividendMin:10000000,   dividendMax:99999999   },
+  { id:'ld8', label:'9-digit ÷ 5-digit',  divisorMin:10001, divisorMax:99999, dividendMin:100000000,  dividendMax:999999999  },
+  { id:'ld9', label:'10-digit ÷ 5-digit', divisorMin:10001, divisorMax:99999, dividendMin:1000000000, dividendMax:9999999999 },
+];
+
+function genLongDiv(cfg) {
+  const divisor = rnd(cfg.divisorMin, cfg.divisorMax);
+  const minQ = Math.ceil(cfg.dividendMin / divisor);
+  const maxQ = Math.floor(cfg.dividendMax / divisor);
+  if (minQ > maxQ) return genLongDiv(cfg);
+  const quotient = rnd(minQ, maxQ);
+  return { dividend: divisor * quotient, divisor, quotient };
+}
+
 function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+const ALL_MODES = ['multiply','shortdivide','longdivide','add','subtract'];
 
 function setMode(mode) {
   currentMode = mode;
   selectedDigits.clear();
-  ['multiply','divide','add','subtract'].forEach(m => {
+  selectedLongDiv.clear();
+  ALL_MODES.forEach(m => {
     document.getElementById('modeBtn-' + m).classList.toggle('active', m === mode);
     document.getElementById('setup-' + m).style.display = m === mode ? 'block' : 'none';
   });
   document.querySelectorAll('.digit-btn').forEach(b => b.classList.remove('selected'));
   const info = {
-    multiply: { emoji:'✖️', sub:'Pick your tables and start practicing!' },
-    divide:   { emoji:'➗', sub:'Practice division with small or long problems!' },
-    add:      { emoji:'➕', sub:'Pick number sizes and start adding!' },
-    subtract: { emoji:'➖', sub:'Pick number sizes and start subtracting!' },
+    multiply:    { emoji:'✖️', sub:'Pick your tables and start practicing!' },
+    shortdivide: { emoji:'➗', sub:'Pick your divisors and practice short division!' },
+    longdivide:  { emoji:'📐', sub:'Pick a problem size — use the scratch pad to work it out!' },
+    add:         { emoji:'➕', sub:'Pick number sizes and start adding!' },
+    subtract:    { emoji:'➖', sub:'Pick number sizes and start subtracting!' },
   };
   document.getElementById('modeEmoji').textContent = info[mode].emoji;
   document.getElementById('modeSubtitle').textContent = info[mode].sub;
   updateStartBtn();
 }
 
-function toggleDivType(type) {
-  const btn = document.getElementById('divBtn-' + type);
-  if (divTypes.has(type) && divTypes.size > 1) {
-    divTypes.delete(type); btn.classList.remove('selected');
-  } else if (!divTypes.has(type)) {
-    divTypes.add(type); btn.classList.add('selected');
+// ── DIVISOR GRID (short divide) ──
+function selectAllDivisors()      { for(let i=1;i<=30;i++) { selectedDivisors.add(i); document.querySelector(`#divisorGrid [data-n="${i}"]`)?.classList.add('selected'); } updateStartBtn(); }
+function clearAllDivisors()       { selectedDivisors.clear(); document.querySelectorAll('#divisorGrid .table-btn').forEach(b=>b.classList.remove('selected')); updateStartBtn(); }
+function selectDivisorRange(a,b)  { for(let i=a;i<=b;i++) { selectedDivisors.add(i); document.querySelector(`#divisorGrid [data-n="${i}"]`)?.classList.add('selected'); } updateStartBtn(); }
+
+function buildDivisorGrid() {
+  const grid = document.getElementById('divisorGrid');
+  for (let i = 1; i <= 30; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'table-btn'; btn.textContent = i; btn.dataset.n = i;
+    btn.onclick = () => {
+      selectedDivisors.has(i) ? (selectedDivisors.delete(i), btn.classList.remove('selected'))
+                              : (selectedDivisors.add(i),    btn.classList.add('selected'));
+      updateStartBtn();
+    };
+    grid.appendChild(btn);
   }
-  updateStartBtn();
+}
+
+function buildLongDivGrid() {
+  const grid = document.getElementById('longDivGrid');
+  LONG_DIV_CONFIGS.forEach(cfg => {
+    const btn = document.createElement('button');
+    btn.className = 'digit-btn'; btn.dataset.config = cfg.id;
+    btn.textContent = cfg.label;
+    btn.onclick = () => {
+      if (selectedLongDiv.has(cfg.id)) { selectedLongDiv.delete(cfg.id); btn.classList.remove('selected'); }
+      else { selectedLongDiv.add(cfg.id); btn.classList.add('selected'); }
+      updateStartBtn();
+    };
+    grid.appendChild(btn);
+  });
 }
 
 function toggleDigit(id, gridId) {
@@ -1062,13 +1181,14 @@ function toggleDigit(id, gridId) {
 }
 
 function buildDigitGrids() {
-  ['add','subtract'].forEach(mode => {
-    const grid = document.getElementById(mode + 'DigitGrid');
+  const grids = { add: 'addDigitGrid', subtract: 'subtractDigitGrid' };
+  Object.entries(grids).forEach(([mode, gridId]) => {
+    const grid = document.getElementById(gridId);
     DIGIT_CONFIGS.forEach(cfg => {
       const btn = document.createElement('button');
       btn.className = 'digit-btn'; btn.dataset.config = cfg.id;
       btn.textContent = mode === 'add' ? cfg.addLabel : cfg.subLabel;
-      btn.onclick = () => toggleDigit(cfg.id, grid.id);
+      btn.onclick = () => toggleDigit(cfg.id, gridId);
       grid.appendChild(btn);
     });
   });
@@ -1099,24 +1219,27 @@ function clearAll()      { selected.clear(); document.querySelectorAll('.table-b
 
 function updateStartBtn() {
   const btn = document.getElementById('startBtn');
-  const ready = currentMode === 'multiply' ? selected.size > 0
-              : currentMode === 'divide'   ? divTypes.size > 0
+  const ready = currentMode === 'multiply'    ? selected.size > 0
+              : currentMode === 'shortdivide' ? selectedDivisors.size > 0
+              : currentMode === 'longdivide'  ? selectedLongDiv.size > 0
               : selectedDigits.size > 0;
   btn.disabled = !ready;
   if (!ready) {
     const hints = {
-      multiply: 'Choose at least one table to start!',
-      divide:   'Choose a division type to start!',
-      add:      'Choose at least one number size!',
-      subtract: 'Choose at least one number size!',
+      multiply:    'Choose at least one table to start!',
+      shortdivide: 'Choose at least one divisor!',
+      longdivide:  'Choose at least one problem size!',
+      add:         'Choose at least one number size!',
+      subtract:    'Choose at least one number size!',
     };
     btn.textContent = hints[currentMode];
   } else {
     const labels = {
-      multiply: `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
-      divide:   `Start Dividing! (${[...divTypes].map(t=>t==='small'?'Small':'Long').join(' + ')})`,
-      add:      `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
-      subtract: `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+      multiply:    `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
+      shortdivide: `Start Dividing! (${selectedDivisors.size} divisor${selectedDivisors.size>1?'s':''} selected)`,
+      longdivide:  `Start Long Division! (${selectedLongDiv.size} size${selectedLongDiv.size>1?'s':''} selected)`,
+      add:         `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+      subtract:    `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
     };
     btn.textContent = labels[currentMode];
   }
@@ -1128,6 +1251,10 @@ function startGame() {
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
   document.getElementById('game-screen').style.display='block';
+  const isLong = currentMode === 'longdivide';
+  const wb = document.getElementById('whiteboardWrap');
+  wb.style.display = isLong ? 'block' : 'none';
+  if (isLong) initWhiteboard();
   hideFeedback(); updateScore(); nextQuestion();
   document.getElementById('answerInput').focus();
 }
@@ -1139,29 +1266,32 @@ function nextQuestion() {
     const mult = rnd(1, 12);
     currentAnswer = table * mult;
     setQuestion(`${table} × ${mult} = ?`);
-  } else if (currentMode === 'divide') {
-    const typeArr = Array.from(divTypes);
-    const type = typeArr[Math.floor(Math.random() * typeArr.length)];
-    if (type === 'small') {
-      const a = rnd(1, 12), b = rnd(1, 12);
-      currentAnswer = b;
-      setQuestion(`${a * b} ÷ ${a} = ?`);
-    } else {
-      const divisor = rnd(2, 25), quotient = rnd(2, 80);
-      currentAnswer = quotient;
-      setQuestion(`${divisor * quotient} ÷ ${divisor} = ?`);
-    }
+  } else if (currentMode === 'shortdivide') {
+    const divArr = Array.from(selectedDivisors);
+    const d = divArr[Math.floor(Math.random() * divArr.length)];
+    const mult = rnd(1, 12);
+    currentAnswer = mult;
+    setQuestion(`${d * mult} ÷ ${d} = ?`);
+  } else if (currentMode === 'longdivide') {
+    const ids = Array.from(selectedLongDiv);
+    const cfgId = ids[Math.floor(Math.random() * ids.length)];
+    const cfg = LONG_DIV_CONFIGS.find(c => c.id === cfgId);
+    const { dividend, divisor, quotient } = genLongDiv(cfg);
+    currentAnswer = quotient;
+    setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
+    clearWhiteboard();
   } else {
-    const cfgId = Array.from(selectedDigits)[Math.floor(Math.random() * selectedDigits.size)];
+    const cfgIds = Array.from(selectedDigits);
+    const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
     const cfg = DIGIT_CONFIGS.find(c => c.id === cfgId);
     let a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
     if (currentMode === 'subtract') {
       if (a < b) [a, b] = [b, a];
       currentAnswer = a - b;
-      setQuestion(`${a} − ${b} = ?`);
+      setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
       currentAnswer = a + b;
-      setQuestion(`${a} + ${b} = ?`);
+      setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
   }
   document.getElementById('answerInput').value = '';
@@ -1176,14 +1306,15 @@ function checkAnswer() {
   total++;
   val===currentAnswer?(correct++,showFeedback(true)):(wrong++,showFeedback(false,currentAnswer));
   updateScore();
-  setTimeout(()=>{hideFeedback();nextQuestion();},1400);
+  const delay = currentMode === 'longdivide' ? 2800 : 1400;
+  setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
 }
 
 function showFeedback(ok,ans) {
   const fb=document.getElementById('feedback');
   fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
   document.getElementById('feedbackIcon').textContent=ok?'✅':'❌';
-  document.getElementById('feedbackText').textContent=ok?'Correct! Great job!':`Not quite — the answer was ${ans}`;
+  document.getElementById('feedbackText').textContent=ok?'Correct! Great job!':`Not quite — the answer was ${fmtN(ans)}`;
 }
 function hideFeedback() { document.getElementById('feedback').className='feedback'; }
 function updateScore()  { document.getElementById('correctCount').textContent=correct; document.getElementById('wrongCount').textContent=wrong; document.getElementById('totalCount').textContent=total; }
@@ -1199,11 +1330,66 @@ function stopGame() {
   document.getElementById('endStats').innerHTML=`You answered <span>${total}</span> questions<br><span>${correct}</span> correct · <span>${wrong}</span> wrong · <span>${pct}%</span> accuracy`;
 }
 
-function playAgain() { document.getElementById('end-screen').style.display='none'; document.getElementById('setup-screen').style.display='block'; }
+function playAgain() {
+  document.getElementById('end-screen').style.display='none';
+  document.getElementById('setup-screen').style.display='block';
+  document.getElementById('whiteboardWrap').style.display='none';
+}
+
+// ── WHITEBOARD ──
+let wbDrawing = false, wbLastX = 0, wbLastY = 0, wbInitialized = false;
+
+function initWhiteboard() {
+  const canvas = document.getElementById('whiteboardCanvas');
+  // Set actual pixel dimensions
+  canvas.width  = canvas.offsetWidth  || 440;
+  canvas.height = canvas.offsetHeight || 220;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (wbInitialized) return;
+  wbInitialized = true;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src  = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * (canvas.width / rect.width),
+             y: (src.clientY - rect.top)  * (canvas.height / rect.height) };
+  }
+  function startDraw(e) { e.preventDefault(); wbDrawing = true; const p = getPos(e); wbLastX = p.x; wbLastY = p.y; }
+  function draw(e) {
+    if (!wbDrawing) return; e.preventDefault();
+    const p = getPos(e);
+    const ctx2 = canvas.getContext('2d');
+    ctx2.beginPath(); ctx2.moveTo(wbLastX, wbLastY); ctx2.lineTo(p.x, p.y);
+    ctx2.strokeStyle = document.getElementById('wbColor').value;
+    ctx2.lineWidth   = parseInt(document.getElementById('wbSize').value);
+    ctx2.lineCap = 'round'; ctx2.lineJoin = 'round'; ctx2.stroke();
+    wbLastX = p.x; wbLastY = p.y;
+  }
+  function endDraw() { wbDrawing = false; }
+  canvas.addEventListener('mousedown',  startDraw);
+  canvas.addEventListener('mousemove',  draw);
+  canvas.addEventListener('mouseup',    endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove',  draw,      { passive: false });
+  canvas.addEventListener('touchend',   endDraw);
+}
+
+function clearWhiteboard() {
+  const canvas = document.getElementById('whiteboardCanvas');
+  if (!canvas.width) return;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 // Init
 setTheme('light','orange');
 buildDigitGrids();
+buildDivisorGrid();
+buildLongDivGrid();
 </script>
 </body>
 </html>
