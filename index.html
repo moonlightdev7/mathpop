@@ -1507,26 +1507,25 @@
   };
 
   onAuthStateChanged(auth, async (user) => {
-    window.currentUserId = user ? user.uid : null; // expose so saveAchievements can key localStorage
+    window.currentUserId = user ? user.uid : null;
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
       document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Friend';
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
 
-      // Load saved purchases + theme + achievements
       try {
-        // First: load localStorage for this user as an instant baseline
-        if (window.loadAchievements) {
-          try {
-            const lsKey = 'mathpop_ach_' + user.uid;
-            const lsSaved = localStorage.getItem(lsKey)
-                         || localStorage.getItem('mathpop_ach'); // legacy fallback
-            if (lsSaved) window.loadAchievements(JSON.parse(lsSaved));
-          } catch(e) {}
+        // Step 1: Load localStorage instantly — clears the loading state right away
+        const lsKey = 'mathpop_ach_' + user.uid;
+        const lsSaved = localStorage.getItem(lsKey) || localStorage.getItem('mathpop_ach');
+        if (lsSaved && window.loadAchievements) {
+          window.loadAchievements(JSON.parse(lsSaved));
+        } else if (window.updateRankBanner) {
+          // No localStorage yet — still clear the loading state with defaults
+          window.updateRankBanner();
         }
 
-        // Then: fetch Firestore and merge (Firestore is the source of truth)
+        // Step 2: Fetch Firestore (source of truth) and merge on top
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
@@ -1536,18 +1535,15 @@
             window.applyThemeFromFirestore(data.theme);
           }
           if (data.achievements && window.loadAchievements) {
-            window.loadAchievements(data.achievements); // smart merge + banner update
+            window.loadAchievements(data.achievements);
           } else if (!data.achievements && window.saveAchievementsCloud && window.getAchData) {
-            // Firestore has no achievements yet — push what we have up now
             window.saveAchievementsCloud(window.getAchData());
-            if (window.updateRankBanner) window.updateRankBanner();
           }
         } else {
-          // Brand new user — push current state up to Firestore
+          // Brand new user — seed Firestore with current state
           if (window.saveAchievementsCloud && window.getAchData) {
             window.saveAchievementsCloud(window.getAchData());
           }
-          if (window.updateRankBanner) window.updateRankBanner();
         }
       } catch(e) { console.error('Firestore error', e); }
 
@@ -1555,7 +1551,7 @@
       document.getElementById('signedOut').style.display = 'flex';
       document.getElementById('signedIn').style.display  = 'none';
       if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
-      if (window.resetToGuest) window.resetToGuest(); // wipe XP/rank back to default
+      if (window.resetToGuest) window.resetToGuest();
     }
   });
 </script>
@@ -2809,8 +2805,20 @@ window.resetToGuest = function() {
   if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
 };
 
-// Show default state immediately — Firebase will update it once auth resolves
-updateRankBanner();
+// Show a loading state while Firebase resolves auth (usually < 500ms)
+// updateRankBanner() in the auth handler below is guaranteed to clear it
+(function() {
+  const banner = document.getElementById('rankBanner');
+  if (banner) banner.classList.add('visible');
+  const emoji = document.getElementById('rankBannerEmoji');
+  const title = document.getElementById('rankBannerTitle');
+  const xp    = document.getElementById('rankBannerXp');
+  const fill  = document.getElementById('rankBannerFill');
+  if (emoji) emoji.textContent = '⏳';
+  if (title) title.textContent = 'Loading…';
+  if (xp)    xp.textContent   = '';
+  if (fill)  fill.style.width = '0%';
+})();
 
 // Save to user-keyed localStorage on page close/refresh (only if signed in)
 window.addEventListener('beforeunload', () => {
