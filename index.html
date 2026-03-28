@@ -491,7 +491,7 @@
   }
   .wb-btn:hover { border-color: var(--wrong); color: var(--wrong); }
   .whiteboard-canvas {
-    width: 100%; height: 220px; border-radius: 12px;
+    width: 100%; height: 320px; border-radius: 12px;
     border: 2px solid var(--border); background: #fff;
     cursor: crosshair; display: block; touch-action: none;
   }
@@ -1096,6 +1096,7 @@ const DIGIT_CONFIGS = [
 
 const LONG_DIV_CONFIGS = [
   { id:'ld1', label:'3-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:100,        dividendMax:999        },
+  { id:'ld1b',label:'3-digit ÷ 2-digit', divisorMin:11,    divisorMax:99,    dividendMin:100,        dividendMax:999        },
   { id:'ld2', label:'4-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:1000,       dividendMax:9999       },
   { id:'ld3', label:'4-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:1000,       dividendMax:9999       },
   { id:'ld4', label:'5-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:10000,      dividendMax:99999      },
@@ -1252,10 +1253,8 @@ function startGame() {
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
   document.getElementById('game-screen').style.display='block';
-  const isLong = currentMode === 'longdivide';
-  const wb = document.getElementById('whiteboardWrap');
-  wb.style.display = isLong ? 'block' : 'none';
-  if (isLong) initWhiteboard();
+  document.getElementById('whiteboardWrap').style.display = 'block';
+  initWhiteboard();
   hideFeedback(); updateScore(); nextQuestion();
   document.getElementById('answerInput').focus();
 }
