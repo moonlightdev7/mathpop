@@ -412,7 +412,7 @@
   .question-card {
     background: var(--card); border-radius: 24px; padding: 36px 28px 28px;
     text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 16px; position: relative; overflow: hidden; transition: background 0.3s;
+    margin-bottom: 16px; position: relative; overflow: visible; transition: background 0.3s;
   }
   .question-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
@@ -434,17 +434,18 @@
   }
   .submit-btn:hover { transform: translateY(-2px); }
   .submit-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--neutral-shadow); }
-  /* Remainder mode: two inputs on one row */
-  .answer-row {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 0;
+  /* Remainder mode: stacked inputs */
+  .answer-row { display: flex; flex-direction: column; gap: 10px; }
+  .remainder-row {
+    display: flex; align-items: center; gap: 12px;
   }
-  .answer-row .answer-input { flex: 1; width: auto; }
   .remainder-label {
-    font-family: 'Fredoka One', cursive; font-size: 1.8rem;
-    color: var(--muted); white-space: nowrap; flex-shrink: 0;
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    color: white; background: var(--primary); border-radius: 10px;
+    padding: 6px 14px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.5px;
   }
   .remainder-input-wrap { flex: 1; }
-  .remainder-input-wrap .answer-input { width: 100%; }
+  .remainder-input-wrap .answer-input { width: 100%; box-sizing: border-box; }
   .feedback {
     border-radius: 16px; padding: 16px 20px; display: none;
     align-items: center; gap: 12px; font-weight: 700; font-size: 1rem;
@@ -862,9 +863,11 @@
     <div class="question-text" id="questionText">? × ? = ?</div>
     <div class="answer-row">
       <input type="number" class="answer-input" id="answerInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleKey(event)"/>
-      <span class="remainder-label" id="remainderLabel" style="display:none">R</span>
-      <div class="remainder-input-wrap" id="remainderWrap" style="display:none">
-        <input type="number" class="answer-input" id="remainderInput" placeholder="R?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
+      <div class="remainder-row" id="remainderWrap" style="display:none">
+        <span class="remainder-label" id="remainderLabel">Remainder</span>
+        <div class="remainder-input-wrap">
+          <input type="number" class="answer-input" id="remainderInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
+        </div>
       </div>
     </div>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
@@ -1343,10 +1346,9 @@ function setMode(mode) {
     document.getElementById('setup-' + m).style.display = m === mode ? 'block' : 'none';
   });
   document.querySelectorAll('.digit-btn').forEach(b => b.classList.remove('selected'));
-  // Show/hide remainder inputs
+  // Show/hide remainder input row
   const isRemainder = mode === 'remainderdiv';
-  document.getElementById('remainderLabel').style.display = isRemainder ? '' : 'none';
-  document.getElementById('remainderWrap').style.display  = isRemainder ? '' : 'none';
+  document.getElementById('remainderWrap').style.display = isRemainder ? 'flex' : 'none';
   const info = {
     multiply:     { emoji:'✖️',  sub:'Pick your tables and start practicing!' },
     shortdivide:  { emoji:'➗',  sub:'Pick your divisors and practice short division!' },
