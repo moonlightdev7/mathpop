@@ -577,6 +577,12 @@
     await setDoc(doc(db, 'users', user.uid), { [product]: true }, { merge: true });
   };
 
+  window.saveTheme = async (themeData) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    await setDoc(doc(db, 'users', user.uid), { theme: themeData }, { merge: true });
+  };
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
@@ -584,13 +590,16 @@
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
 
-      // Load saved purchases
+      // Load saved purchases + theme
       try {
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
           if (data.colorWheel) window.unlockWheel(true);
           if (data.neonPack)   window.unlockNeon(true);
+          if (data.theme && window.applyThemeFromFirestore) {
+            window.applyThemeFromFirestore(data.theme);
+          }
         }
       } catch(e) { console.error('Firestore error', e); }
 
@@ -659,15 +668,38 @@ function setTheme(mode, color) {
   const rows = document.querySelectorAll('.theme-row');
   const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(color);
   rows[mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
+  if (window.saveTheme) window.saveTheme({ mode, color });
 }
 
 function setNeon(name) {
   applyThemeVars(NEON[name]);
   clearActive();
   document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(name)]?.classList.add('active');
+  if (window.saveTheme) window.saveTheme({ mode: 'neon', color: name });
 }
 
 function clearActive() { document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active')); }
+
+// Restore theme saved in Firestore
+window.applyThemeFromFirestore = function(t) {
+  if (!t) return;
+  if (t.mode === 'neon') {
+    setNeon(t.color);
+  } else if (t.mode === 'custom' && t.customColors) {
+    Object.entries(t.customColors).forEach(([k, v]) => {
+      applyColor(k, v);
+      const el = document.getElementById('cp-' + k);
+      if (el) el.value = v;
+    });
+  } else if (t.mode && t.color) {
+    // Call applyThemeVars directly to avoid re-saving to Firestore on restore
+    applyThemeVars(t.mode === 'dark' ? DARK[t.color] : LIGHT[t.color]);
+    clearActive();
+    const rows = document.querySelectorAll('.theme-row');
+    const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(t.color);
+    rows[t.mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
+  }
+};
 
 function toggleThemePanel() {
   const wrap = document.getElementById('themePanelWrap');
@@ -739,7 +771,7 @@ document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('cli
 function renderPayPalWheel() {
   document.getElementById('paypal-wheel').innerHTML = '';
   paypal.Buttons({
-    style: { layout: 'vertical', color: 'blue', shape: 'pill', label: 'pay' },
+    style: { layout: 'vertical', color: 'blue', shape: 'pill', label: 'checkout' },
     createOrder: (data, actions) => actions.order.create({
       purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Color Wheel' }]
     }),
@@ -755,7 +787,7 @@ function renderPayPalWheel() {
 function renderPayPalNeon() {
   document.getElementById('paypal-neon').innerHTML = '';
   paypal.Buttons({
-    style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' },
+    style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'checkout' },
     createOrder: (data, actions) => actions.order.create({
       purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Neon Pack' }]
     }),
@@ -780,6 +812,16 @@ function applyColor(prop, val) {
   else if (prop === 'card')   { s.setProperty('--card', val); }
   else if (prop === 'correct'){ s.setProperty('--correct', val); s.setProperty('--correct-bg', hexToRgba(val,.12)); s.setProperty('--correct-border', hexToRgba(val,.35)); }
   else if (prop === 'wrong')  { s.setProperty('--wrong', val);   s.setProperty('--wrong-bg',   hexToRgba(val,.12)); s.setProperty('--wrong-border',   hexToRgba(val,.35)); }
+  // Save custom colors to Firestore
+  if (window.saveTheme) {
+    const customColors = {};
+    ['primary','correct','wrong','bg','card'].forEach(k => {
+      const el = document.getElementById('cp-' + k);
+      if (el) customColors[k] = el.value;
+    });
+    customColors[prop] = val; // include the current change before input updates
+    window.saveTheme({ mode: 'custom', customColors });
+  }
 }
 
 function resetColors() {
