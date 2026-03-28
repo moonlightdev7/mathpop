@@ -810,6 +810,7 @@
     } else {
       document.getElementById('signedOut').style.display = 'flex';
       document.getElementById('signedIn').style.display  = 'none';
+      if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
     }
   });
 </script>
@@ -929,6 +930,40 @@ function toggleThemePanel() {
 // ── UNLOCK ──
 let wheelUnlocked = false, neonUnlocked = false;
 let paypalWheelRendered = false, paypalNeonRendered = false;
+
+window.lockWheel = function() {
+  wheelUnlocked = false;
+  paypalWheelRendered = false;
+  const b = document.getElementById('priceWheel');
+  b.textContent = '$0.99'; b.style.background = '';
+  document.getElementById('chipWheel').classList.remove('unlocked');
+  document.getElementById('colorPanel').style.display = 'none';
+};
+
+window.lockNeon = function() {
+  neonUnlocked = false;
+  paypalNeonRendered = false;
+  const b = document.getElementById('priceNeon');
+  b.textContent = '$0.99'; b.style.background = '';
+  document.getElementById('chipNeon').classList.remove('unlocked');
+  document.getElementById('neonSwatches').style.display = 'none';
+};
+
+window.lockPremiumOnSignOut = function() {
+  window.lockWheel();
+  window.lockNeon();
+  // If a premium theme is active, revert to the free default
+  try {
+    const saved = localStorage.getItem('mathpop_theme');
+    if (saved) {
+      const t = JSON.parse(saved);
+      if (t.mode === 'neon' || t.mode === 'custom') {
+        localStorage.removeItem('mathpop_theme');
+        setTheme('light', 'orange');
+      }
+    }
+  } catch(e) {}
+};
 
 window.unlockWheel = function(silent = false) {
   wheelUnlocked = true;
