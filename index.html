@@ -1525,6 +1525,14 @@
           }
           if (data.achievements && window.loadAchievements) {
             window.loadAchievements(data.achievements);
+          } else if (!data.achievements && window.saveAchievementsCloud && window.getAchData) {
+            // Firestore has no achievements yet — push localStorage data up now
+            window.saveAchievementsCloud(window.getAchData());
+          }
+        } else {
+          // Brand new user doc — push whatever is in localStorage up to Firestore
+          if (window.saveAchievementsCloud && window.getAchData) {
+            window.saveAchievementsCloud(window.getAchData());
           }
         }
       } catch(e) { console.error('Firestore error', e); }
@@ -2764,6 +2772,7 @@ function loadAchievements(data) {
   }
 }
 window.loadAchievements = (data) => { loadAchievements(data); updateRankBanner(); };
+window.getAchData = () => achData;
 
 // Try loading from localStorage on boot, then refresh banner
 try {
@@ -2771,6 +2780,12 @@ try {
   if (saved) loadAchievements(JSON.parse(saved));
 } catch(e){}
 setTimeout(updateRankBanner, 50);
+
+// Save everything to localStorage (and Firestore if signed in) on page close/refresh
+window.addEventListener('beforeunload', () => {
+  try { localStorage.setItem('mathpop_ach',   JSON.stringify(achData));   } catch(e){}
+  try { localStorage.setItem('mathpop_theme', JSON.stringify(currentTheme)); } catch(e){}
+});
 
 function showAchievements() {
   // hide whatever screen is visible
