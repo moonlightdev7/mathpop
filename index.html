@@ -434,6 +434,17 @@
   }
   .submit-btn:hover { transform: translateY(-2px); }
   .submit-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--neutral-shadow); }
+  /* Remainder mode: two inputs on one row */
+  .answer-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 0;
+  }
+  .answer-row .answer-input { flex: 1; width: auto; }
+  .remainder-label {
+    font-family: 'Fredoka One', cursive; font-size: 1.8rem;
+    color: var(--muted); white-space: nowrap; flex-shrink: 0;
+  }
+  .remainder-input-wrap { flex: 1; }
+  .remainder-input-wrap .answer-input { width: 100%; }
   .feedback {
     border-radius: 16px; padding: 16px 20px; display: none;
     align-items: center; gap: 12px; font-weight: 700; font-size: 1rem;
@@ -703,6 +714,7 @@
     <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
     <button class="mode-btn"        id="modeBtn-shortdivide" onclick="setMode('shortdivide')">➗ Short ÷</button>
     <button class="mode-btn"        id="modeBtn-longdivide"  onclick="setMode('longdivide')">📐 Long ÷</button>
+    <button class="mode-btn"        id="modeBtn-remainderdiv" onclick="setMode('remainderdiv')">📐R Long ÷ R</button>
     <button class="mode-btn"        id="modeBtn-add"         onclick="setMode('add')">➕ Add</button>
     <button class="mode-btn"        id="modeBtn-subtract"    onclick="setMode('subtract')">➖ Subtract</button>
   </div>
@@ -739,6 +751,12 @@
   <div id="setup-longdivide" style="display:none">
     <p class="section-label">Problem Size</p>
     <div class="digit-grid digit-grid-sm" id="longDivGrid"></div>
+  </div>
+
+  <!-- ── LONG DIVIDE WITH REMAINDERS SETUP ── -->
+  <div id="setup-remainderdiv" style="display:none">
+    <p class="section-label">Problem Size</p>
+    <div class="digit-grid digit-grid-sm" id="remainderDivGrid"></div>
   </div>
 
   <!-- ── ADD SETUP ── -->
@@ -796,6 +814,17 @@
   </div>
 
   <div class="tutorial-section">
+    <h3>📐R Long Division with Remainders</h3>
+    <p>Take long division to the next level! Work out the quotient AND the leftover remainder — great for building real division fluency.</p>
+    <div class="video-wrapper" id="video-remainderdiv">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-section">
     <h3>➕ Addition</h3>
     <p>Build your addition speed from single digits all the way up to 10-digit numbers!</p>
     <div class="video-wrapper" id="video-add">
@@ -831,7 +860,13 @@
   </div>
   <div class="question-card">
     <div class="question-text" id="questionText">? × ? = ?</div>
-    <input type="number" class="answer-input" id="answerInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleKey(event)"/>
+    <div class="answer-row">
+      <input type="number" class="answer-input" id="answerInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleKey(event)"/>
+      <span class="remainder-label" id="remainderLabel" style="display:none">R</span>
+      <div class="remainder-input-wrap" id="remainderWrap" style="display:none">
+        <input type="number" class="answer-input" id="remainderInput" placeholder="R?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
+      </div>
+    </div>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
   </div>
   <div class="whiteboard-wrap" id="whiteboardWrap" style="display:none">
@@ -1232,9 +1267,11 @@ function hexToRgba(hex, a) {
 
 // ── MODE & DIGIT CONFIG ──
 let currentMode = 'multiply';
-const selectedDivisors = new Set();
-const selectedDigits   = new Set();
-const selectedLongDiv  = new Set();
+const selectedDivisors   = new Set();
+const selectedDigits     = new Set();
+const selectedLongDiv    = new Set();
+const selectedRemainderDiv = new Set();
+let currentRemainder = 0;
 
 function fmtN(n) { return n.toLocaleString('en-US'); }
 
@@ -1280,25 +1317,43 @@ function genLongDiv(cfg) {
   return { dividend: divisor * quotient, divisor, quotient };
 }
 
+function genRemainderDiv(cfg) {
+  const divisor = rnd(cfg.divisorMin, cfg.divisorMax);
+  if (divisor < 2) return genRemainderDiv(cfg); // need remainder range of at least 1
+  const minQ = Math.max(2, Math.ceil(cfg.dividendMin / divisor));
+  // leave room for remainder: dividend = divisor*quotient + remainder, remainder in [1, divisor-1]
+  const maxQ = Math.floor((cfg.dividendMax - 1) / divisor);
+  if (minQ > maxQ) return genRemainderDiv(cfg);
+  const quotient  = rnd(minQ, maxQ);
+  const remainder = rnd(1, divisor - 1); // guaranteed non-zero remainder
+  return { dividend: divisor * quotient + remainder, divisor, quotient, remainder };
+}
+
 function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-const ALL_MODES = ['multiply','shortdivide','longdivide','add','subtract'];
+const ALL_MODES = ['multiply','shortdivide','longdivide','remainderdiv','add','subtract'];
 
 function setMode(mode) {
   currentMode = mode;
   selectedDigits.clear();
   selectedLongDiv.clear();
+  selectedRemainderDiv.clear();
   ALL_MODES.forEach(m => {
     document.getElementById('modeBtn-' + m).classList.toggle('active', m === mode);
     document.getElementById('setup-' + m).style.display = m === mode ? 'block' : 'none';
   });
   document.querySelectorAll('.digit-btn').forEach(b => b.classList.remove('selected'));
+  // Show/hide remainder inputs
+  const isRemainder = mode === 'remainderdiv';
+  document.getElementById('remainderLabel').style.display = isRemainder ? '' : 'none';
+  document.getElementById('remainderWrap').style.display  = isRemainder ? '' : 'none';
   const info = {
-    multiply:    { emoji:'✖️', sub:'Pick your tables and start practicing!' },
-    shortdivide: { emoji:'➗', sub:'Pick your divisors and practice short division!' },
-    longdivide:  { emoji:'📐', sub:'Pick a problem size — use the scratch pad to work it out!' },
-    add:         { emoji:'➕', sub:'Pick number sizes and start adding!' },
-    subtract:    { emoji:'➖', sub:'Pick number sizes and start subtracting!' },
+    multiply:     { emoji:'✖️',  sub:'Pick your tables and start practicing!' },
+    shortdivide:  { emoji:'➗',  sub:'Pick your divisors and practice short division!' },
+    longdivide:   { emoji:'📐',  sub:'Pick a problem size — use the scratch pad to work it out!' },
+    remainderdiv: { emoji:'📐R', sub:'Pick a problem size — find the quotient AND remainder!' },
+    add:          { emoji:'➕',  sub:'Pick number sizes and start adding!' },
+    subtract:     { emoji:'➖',  sub:'Pick number sizes and start subtracting!' },
   };
   document.getElementById('modeEmoji').textContent = info[mode].emoji;
   document.getElementById('modeSubtitle').textContent = info[mode].sub;
@@ -1333,6 +1388,21 @@ function buildLongDivGrid() {
     btn.onclick = () => {
       if (selectedLongDiv.has(cfg.id)) { selectedLongDiv.delete(cfg.id); btn.classList.remove('selected'); }
       else { selectedLongDiv.add(cfg.id); btn.classList.add('selected'); }
+      updateStartBtn();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function buildRemainderDivGrid() {
+  const grid = document.getElementById('remainderDivGrid');
+  LONG_DIV_CONFIGS.forEach(cfg => {
+    const btn = document.createElement('button');
+    btn.className = 'digit-btn'; btn.dataset.config = cfg.id;
+    btn.textContent = cfg.label;
+    btn.onclick = () => {
+      if (selectedRemainderDiv.has(cfg.id)) { selectedRemainderDiv.delete(cfg.id); btn.classList.remove('selected'); }
+      else { selectedRemainderDiv.add(cfg.id); btn.classList.add('selected'); }
       updateStartBtn();
     };
     grid.appendChild(btn);
@@ -1385,27 +1455,30 @@ function clearAll()      { selected.clear(); document.querySelectorAll('.table-b
 
 function updateStartBtn() {
   const btn = document.getElementById('startBtn');
-  const ready = currentMode === 'multiply'    ? selected.size > 0
-              : currentMode === 'shortdivide' ? selectedDivisors.size > 0
-              : currentMode === 'longdivide'  ? selectedLongDiv.size > 0
+  const ready = currentMode === 'multiply'     ? selected.size > 0
+              : currentMode === 'shortdivide'  ? selectedDivisors.size > 0
+              : currentMode === 'longdivide'   ? selectedLongDiv.size > 0
+              : currentMode === 'remainderdiv' ? selectedRemainderDiv.size > 0
               : selectedDigits.size > 0;
   btn.disabled = !ready;
   if (!ready) {
     const hints = {
-      multiply:    'Choose at least one table to start!',
-      shortdivide: 'Choose at least one divisor!',
-      longdivide:  'Choose at least one problem size!',
-      add:         'Choose at least one number size!',
-      subtract:    'Choose at least one number size!',
+      multiply:     'Choose at least one table to start!',
+      shortdivide:  'Choose at least one divisor!',
+      longdivide:   'Choose at least one problem size!',
+      remainderdiv: 'Choose at least one problem size!',
+      add:          'Choose at least one number size!',
+      subtract:     'Choose at least one number size!',
     };
     btn.textContent = hints[currentMode];
   } else {
     const labels = {
-      multiply:    `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
-      shortdivide: `Start Dividing! (${selectedDivisors.size} divisor${selectedDivisors.size>1?'s':''} selected)`,
-      longdivide:  `Start Long Division! (${selectedLongDiv.size} size${selectedLongDiv.size>1?'s':''} selected)`,
-      add:         `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
-      subtract:    `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+      multiply:     `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
+      shortdivide:  `Start Dividing! (${selectedDivisors.size} divisor${selectedDivisors.size>1?'s':''} selected)`,
+      longdivide:   `Start Long Division! (${selectedLongDiv.size} size${selectedLongDiv.size>1?'s':''} selected)`,
+      remainderdiv: `Start Long ÷ with Remainders! (${selectedRemainderDiv.size} size${selectedRemainderDiv.size>1?'s':''} selected)`,
+      add:          `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
+      subtract:     `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
     };
     btn.textContent = labels[currentMode];
   }
@@ -1444,6 +1517,17 @@ function nextQuestion() {
     currentAnswer = quotient;
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
+  } else if (currentMode === 'remainderdiv') {
+    const ids = Array.from(selectedRemainderDiv);
+    const cfgId = ids[Math.floor(Math.random() * ids.length)];
+    const cfg = LONG_DIV_CONFIGS.find(c => c.id === cfgId);
+    const { dividend, divisor, quotient, remainder } = genRemainderDiv(cfg);
+    currentAnswer   = quotient;
+    currentRemainder = remainder;
+    setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
+    clearWhiteboard();
+    document.getElementById('remainderInput').value = '';
+    document.getElementById('remainderInput').focus();
   } else {
     const cfgIds = Array.from(selectedDigits);
     const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
@@ -1463,23 +1547,45 @@ function nextQuestion() {
   document.getElementById('answerInput').focus();
 }
 
-function handleKey(e) { if(e.key==='Enter') checkAnswer(); }
+function handleKey(e) {
+  if (e.key === 'Enter') {
+    if (currentMode === 'remainderdiv') {
+      // Tab from quotient field to remainder field on Enter
+      document.getElementById('remainderInput').focus();
+    } else {
+      checkAnswer();
+    }
+  }
+}
+function handleRemainderKey(e) { if(e.key==='Enter') checkAnswer(); }
 
 function checkAnswer() {
-  const val=parseInt(document.getElementById('answerInput').value);
-  if(isNaN(val)) return;
-  total++;
-  val===currentAnswer?(correct++,showFeedback(true)):(wrong++,showFeedback(false,currentAnswer));
+  const qVal = parseInt(document.getElementById('answerInput').value);
+  if (isNaN(qVal)) return;
+  if (currentMode === 'remainderdiv') {
+    const rVal = parseInt(document.getElementById('remainderInput').value);
+    if (isNaN(rVal)) { document.getElementById('remainderInput').focus(); return; }
+    total++;
+    const ok = qVal === currentAnswer && rVal === currentRemainder;
+    ok ? (correct++, showFeedback(true))
+       : (wrong++,   showFeedback(false, currentAnswer, currentRemainder));
+  } else {
+    total++;
+    qVal === currentAnswer ? (correct++, showFeedback(true))
+                           : (wrong++,  showFeedback(false, currentAnswer));
+  }
   updateScore();
-  const delay = currentMode === 'longdivide' ? 2800 : 1400;
+  const delay = (currentMode === 'longdivide' || currentMode === 'remainderdiv') ? 2800 : 1400;
   setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
 }
 
-function showFeedback(ok,ans) {
+function showFeedback(ok, ans, rem) {
   const fb=document.getElementById('feedback');
   fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
   document.getElementById('feedbackIcon').textContent=ok?'✅':'❌';
-  document.getElementById('feedbackText').textContent=ok?'Correct! Great job!':`Not quite — the answer was ${fmtN(ans)}`;
+  let msg = ok ? 'Correct! Great job!' : `Not quite — the answer was ${fmtN(ans)}`;
+  if (!ok && rem !== undefined) msg += ` remainder ${fmtN(rem)}`;
+  document.getElementById('feedbackText').textContent = msg;
 }
 function hideFeedback() { document.getElementById('feedback').className='feedback'; }
 function updateScore()  { document.getElementById('correctCount').textContent=correct; document.getElementById('wrongCount').textContent=wrong; document.getElementById('totalCount').textContent=total; }
@@ -1572,6 +1678,7 @@ setTheme('light','orange');
 buildDigitGrids();
 buildDivisorGrid();
 buildLongDivGrid();
+buildRemainderDivGrid();
 </script>
 </body>
 </html>
