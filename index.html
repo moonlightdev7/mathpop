@@ -769,6 +769,18 @@
   .ach-toast-icon { font-size: 1.6rem; flex-shrink: 0; }
   .ach-toast-text { font-weight: 800; font-size: 0.85rem; color: var(--text); }
   .ach-toast-sub  { font-size: 0.75rem; color: var(--muted); }
+
+  /* Title chooser */
+  .title-item { cursor: default; }
+  .title-equipped { border-color: var(--primary) !important; background: color-mix(in srgb, var(--primary) 8%, var(--bg)) !important; }
+  .equip-btn {
+    padding: 6px 14px; border-radius: 20px; border: 2px solid var(--primary);
+    background: transparent; color: var(--primary);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.78rem;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .equip-btn:hover { background: var(--primary); color: white; }
+  .equip-btn.equipped { background: var(--primary); color: white; }
 </style>
 </head>
 <body>
@@ -1034,9 +1046,10 @@
     <div class="ach-list" id="achSecretList"></div>
   </div>
 
-  <!-- Titles earned -->
-  <div class="ach-section" id="achTitlesSection" style="display:none">
-    <h3>👑 Your Titles</h3>
+  <!-- Title chooser -->
+  <div class="ach-section" id="achTitlesSection">
+    <h3>👑 Choose Your Title</h3>
+    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to show a title on your rank banner. Tap again to go back to auto.</p>
     <div class="ach-list" id="achTitlesList"></div>
   </div>
 </div>
@@ -2475,11 +2488,12 @@ let achData = {
   xp: 0,
   stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
   totalCorrect: 0,
-  earned: [],       // achievement IDs already awarded
+  earned: [],          // achievement IDs already awarded
   maxStreak: 0,
   perfectSession: false,
   comebackKid: false,
   sessionTotal: 0,
+  equippedTitle: null, // null = auto (highest rank reached); otherwise a title ID
 };
 let currentStreak  = 0;
 let wrongStreak    = 0; // consecutive wrongs for comeback kid tracking
@@ -2495,17 +2509,44 @@ function getNextRank(xp) {
   return RANKS.find(r => r.xp > xp) || null;
 }
 
+// Returns the rank/title object currently displayed (respects equipped choice)
+function getDisplayRank() {
+  const auto = getRank(achData.xp);
+  const eq   = achData.equippedTitle;
+  if (!eq) return auto;
+  if (eq.startsWith('rank_')) {
+    const idx = parseInt(eq.split('_')[1]);
+    return RANKS[idx] || auto;
+  }
+  if (eq.startsWith('secret_')) {
+    const qId = eq.replace('secret_', '');
+    const q = SECRET_QUESTS.find(q => q.id === qId);
+    if (q) return { emoji: q.emoji, title: q.name, sub: '✨ Secret title' };
+  }
+  return auto;
+}
+
+// Equip a title by ID ('rank_3', 'secret_speed_demon', or null for auto)
+function equipTitle(titleId) {
+  achData.equippedTitle = titleId;
+  saveAchievements();
+  updateRankBanner();
+  renderAchievementScreen();
+}
+
 function updateRankBanner() {
-  const xp   = achData.xp;
-  const rank = getRank(xp);
-  const next = getNextRank(xp);
-  const banner = document.getElementById('rankBanner');
+  const xp      = achData.xp;
+  const display = getDisplayRank();
+  const autoRank = getRank(xp);
+  const next    = getNextRank(xp);
+  const banner  = document.getElementById('rankBanner');
   if (!banner) return;
   banner.classList.add('visible');
-  document.getElementById('rankBannerEmoji').textContent = rank.emoji;
-  document.getElementById('rankBannerTitle').textContent = rank.title;
+  document.getElementById('rankBannerEmoji').textContent = display.emoji;
+  document.getElementById('rankBannerTitle').textContent = display.title;
   document.getElementById('rankBannerXp').textContent    = `${xp.toLocaleString()} XP`;
-  const pct = next ? Math.min(100, Math.round(((xp - rank.xp) / (next.xp - rank.xp)) * 100)) : 100;
+  // Progress bar always shows real XP progress to next rank
+  const pct = next ? Math.min(100, Math.round(((xp - autoRank.xp) / (next.xp - autoRank.xp)) * 100)) : 100;
   document.getElementById('rankBannerFill').style.width  = pct + '%';
 }
 
@@ -2585,9 +2626,25 @@ function saveAchievements() {
 }
 
 function loadAchievements(data) {
-  if (data) {
-    achData = { ...achData, ...data };
-    if (!achData.stats) achData.stats = { multiply:0,shortdivide:0,longdivide:0,remainderdiv:0,add:0,subtract:0 };
+  if (!data) return;
+  // Take the best values — never let stale cloud data roll back local progress
+  achData.xp           = Math.max(achData.xp,           data.xp           || 0);
+  achData.totalCorrect = Math.max(achData.totalCorrect,  data.totalCorrect || 0);
+  achData.maxStreak    = Math.max(achData.maxStreak,     data.maxStreak    || 0);
+  // Union of earned arrays — keep everything from both sources
+  const combined = new Set([...achData.earned, ...(data.earned || [])]);
+  achData.earned = Array.from(combined);
+  // Merge per-mode stats (take higher of each)
+  const remoteStats = data.stats || {};
+  Object.keys(achData.stats).forEach(k => {
+    achData.stats[k] = Math.max(achData.stats[k] || 0, remoteStats[k] || 0);
+  });
+  // Boolean flags — once true, always true
+  achData.perfectSession = achData.perfectSession || !!data.perfectSession;
+  achData.comebackKid    = achData.comebackKid    || !!data.comebackKid;
+  // Equipped title — trust the remote value if we don't have one locally
+  if (!achData.equippedTitle && data.equippedTitle) {
+    achData.equippedTitle = data.equippedTitle;
   }
 }
 window.loadAchievements = (data) => { loadAchievements(data); updateRankBanner(); };
@@ -2617,19 +2674,21 @@ function hideAchievements() {
 }
 
 function renderAchievementScreen() {
-  const xp   = achData.xp;
-  const rank = getRank(xp);
-  const next = getNextRank(xp);
+  const xp      = achData.xp;
+  const autoRank = getRank(xp);
+  const display  = getDisplayRank();
+  const next     = getNextRank(xp);
 
-  document.getElementById('achRankEmoji').textContent = rank.emoji;
-  document.getElementById('achRankTitle').textContent = rank.title;
-  document.getElementById('achRankSub').textContent   = rank.sub;
+  // Rank card shows equipped title
+  document.getElementById('achRankEmoji').textContent = display.emoji;
+  document.getElementById('achRankTitle').textContent = display.title;
+  document.getElementById('achRankSub').textContent   = display.sub || '';
   document.getElementById('achXpBig').textContent     = `${xp.toLocaleString()} XP`;
 
   if (next) {
-    const pct = Math.min(100, Math.round(((xp - rank.xp) / (next.xp - rank.xp)) * 100));
+    const pct = Math.min(100, Math.round(((xp - autoRank.xp) / (next.xp - autoRank.xp)) * 100));
     document.getElementById('achXpBar').style.width   = pct + '%';
-    document.getElementById('achXpLabel').textContent = `${(xp - rank.xp).toLocaleString()} / ${(next.xp - rank.xp).toLocaleString()} XP to "${next.title}"`;
+    document.getElementById('achXpLabel').textContent = `${(xp - autoRank.xp).toLocaleString()} / ${(next.xp - autoRank.xp).toLocaleString()} XP to "${next.title}"`;
   } else {
     document.getElementById('achXpBar').style.width   = '100%';
     document.getElementById('achXpLabel').textContent = 'MAX RANK — you are transcendent.';
@@ -2682,19 +2741,69 @@ function renderAchievementScreen() {
     sList.appendChild(div);
   }
 
-  // Titles section (show only earned secret quests names as titles)
-  const earnedSecrets = SECRET_QUESTS.filter(q => achData.earned.includes('secret_' + q.id));
+  // ── Title Chooser ──
   const titlesSection = document.getElementById('achTitlesSection');
-  titlesSection.style.display = earnedSecrets.length ? 'block' : 'none';
+  titlesSection.style.display = 'block';
   const tList = document.getElementById('achTitlesList');
   tList.innerHTML = '';
-  earnedSecrets.forEach(q => {
+
+  // All rank titles the user has reached
+  const unlockedRanks = RANKS.filter(r => xp >= r.xp);
+  unlockedRanks.forEach((r, i) => {
+    const titleId   = `rank_${RANKS.indexOf(r)}`;
+    const isEquipped = achData.equippedTitle === titleId ||
+                       (!achData.equippedTitle && r === autoRank);
     const div = document.createElement('div');
-    div.className = 'ach-item secret earned';
-    div.innerHTML = `<div class="ach-icon">${q.emoji}</div>
-      <div class="ach-info"><div class="ach-name">${q.name}</div><div class="ach-desc">Rare title earned</div></div>`;
+    div.className = 'ach-item title-item' + (isEquipped ? ' title-equipped' : '');
+    div.innerHTML = `
+      <div class="ach-icon">${r.emoji}</div>
+      <div class="ach-info">
+        <div class="ach-name">${r.title}</div>
+        <div class="ach-desc">${r.sub}</div>
+      </div>
+      <button class="equip-btn ${isEquipped ? 'equipped' : ''}"
+        onclick="equipTitle('${isEquipped && achData.equippedTitle ? 'null' : titleId}')">
+        ${isEquipped ? '✓ Equipped' : 'Equip'}
+      </button>`;
     tList.appendChild(div);
   });
+
+  // Secret quest titles the user has earned
+  const earnedSecrets = SECRET_QUESTS.filter(q => achData.earned.includes('secret_' + q.id));
+  if (earnedSecrets.length) {
+    const hdr = document.createElement('div');
+    hdr.className = 'mk-group';
+    hdr.style.cssText = 'margin: 12px 0 6px; padding: 0;';
+    hdr.textContent = '✨ Secret Titles';
+    tList.appendChild(hdr);
+    earnedSecrets.forEach(q => {
+      const titleId   = `secret_${q.id}`;
+      const isEquipped = achData.equippedTitle === titleId;
+      const div = document.createElement('div');
+      div.className = 'ach-item secret earned title-item' + (isEquipped ? ' title-equipped' : '');
+      div.innerHTML = `
+        <div class="ach-icon">${q.emoji}</div>
+        <div class="ach-info">
+          <div class="ach-name">${q.name}</div>
+          <div class="ach-desc">✨ Rare secret title</div>
+        </div>
+        <button class="equip-btn ${isEquipped ? 'equipped' : ''}"
+          onclick="equipTitle('${isEquipped ? 'null' : titleId}')">
+          ${isEquipped ? '✓ Equipped' : 'Equip'}
+        </button>`;
+      tList.appendChild(div);
+    });
+  }
+
+  if (!unlockedRanks.length) {
+    tList.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:10px">Keep earning XP to unlock titles!</div>';
+  }
+}
+
+// Handle 'null' string from onclick (can't pass actual null in inline handlers)
+const _equipTitle = equipTitle;
+function equipTitle(titleId) {
+  _equipTitle(titleId === 'null' ? null : titleId);
 }
 
 // Init
