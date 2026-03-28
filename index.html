@@ -2526,9 +2526,9 @@ function getDisplayRank() {
   return auto;
 }
 
-// Equip a title by ID ('rank_3', 'secret_speed_demon', or null for auto)
+// Equip a title by ID ('rank_3', 'secret_speed_demon', null for auto, or 'null' string from onclick)
 function equipTitle(titleId) {
-  achData.equippedTitle = titleId;
+  achData.equippedTitle = (titleId === 'null' || titleId === null) ? null : titleId;
   saveAchievements();
   updateRankBanner();
   renderAchievementScreen();
@@ -2649,13 +2649,12 @@ function loadAchievements(data) {
 }
 window.loadAchievements = (data) => { loadAchievements(data); updateRankBanner(); };
 
-// Try loading from localStorage on boot
+// Try loading from localStorage on boot, then refresh banner
 try {
   const saved = localStorage.getItem('mathpop_ach');
   if (saved) loadAchievements(JSON.parse(saved));
 } catch(e){}
-// Show banner after short delay (DOM ready)
-setTimeout(updateRankBanner, 100);
+setTimeout(updateRankBanner, 50);
 
 function showAchievements() {
   // hide whatever screen is visible
@@ -2671,6 +2670,7 @@ function showAchievements() {
 function hideAchievements() {
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
+  updateRankBanner();
 }
 
 function renderAchievementScreen() {
@@ -2798,12 +2798,6 @@ function renderAchievementScreen() {
   if (!unlockedRanks.length) {
     tList.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:10px">Keep earning XP to unlock titles!</div>';
   }
-}
-
-// Handle 'null' string from onclick (can't pass actual null in inline handlers)
-const _equipTitle = equipTitle;
-function equipTitle(titleId) {
-  _equipTitle(titleId === 'null' ? null : titleId);
 }
 
 // Init
