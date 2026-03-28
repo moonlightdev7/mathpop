@@ -249,23 +249,6 @@
   }
   .modal-signin-gate strong { color: var(--text); }
 
-  /* save theme btn */
-  .save-theme-btn {
-    display: block;
-    margin: 12px auto 0;
-    padding: 7px 20px;
-    border-radius: 20px;
-    border: 2px solid var(--primary);
-    background: transparent;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 0.82rem;
-    color: var(--primary);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .save-theme-btn:hover { background: var(--primary); color: white; }
-
   /* paypal containers */
   .paypal-container { margin-top: 12px; }
   .paypal-or {
@@ -533,7 +516,6 @@
           <button class="reset-btn" onclick="resetColors()">↺ Reset</button>
         </div>
       </div>
-      <button class="save-theme-btn" id="saveThemeBtn" onclick="saveCurrentTheme()">💾 Save Theme</button>
     </div>
   </div>
 
@@ -702,33 +684,6 @@ function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
 }
 
-function saveCurrentTheme() {
-  const btn = document.getElementById('saveThemeBtn');
-  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-
-  // Always save to localStorage so refresh works for everyone
-  persistThemeLocally(currentTheme);
-
-  if (!isSignedIn || !window.saveTheme) {
-    if (btn) {
-      const orig = btn.textContent;
-      btn.textContent = '🔒 Sign in to sync across devices';
-      setTimeout(() => { btn.textContent = orig; }, 2500);
-    }
-    return;
-  }
-
-  // Also sync to Firestore for cross-device use
-  window.saveTheme(currentTheme).then(() => {
-    if (btn) {
-      const orig = btn.textContent;
-      btn.textContent = '✓ Saved!';
-      btn.style.borderColor = 'var(--correct)';
-      btn.style.color = 'var(--correct)';
-      setTimeout(() => { btn.textContent = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
-    }
-  }).catch(e => console.error('Theme sync failed', e));
-}
 
 function setTheme(mode, color) {
   applyThemeVars(mode === 'dark' ? DARK[color] : LIGHT[color]);
