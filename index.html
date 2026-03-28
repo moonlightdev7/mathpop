@@ -343,6 +343,58 @@
   .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--primary-shadow); }
   .start-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--primary-shadow); }
   .start-btn:disabled { background: var(--border); box-shadow: 0 4px 0 #ccc; cursor: not-allowed; color: var(--muted); }
+  .tutorial-link-btn {
+    display: block; width: 100%; margin-top: 12px; padding: 12px;
+    background: transparent; color: var(--primary);
+    border: 2px solid var(--primary); border-radius: 16px;
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .tutorial-link-btn:hover { background: var(--primary); color: #fff; }
+
+  /* ── TUTORIAL SCREEN ── */
+  #tutorial-screen {
+    display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
+  }
+  .tutorial-back-btn {
+    background: transparent; border: none; color: var(--primary);
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    cursor: pointer; padding: 8px 0; margin-bottom: 16px;
+  }
+  .tutorial-back-btn:hover { text-decoration: underline; }
+  .tutorial-title {
+    font-family: 'Fredoka One', cursive; font-size: 2rem;
+    color: var(--primary); text-align: center; margin-bottom: 24px;
+  }
+  .tutorial-section {
+    background: var(--card); border-radius: 20px;
+    padding: 24px; margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
+  }
+  .tutorial-section h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+    color: var(--primary); margin: 0 0 12px 0;
+  }
+  .tutorial-section p {
+    color: var(--text); font-size: 0.95rem; line-height: 1.6;
+    margin: 0 0 14px 0;
+  }
+  .video-wrapper {
+    position: relative; padding-bottom: 56.25%; height: 0;
+    overflow: hidden; border-radius: 12px; background: var(--bg);
+    border: 2px dashed var(--border);
+  }
+  .video-wrapper iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border: none; border-radius: 12px;
+  }
+  .video-placeholder {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 10px; color: var(--muted);
+  }
+  .video-placeholder span { font-size: 2.5rem; }
+  .video-placeholder p { font-size: 0.9rem; margin: 0; font-style: italic; }
 
   /* ── GAME ── */
   #game-screen { display: none; max-width: 480px; margin: 0 auto; }
@@ -685,16 +737,78 @@
   <!-- ── ADD SETUP ── -->
   <div id="setup-add" style="display:none">
     <p class="section-label">Number Sizes</p>
-    <div class="digit-grid" id="addDigitGrid"></div>
+    <div class="digit-grid digit-grid-sm" id="addDigitGrid"></div>
   </div>
 
   <!-- ── SUBTRACT SETUP ── -->
   <div id="setup-subtract" style="display:none">
     <p class="section-label">Number Sizes</p>
-    <div class="digit-grid" id="subtractDigitGrid"></div>
+    <div class="digit-grid digit-grid-sm" id="subtractDigitGrid"></div>
   </div>
 
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
+  <button class="tutorial-link-btn" onclick="showTutorials()">🎬 Watch Tutorials</button>
+</div>
+
+<!-- ── TUTORIAL ── -->
+<div id="tutorial-screen">
+  <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Practice</button>
+  <div class="tutorial-title">🎬 Tutorials</div>
+
+  <div class="tutorial-section">
+    <h3>✖️ Multiplication</h3>
+    <p>Learn how to use the multiplication practice mode — from choosing your tables to mastering your facts!</p>
+    <div class="video-wrapper" id="video-multiply">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-section">
+    <h3>➗ Short Division</h3>
+    <p>Master short division by picking your divisors and working through problems quickly in your head.</p>
+    <div class="video-wrapper" id="video-shortdivide">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-section">
+    <h3>📐 Long Division</h3>
+    <p>Tackle long division step by step! Use the scratch pad to work through bigger problems.</p>
+    <div class="video-wrapper" id="video-longdivide">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-section">
+    <h3>➕ Addition</h3>
+    <p>Build your addition speed from single digits all the way up to 10-digit numbers!</p>
+    <div class="video-wrapper" id="video-add">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-section">
+    <h3>➖ Subtraction</h3>
+    <p>Practice subtraction at every level — choose your number sizes and sharpen your skills.</p>
+    <div class="video-wrapper" id="video-subtract">
+      <div class="video-placeholder">
+        <span>🎬</span>
+        <p>Tutorial video coming soon!</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── GAME ── -->
@@ -1117,27 +1231,22 @@ const selectedLongDiv  = new Set();
 
 function fmtN(n) { return n.toLocaleString('en-US'); }
 
-const DIGIT_CONFIGS = [
-  { id:'1+1',   addLabel:'1-digit + 1-digit',   subLabel:'1-digit − 1-digit',   aMin:1,          aMax:9,          bMin:1,          bMax:9          },
-  { id:'2+1',   addLabel:'2-digit + 1-digit',   subLabel:'2-digit − 1-digit',   aMin:10,         aMax:99,         bMin:1,          bMax:9          },
-  { id:'2+2',   addLabel:'2-digit + 2-digit',   subLabel:'2-digit − 2-digit',   aMin:10,         aMax:99,         bMin:10,         bMax:99         },
-  { id:'3+2',   addLabel:'3-digit + 2-digit',   subLabel:'3-digit − 2-digit',   aMin:100,        aMax:999,        bMin:10,         bMax:99         },
-  { id:'3+3',   addLabel:'3-digit + 3-digit',   subLabel:'3-digit − 3-digit',   aMin:100,        aMax:999,        bMin:100,        bMax:999        },
-  { id:'4+3',   addLabel:'4-digit + 3-digit',   subLabel:'4-digit − 3-digit',   aMin:1000,       aMax:9999,       bMin:100,        bMax:999        },
-  { id:'4+4',   addLabel:'4-digit + 4-digit',   subLabel:'4-digit − 4-digit',   aMin:1000,       aMax:9999,       bMin:1000,       bMax:9999       },
-  { id:'5+4',   addLabel:'5-digit + 4-digit',   subLabel:'5-digit − 4-digit',   aMin:10000,      aMax:99999,      bMin:1000,       bMax:9999       },
-  { id:'5+5',   addLabel:'5-digit + 5-digit',   subLabel:'5-digit − 5-digit',   aMin:10000,      aMax:99999,      bMin:10000,      bMax:99999      },
-  { id:'6+5',   addLabel:'6-digit + 5-digit',   subLabel:'6-digit − 5-digit',   aMin:100000,     aMax:999999,     bMin:10000,      bMax:99999      },
-  { id:'6+6',   addLabel:'6-digit + 6-digit',   subLabel:'6-digit − 6-digit',   aMin:100000,     aMax:999999,     bMin:100000,     bMax:999999     },
-  { id:'7+6',   addLabel:'7-digit + 6-digit',   subLabel:'7-digit − 6-digit',   aMin:1000000,    aMax:9999999,    bMin:100000,     bMax:999999     },
-  { id:'7+7',   addLabel:'7-digit + 7-digit',   subLabel:'7-digit − 7-digit',   aMin:1000000,    aMax:9999999,    bMin:1000000,    bMax:9999999    },
-  { id:'8+7',   addLabel:'8-digit + 7-digit',   subLabel:'8-digit − 7-digit',   aMin:10000000,   aMax:99999999,   bMin:1000000,    bMax:9999999    },
-  { id:'8+8',   addLabel:'8-digit + 8-digit',   subLabel:'8-digit − 8-digit',   aMin:10000000,   aMax:99999999,   bMin:10000000,   bMax:99999999   },
-  { id:'9+8',   addLabel:'9-digit + 8-digit',   subLabel:'9-digit − 8-digit',   aMin:100000000,  aMax:999999999,  bMin:10000000,   bMax:99999999   },
-  { id:'9+9',   addLabel:'9-digit + 9-digit',   subLabel:'9-digit − 9-digit',   aMin:100000000,  aMax:999999999,  bMin:100000000,  bMax:999999999  },
-  { id:'10+9',  addLabel:'10-digit + 9-digit',  subLabel:'10-digit − 9-digit',  aMin:1000000000, aMax:9999999999, bMin:100000000,  bMax:999999999  },
-  { id:'10+10', addLabel:'10-digit + 10-digit', subLabel:'10-digit − 10-digit', aMin:1000000000, aMax:9999999999, bMin:1000000000, bMax:9999999999 },
-];
+// Generate every combo: larger number 1–10 digits, smaller number 1–larger digits
+const DIGIT_CONFIGS = [];
+for (let aDigs = 1; aDigs <= 10; aDigs++) {
+  for (let bDigs = 1; bDigs <= aDigs; bDigs++) {
+    const aMin = aDigs === 1 ? 1 : Math.pow(10, aDigs - 1);
+    const aMax = Math.pow(10, aDigs) - 1;
+    const bMin = bDigs === 1 ? 1 : Math.pow(10, bDigs - 1);
+    const bMax = Math.pow(10, bDigs) - 1;
+    DIGIT_CONFIGS.push({
+      id: `${aDigs}+${bDigs}`,
+      addLabel: `${aDigs}-digit + ${bDigs}-digit`,
+      subLabel: `${aDigs}-digit − ${bDigs}-digit`,
+      aMin, aMax, bMin, bMax,
+    });
+  }
+}
 
 // Generate every combo: dividend digits 2–10, divisor digits 1–dividendDigs
 const LONG_DIV_CONFIGS = [];
@@ -1382,6 +1491,16 @@ function playAgain() {
   document.getElementById('end-screen').style.display='none';
   document.getElementById('setup-screen').style.display='block';
   document.getElementById('whiteboardWrap').style.display='none';
+}
+
+// ── TUTORIALS ──
+function showTutorials() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('tutorial-screen').style.display = 'block';
+}
+function hideTutorials() {
+  document.getElementById('tutorial-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
 }
 
 // ── WHITEBOARD ──
