@@ -132,7 +132,23 @@
     margin-bottom: 4px;
     transition: color 0.3s;
   }
-  .subtitle { text-align: center; color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
+  .subtitle { text-align: center; color: var(--muted); font-size: 0.95rem; margin-bottom: 10px; }
+  /* ── RANK BANNER ── */
+  .rank-banner {
+    display: none; align-items: center; justify-content: center; gap: 10px;
+    background: var(--card); border-radius: 16px; padding: 10px 20px;
+    margin: 0 auto 16px; width: fit-content; max-width: 100%;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+    border: 2px solid var(--border); transition: background 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .rank-banner.visible { display: flex; }
+  .rank-banner-emoji { font-size: 1.5rem; line-height: 1; }
+  .rank-banner-info { display: flex; flex-direction: column; gap: 2px; }
+  .rank-banner-title { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--primary); line-height: 1; }
+  .rank-banner-xp { font-size: 0.72rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+  .rank-banner-bar { width: 90px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .rank-banner-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--correct)); transition: width 0.5s ease; }
 
   /* ── THEME TOGGLE ── */
   .theme-toggle-btn {
@@ -575,12 +591,82 @@
     display: none; margin-bottom: 8px;
   }
   .wb-text-area.active { display: block; }
+
+  /* Formula type tabs */
+  .formula-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .formula-tab {
+    padding: 5px 14px; border-radius: 20px; border: 2px solid var(--border);
+    background: var(--card); font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.8rem; color: var(--muted); cursor: pointer; transition: all 0.15s;
+  }
+  .formula-tab.active { border-color: var(--primary); color: var(--primary); background: var(--bg); }
+
+  /* Formula builder panels */
+  .formula-panel { display: none; margin-bottom: 10px; }
+  .formula-panel.active { display: block; }
+
+  /* Plain text panel */
   .wb-text-input {
     width: 100%; padding: 10px 14px; border: 2px solid var(--primary);
     border-radius: 12px; font-size: 1.2rem; font-family: 'Nunito', sans-serif;
     font-weight: 700; color: var(--text); background: var(--input-bg, #fff);
     outline: none; box-sizing: border-box; margin-bottom: 8px;
   }
+
+  /* Visual formula builders */
+  .formula-builder {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--bg); border-radius: 14px; padding: 14px;
+    border: 2px solid var(--border); margin-bottom: 10px;
+  }
+  .formula-preview {
+    display: flex; align-items: center; gap: 4px;
+    font-family: 'Fredoka One', cursive; flex: 1; flex-wrap: wrap;
+  }
+  /* Fraction */
+  .frac-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
+  .frac-bar { width: 100%; height: 3px; background: var(--text); border-radius: 2px; }
+  .frac-input {
+    width: 70px; padding: 5px 8px; border: 2px solid var(--border);
+    border-radius: 8px; font-size: 1rem; font-weight: 700; text-align: center;
+    font-family: 'Nunito', sans-serif; color: var(--text); background: var(--card);
+    outline: none; box-sizing: border-box;
+  }
+  .frac-input:focus { border-color: var(--primary); }
+  /* Power */
+  .power-wrap { display: inline-flex; align-items: flex-start; gap: 2px; }
+  .power-base, .power-exp {
+    padding: 5px 8px; border: 2px solid var(--border); border-radius: 8px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--text);
+    background: var(--card); outline: none; box-sizing: border-box;
+  }
+  .power-base { width: 70px; font-size: 1.1rem; text-align: center; }
+  .power-exp  { width: 50px; font-size: 0.8rem; text-align: center; margin-top: -8px; }
+  /* Square root */
+  .sqrt-wrap { display: inline-flex; align-items: center; gap: 0; }
+  .sqrt-sym { font-size: 2rem; font-family: serif; line-height: 1; }
+  .sqrt-content-wrap { display: flex; flex-direction: column; }
+  .sqrt-overline { height: 3px; background: var(--text); border-radius: 2px; margin-bottom: 2px; }
+  .sqrt-radicand {
+    width: 90px; padding: 5px 8px; border: 2px solid var(--border);
+    border-radius: 0 8px 8px 0; font-size: 1rem; font-weight: 700; text-align: center;
+    font-family: 'Nunito', sans-serif; color: var(--text); background: var(--card);
+    outline: none; box-sizing: border-box;
+  }
+  .sqrt-radicand:focus { border-color: var(--primary); }
+  /* Log */
+  .log-wrap { display: inline-flex; align-items: flex-end; gap: 2px; }
+  .log-label { font-size: 1.1rem; font-weight: 800; font-family: 'Nunito', sans-serif; color: var(--text); }
+  .log-sub { font-size: 0.75rem; font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--muted); padding-bottom: 2px; }
+  .log-base-inp, .log-arg-inp {
+    padding: 5px 8px; border: 2px solid var(--border); border-radius: 8px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--text);
+    background: var(--card); outline: none; text-align: center;
+  }
+  .log-base-inp { width: 40px; font-size: 0.8rem; }
+  .log-arg-inp  { width: 70px; font-size: 1rem; }
+  .formula-lbl { font-size: 0.85rem; font-weight: 800; color: var(--muted); white-space: nowrap; }
+
   .wb-stamp-btn {
     padding: 7px 18px; border-radius: 10px; border: none;
     background: var(--primary); color: white;
@@ -588,6 +674,10 @@
     cursor: pointer; transition: opacity 0.15s;
   }
   .wb-stamp-btn:hover { opacity: 0.85; }
+
+  /* Move mode */
+  .wb-btn.move-on { border-color: #6b21a8; color: #6b21a8; background: var(--bg); }
+
   .math-keyboard {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 5px; margin-top: 8px; max-height: 200px; overflow-y: auto;
@@ -770,6 +860,16 @@
 <div id="setup-screen">
   <h1><span id="modeEmoji">✖️</span> Mathpop</h1>
   <p class="subtitle" id="modeSubtitle">Pick your tables and start practicing!</p>
+
+  <!-- Rank banner — click to open achievements -->
+  <div class="rank-banner" id="rankBanner" onclick="showAchievements()" title="View Achievements">
+    <div class="rank-banner-emoji" id="rankBannerEmoji">🧮</div>
+    <div class="rank-banner-info">
+      <div class="rank-banner-title" id="rankBannerTitle">Math Newbie</div>
+      <div class="rank-banner-xp" id="rankBannerXp">0 XP</div>
+    </div>
+    <div class="rank-banner-bar"><div class="rank-banner-fill" id="rankBannerFill" style="width:0%"></div></div>
+  </div>
 
   <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
     🎨 Customize Theme <span class="arrow">▼</span>
@@ -1058,20 +1158,87 @@
       </select>
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
-      <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear</button>
+      <button class="wb-btn" id="wbMoveBtn" onclick="toggleWbMove()">✋ Move</button>
+      <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
     </div>
-    <!-- Text input mode -->
+    <!-- Text / Formula input mode -->
     <div class="wb-text-area" id="wbTextArea">
-      <input type="text" class="wb-text-input" id="wbTextInput" placeholder="Type math here… then stamp to board ↓" autocomplete="off"/>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-        <button class="wb-stamp-btn" onclick="stampText()">✏️ Stamp to Board</button>
+      <!-- Formula type tabs -->
+      <div class="formula-tabs">
+        <button class="formula-tab active" onclick="setFormulaTab('text',this)">✏️ Text</button>
+        <button class="formula-tab" onclick="setFormulaTab('frac',this)">½ Fraction</button>
+        <button class="formula-tab" onclick="setFormulaTab('sqrt',this)">√ Root</button>
+        <button class="formula-tab" onclick="setFormulaTab('power',this)">xⁿ Power</button>
+        <button class="formula-tab" onclick="setFormulaTab('log',this)">log Log</button>
+      </div>
+
+      <!-- Plain text -->
+      <div class="formula-panel active" id="fp-text">
+        <input type="text" class="wb-text-input" id="wbTextInput" placeholder="Type math here… e.g. 2x + 5 = 13" autocomplete="off"/>
+      </div>
+
+      <!-- Fraction: numerator / denominator -->
+      <div class="formula-panel" id="fp-frac">
+        <div class="formula-builder">
+          <span class="formula-lbl">Fraction:</span>
+          <div class="frac-wrap">
+            <input class="frac-input" id="fracNum" placeholder="top" autocomplete="off"/>
+            <div class="frac-bar"></div>
+            <input class="frac-input" id="fracDen" placeholder="bottom" autocomplete="off"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Square root -->
+      <div class="formula-panel" id="fp-sqrt">
+        <div class="formula-builder">
+          <span class="formula-lbl">Root:</span>
+          <input class="frac-input" id="sqrtIndex" placeholder="n" title="Leave blank for square root" autocomplete="off" style="width:40px"/>
+          <div class="sqrt-wrap">
+            <span class="sqrt-sym">√</span>
+            <div class="sqrt-content-wrap" style="flex:1">
+              <div class="sqrt-overline"></div>
+              <input class="sqrt-radicand" id="sqrtContent" placeholder="radicand" autocomplete="off"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Power / exponent -->
+      <div class="formula-panel" id="fp-power">
+        <div class="formula-builder">
+          <span class="formula-lbl">Power:</span>
+          <div class="power-wrap">
+            <input class="power-base" id="powerBase" placeholder="base" autocomplete="off"/>
+            <input class="power-exp"  id="powerExp"  placeholder="exp" autocomplete="off"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log / ln -->
+      <div class="formula-panel" id="fp-log">
+        <div class="formula-builder">
+          <span class="formula-lbl">Log:</span>
+          <div class="log-wrap">
+            <span class="log-label">log</span>
+            <input class="log-base-inp" id="logBase" placeholder="b" title="base (blank = log₁₀)" autocomplete="off"/>
+          </div>
+          <span style="font-size:1.2rem;font-weight:800;color:var(--text)">(</span>
+          <input class="log-arg-inp" id="logArg" placeholder="x" autocomplete="off"/>
+          <span style="font-size:1.2rem;font-weight:800;color:var(--text)">)</span>
+        </div>
+      </div>
+
+      <!-- Controls row -->
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+        <button class="wb-stamp-btn" onclick="stampFormula()">✏️ Stamp to Board</button>
         <select class="wb-select" id="wbFontSize">
           <option value="20">Small</option>
           <option value="28" selected>Medium</option>
           <option value="38">Large</option>
           <option value="52">XL</option>
         </select>
-        <button class="wb-btn" onclick="resetStampY()" title="Reset stamp position to top">↑ Reset</button>
+        <button class="wb-btn" onclick="clearTextLayer()" title="Clear all stamped text (keeps drawings)">🗑️ Clear Text</button>
       </div>
       <div class="math-keyboard" id="mathKeyboard">
         <div class="mk-group">Numbers &amp; Basics</div>
@@ -1211,7 +1378,10 @@
         <button class="mk-key wide" onclick="mkInsert('ln(')">ln(</button>
       </div>
     </div>
-    <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
+    <div style="position:relative">
+      <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
+      <canvas id="textCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;touch-action:none;cursor:crosshair"></canvas>
+    </div>
   </div>
   <button class="stop-btn" onclick="stopGame()">⏹ Stop &amp; See Results</button>
 </div>
@@ -1957,27 +2127,43 @@ function hideTutorials() {
 // ── WHITEBOARD ──
 let wbDrawing = false, wbLastX = 0, wbLastY = 0, wbInitialized = false;
 
+// Text object system for move mode
+let textObjects  = [];  // {id, lines, x, y, sz, col, type}
+let wbMoveMode   = false;
+let dragObj      = null, dragOffX = 0, dragOffY = 0;
+let nextObjId    = 0;
+let selectedObj  = null; // currently selected for highlight
+
 function initWhiteboard() {
   const canvas = document.getElementById('whiteboardCanvas');
-  // Set actual pixel dimensions
-  canvas.width  = canvas.offsetWidth  || 440;
-  canvas.height = canvas.offsetHeight || 220;
+  canvas.width  = canvas.offsetWidth  || 700;
+  canvas.height = canvas.offsetHeight || 400;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const tc = document.getElementById('textCanvas');
+  tc.width  = canvas.width;
+  tc.height = canvas.height;
+
   if (wbInitialized) return;
   wbInitialized = true;
 
-  function getPos(e) {
+  // ── Drawing on the bottom canvas ──
+  function getDrawPos(e) {
     const rect = canvas.getBoundingClientRect();
     const src  = e.touches ? e.touches[0] : e;
     return { x: (src.clientX - rect.left) * (canvas.width / rect.width),
              y: (src.clientY - rect.top)  * (canvas.height / rect.height) };
   }
-  function startDraw(e) { e.preventDefault(); wbDrawing = true; const p = getPos(e); wbLastX = p.x; wbLastY = p.y; }
+  function startDraw(e) {
+    if (wbMoveMode) return;
+    e.preventDefault(); wbDrawing = true;
+    const p = getDrawPos(e); wbLastX = p.x; wbLastY = p.y;
+  }
   function draw(e) {
-    if (!wbDrawing) return; e.preventDefault();
-    const p = getPos(e);
+    if (!wbDrawing || wbMoveMode) return; e.preventDefault();
+    const p = getDrawPos(e);
     const ctx2 = canvas.getContext('2d');
     ctx2.beginPath(); ctx2.moveTo(wbLastX, wbLastY); ctx2.lineTo(p.x, p.y);
     const erasing = document.getElementById('wbEraserBtn').classList.contains('eraser-on');
@@ -1994,12 +2180,150 @@ function initWhiteboard() {
   canvas.addEventListener('touchstart', startDraw, { passive: false });
   canvas.addEventListener('touchmove',  draw,      { passive: false });
   canvas.addEventListener('touchend',   endDraw);
+
+  // ── Move/select on the top (text) canvas ──
+  function getTcPos(e) {
+    const rect = tc.getBoundingClientRect();
+    const src  = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * (tc.width / rect.width),
+             y: (src.clientY - rect.top)  * (tc.height / rect.height) };
+  }
+  function hitTest(p) {
+    // iterate in reverse so top-drawn objects win
+    for (let i = textObjects.length - 1; i >= 0; i--) {
+      const obj = textObjects[i];
+      const tcCtx = tc.getContext('2d');
+      tcCtx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+      const maxW = Math.max(...obj.lines.map(l => tcCtx.measureText(l).width));
+      const totalH = obj.lines.length * (obj.sz + 6);
+      if (p.x >= obj.x - 10 && p.x <= obj.x + maxW + 10 &&
+          p.y >= obj.y - 10 && p.y <= obj.y + totalH + 10) return obj;
+    }
+    return null;
+  }
+  function tcMouseDown(e) {
+    if (!wbMoveMode) return;
+    e.preventDefault();
+    const p = getTcPos(e);
+    const hit = hitTest(p);
+    if (hit) {
+      dragObj = hit; selectedObj = hit;
+      dragOffX = p.x - hit.x; dragOffY = p.y - hit.y;
+    } else {
+      selectedObj = null; dragObj = null;
+    }
+    redrawTextLayer();
+  }
+  function tcMouseMove(e) {
+    if (!wbMoveMode) return;
+    e.preventDefault();
+    if (!dragObj) return;
+    const p = getTcPos(e);
+    dragObj.x = Math.max(0, p.x - dragOffX);
+    dragObj.y = Math.max(0, p.y - dragOffY);
+    redrawTextLayer();
+  }
+  function tcMouseUp() { dragObj = null; }
+  tc.addEventListener('mousedown',  tcMouseDown);
+  tc.addEventListener('mousemove',  tcMouseMove);
+  tc.addEventListener('mouseup',    tcMouseUp);
+  tc.addEventListener('mouseleave', tcMouseUp);
+  tc.addEventListener('touchstart', tcMouseDown, { passive: false });
+  tc.addEventListener('touchmove',  tcMouseMove, { passive: false });
+  tc.addEventListener('touchend',   tcMouseUp);
+}
+
+function redrawTextLayer() {
+  const tc  = document.getElementById('textCanvas');
+  if (!tc.width) return;
+  const ctx = tc.getContext('2d');
+  ctx.clearRect(0, 0, tc.width, tc.height);
+  for (const obj of textObjects) {
+    const isSelected = (obj === selectedObj && wbMoveMode);
+    if (isSelected) {
+      // draw selection box
+      ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+      const maxW = Math.max(...obj.lines.map(l => ctx.measureText(l).width));
+      const totalH = obj.lines.length * (obj.sz + 6);
+      ctx.strokeStyle = '#6b21a8'; ctx.lineWidth = 2;
+      ctx.setLineDash([5, 3]);
+      ctx.strokeRect(obj.x - 6, obj.y - 6, maxW + 12, totalH + 12);
+      ctx.setLineDash([]);
+    }
+    renderTextObj(ctx, obj);
+  }
+}
+
+function renderTextObj(ctx, obj) {
+  ctx.fillStyle = obj.col;
+  ctx.textBaseline = 'top';
+  ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+  if (obj.type === 'text') {
+    obj.lines.forEach((line, i) => ctx.fillText(line, obj.x, obj.y + i * (obj.sz + 6)));
+  } else if (obj.type === 'frac') {
+    const [num, den] = obj.lines;
+    const numW = ctx.measureText(num).width;
+    const denW = ctx.measureText(den).width;
+    const barW = Math.max(numW, denW) + 16;
+    const cx   = obj.x + barW / 2;
+    ctx.fillText(num, cx - numW / 2, obj.y);
+    ctx.fillRect(obj.x, obj.y + obj.sz + 6, barW, 3);
+    ctx.fillText(den, cx - denW / 2, obj.y + obj.sz + 14);
+  } else if (obj.type === 'sqrt') {
+    const [index, radicand] = obj.lines;
+    const smallSz = Math.round(obj.sz * 0.65);
+    const contentW = ctx.measureText(radicand).width;
+    let ox = obj.x;
+    if (index && index !== '2') {
+      ctx.font = `bold ${smallSz}px Nunito, sans-serif`;
+      ctx.fillText(index, ox, obj.y + 4);
+      ox += ctx.measureText(index).width + 2;
+      ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+    }
+    ctx.font = `bold ${obj.sz}px serif`;
+    const symW = ctx.measureText('√').width;
+    ctx.fillText('√', ox, obj.y);
+    ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+    ctx.fillRect(ox + symW, obj.y, contentW + 8, 3);
+    ctx.fillText(radicand, ox + symW + 4, obj.y + 4);
+  } else if (obj.type === 'power') {
+    const [base, exp] = obj.lines;
+    const smallSz = Math.round(obj.sz * 0.65);
+    ctx.fillText(base, obj.x, obj.y);
+    const baseW = ctx.measureText(base).width;
+    ctx.font = `bold ${smallSz}px Nunito, sans-serif`;
+    ctx.fillText(exp, obj.x + baseW + 2, obj.y);
+  } else if (obj.type === 'log') {
+    const [base, arg] = obj.lines;
+    const smallSz = Math.round(obj.sz * 0.65);
+    ctx.fillText('log', obj.x, obj.y);
+    const logW = ctx.measureText('log').width;
+    if (base) {
+      ctx.font = `bold ${smallSz}px Nunito, sans-serif`;
+      ctx.fillText(base, obj.x + logW + 1, obj.y + obj.sz * 0.4);
+      const subW = ctx.measureText(base).width;
+      ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
+      ctx.fillText(`(${arg})`, obj.x + logW + subW + 4, obj.y);
+    } else {
+      ctx.fillText(`(${arg})`, obj.x + logW + 2, obj.y);
+    }
+  }
+}
+
+function addTextObject(type, lines, sz, col) {
+  const tc = document.getElementById('textCanvas');
+  // default position: next free y slot, avoid crowding
+  const lastY = textObjects.length ? textObjects[textObjects.length - 1].y + sz * 2 + 20 : 30;
+  const y = lastY > tc.height - sz * 3 ? 30 : lastY;
+  textObjects.push({ id: nextObjId++, type, lines, x: 14, y, sz, col });
+  redrawTextLayer();
 }
 
 function toggleEraser() {
   const btn = document.getElementById('wbEraserBtn');
   const on = btn.classList.toggle('eraser-on');
   btn.textContent = on ? '✏️ Pen' : '🧹 Eraser';
+  if (on) setMoveOff();
 }
 
 function clearWhiteboard() {
@@ -2008,10 +2332,23 @@ function clearWhiteboard() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  textObjects = []; selectedObj = null; redrawTextLayer();
+}
+
+function clearTextLayer() {
+  textObjects = []; selectedObj = null; redrawTextLayer();
 }
 
 // ── WHITEBOARD TYPE MODE ──
-let wbStampY = 40; // y position for next stamped line
+let activeFormulaTab = 'text';
+
+function setFormulaTab(tab, btn) {
+  activeFormulaTab = tab;
+  document.querySelectorAll('.formula-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.formula-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fp-' + tab).classList.add('active');
+}
 
 function toggleWbType() {
   const btn  = document.getElementById('wbTypeBtn');
@@ -2019,7 +2356,36 @@ function toggleWbType() {
   const on   = area.classList.toggle('active');
   btn.classList.toggle('eraser-on', on);
   btn.textContent = on ? '✏️ Draw' : '⌨️ Type';
-  if (on) document.getElementById('wbTextInput').focus();
+  if (on) { setMoveOff(); document.getElementById('wbTextInput').focus(); }
+}
+
+function setMoveOff() {
+  wbMoveMode = false; dragObj = null; selectedObj = null;
+  const btn = document.getElementById('wbMoveBtn');
+  btn.classList.remove('move-on');
+  btn.textContent = '✋ Move';
+  const tc = document.getElementById('textCanvas');
+  if (tc) tc.style.cursor = 'default';
+  redrawTextLayer();
+}
+
+function toggleWbMove() {
+  wbMoveMode = !wbMoveMode;
+  const btn = document.getElementById('wbMoveBtn');
+  btn.classList.toggle('move-on', wbMoveMode);
+  btn.textContent = wbMoveMode ? '✏️ Draw' : '✋ Move';
+  const tc = document.getElementById('textCanvas');
+  if (tc) tc.style.cursor = wbMoveMode ? 'grab' : 'default';
+  if (wbMoveMode) {
+    // turn off eraser and type mode when entering move mode
+    const area = document.getElementById('wbTextArea');
+    if (area.classList.contains('active')) {
+      area.classList.remove('active');
+      document.getElementById('wbTypeBtn').classList.remove('eraser-on');
+      document.getElementById('wbTypeBtn').textContent = '⌨️ Type';
+    }
+  }
+  if (!wbMoveMode) { selectedObj = null; redrawTextLayer(); }
 }
 
 function mkInsert(sym) {
@@ -2030,25 +2396,32 @@ function mkInsert(sym) {
   inp.focus();
 }
 
-function stampText() {
-  const inp  = document.getElementById('wbTextInput');
-  const text = inp.value.trim();
-  if (!text) return;
-  const canvas = document.getElementById('whiteboardCanvas');
-  const ctx    = canvas.getContext('2d');
-  const sz     = parseInt(document.getElementById('wbFontSize').value) || 28;
-  const col    = document.getElementById('wbColor').value;
-  ctx.font      = `bold ${sz}px Nunito, sans-serif`;
-  ctx.fillStyle = col;
-  ctx.textBaseline = 'top';
-  if (wbStampY + sz > canvas.height - 10) wbStampY = 10; // wrap to top
-  ctx.fillText(text, 12, wbStampY);
-  wbStampY += sz + 8;
-  inp.value = '';
-  inp.focus();
+function stampFormula() {
+  const sz  = parseInt(document.getElementById('wbFontSize').value) || 28;
+  const col = document.getElementById('wbColor').value;
+  if (activeFormulaTab === 'text') {
+    const inp  = document.getElementById('wbTextInput');
+    const text = inp.value.trim(); if (!text) return;
+    addTextObject('text', [text], sz, col);
+    inp.value = ''; inp.focus();
+  } else if (activeFormulaTab === 'frac') {
+    const num = document.getElementById('fracNum').value.trim() || '□';
+    const den = document.getElementById('fracDen').value.trim() || '□';
+    addTextObject('frac', [num, den], sz, col);
+  } else if (activeFormulaTab === 'sqrt') {
+    const idx = document.getElementById('sqrtIndex').value.trim();
+    const rad = document.getElementById('sqrtContent').value.trim() || '□';
+    addTextObject('sqrt', [idx || '2', rad], sz, col);
+  } else if (activeFormulaTab === 'power') {
+    const base = document.getElementById('powerBase').value.trim() || '□';
+    const exp  = document.getElementById('powerExp').value.trim()  || '□';
+    addTextObject('power', [base, exp], sz, col);
+  } else if (activeFormulaTab === 'log') {
+    const base = document.getElementById('logBase').value.trim();
+    const arg  = document.getElementById('logArg').value.trim()  || '□';
+    addTextObject('log', [base, arg], sz, col);
+  }
 }
-
-function resetStampY() { wbStampY = 40; }
 
 // ── ACHIEVEMENTS ──
 const RANKS = [
@@ -2122,9 +2495,24 @@ function getNextRank(xp) {
   return RANKS.find(r => r.xp > xp) || null;
 }
 
+function updateRankBanner() {
+  const xp   = achData.xp;
+  const rank = getRank(xp);
+  const next = getNextRank(xp);
+  const banner = document.getElementById('rankBanner');
+  if (!banner) return;
+  banner.classList.add('visible');
+  document.getElementById('rankBannerEmoji').textContent = rank.emoji;
+  document.getElementById('rankBannerTitle').textContent = rank.title;
+  document.getElementById('rankBannerXp').textContent    = `${xp.toLocaleString()} XP`;
+  const pct = next ? Math.min(100, Math.round(((xp - rank.xp) / (next.xp - rank.xp)) * 100)) : 100;
+  document.getElementById('rankBannerFill').style.width  = pct + '%';
+}
+
 function awardXP(amount, reason, icon) {
   achData.xp += amount;
   saveAchievements();
+  updateRankBanner();
   showAchToast(icon || '⭐', `+${amount} XP`, reason);
 }
 
@@ -2202,13 +2590,15 @@ function loadAchievements(data) {
     if (!achData.stats) achData.stats = { multiply:0,shortdivide:0,longdivide:0,remainderdiv:0,add:0,subtract:0 };
   }
 }
-window.loadAchievements = loadAchievements;
+window.loadAchievements = (data) => { loadAchievements(data); updateRankBanner(); };
 
 // Try loading from localStorage on boot
 try {
   const saved = localStorage.getItem('mathpop_ach');
   if (saved) loadAchievements(JSON.parse(saved));
 } catch(e){}
+// Show banner after short delay (DOM ready)
+setTimeout(updateRankBanner, 100);
 
 function showAchievements() {
   // hide whatever screen is visible
