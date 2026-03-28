@@ -1594,6 +1594,7 @@ let currentTheme = { mode: 'light', color: 'orange' };
 
 function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
+  if (window.saveTheme) window.saveTheme(t).catch(()=>{});
 }
 
 
@@ -2915,8 +2916,14 @@ function renderAchievementScreen() {
   }
 }
 
-// Init
-setTheme('light','orange');
+// Init — only apply default theme if nothing is saved
+(function() {
+  try {
+    const saved = localStorage.getItem('mathpop_theme');
+    if (saved) { window.applyThemeFromFirestore(JSON.parse(saved)); return; }
+  } catch(e) {}
+  setTheme('light','orange'); // fallback default
+})();
 buildDigitGrids();
 buildDivisorGrid();
 buildLongDivGrid();
