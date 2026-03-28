@@ -2786,12 +2786,15 @@ function loadAchievements(data) {
     achData.equippedTitle = data.equippedTitle;
   }
 }
-window.loadAchievements = (data, uid) => {
+window.loadAchievements = (data) => {
   loadAchievements(data);
   updateRankBanner();
+  // If achievements screen is open, refresh it so rank/XP shows immediately
+  const achScreen = document.getElementById('achievement-screen');
+  if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
   // Write merged result back to user-keyed localStorage for instant load next time
-  const key = uid ? 'mathpop_ach_' + uid : 'mathpop_ach';
-  try { localStorage.setItem(key, JSON.stringify(achData)); } catch(e) {}
+  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : 'mathpop_ach';
+  try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e) {}
 };
 window.updateRankBanner = updateRankBanner;
 window.getAchData = () => achData;
@@ -2801,22 +2804,13 @@ window.resetToGuest = function() {
   achData = freshAchData();
   currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
   updateRankBanner();
+  // If achievements screen is open, re-render it with default state
+  const achScreen = document.getElementById('achievement-screen');
+  if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
 };
 
-// Try loading from localStorage on boot, then refresh banner
-try {
-  // Don't pre-load localStorage — wait for Firebase auth to confirm sign-in status.
-  // This prevents showing stale XP briefly before the guest reset kicks in.
-} catch(e){}
-// Show a "loading" state in the banner while Firebase resolves auth (~200-500ms)
-(function() {
-  const banner = document.getElementById('rankBanner');
-  if (banner) banner.classList.add('visible');
-  const t = document.getElementById('rankBannerTitle');
-  const x = document.getElementById('rankBannerXp');
-  if (t) t.textContent = '…';
-  if (x) x.textContent = 'Loading';
-})();
+// Show default state immediately — Firebase will update it once auth resolves
+updateRankBanner();
 
 // Save to user-keyed localStorage on page close/refresh (only if signed in)
 window.addEventListener('beforeunload', () => {
