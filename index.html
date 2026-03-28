@@ -1507,6 +1507,7 @@
   };
 
   onAuthStateChanged(auth, async (user) => {
+    const prevUserId = window.currentUserId;
     window.currentUserId = user ? user.uid : null;
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
@@ -1523,6 +1524,12 @@
         } else if (window.updateRankBanner) {
           // No localStorage yet — still clear the loading state with defaults
           window.updateRankBanner();
+        }
+
+        // Step 1b: Restore user's theme instantly from user-keyed localStorage (before Firestore)
+        const lsTheme = localStorage.getItem('mathpop_theme_' + user.uid);
+        if (lsTheme && window.applyThemeFromFirestore) {
+          window.applyThemeFromFirestore(JSON.parse(lsTheme));
         }
 
         // Step 2: Fetch Firestore (source of truth) and merge on top
@@ -1548,6 +1555,8 @@
       } catch(e) { console.error('Firestore error', e); }
 
     } else {
+      // Save current theme to user-keyed key before resetting (prevUserId still valid here)
+      if (prevUserId && window.saveThemeForUser) window.saveThemeForUser(prevUserId);
       document.getElementById('signedOut').style.display = 'flex';
       document.getElementById('signedIn').style.display  = 'none';
       if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
@@ -1613,6 +1622,9 @@ let currentTheme = { mode: 'light', color: 'orange' };
 
 function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
+  if (window.currentUserId) {
+    try { localStorage.setItem('mathpop_theme_' + window.currentUserId, JSON.stringify(t)); } catch(e) {}
+  }
   if (window.saveTheme) window.saveTheme(t).catch(()=>{});
 }
 
@@ -1694,17 +1706,9 @@ window.lockNeon = function() {
 window.lockPremiumOnSignOut = function() {
   window.lockWheel();
   window.lockNeon();
-  // If a premium theme is active, revert to the free default
-  try {
-    const saved = localStorage.getItem('mathpop_theme');
-    if (saved) {
-      const t = JSON.parse(saved);
-      if (t.mode === 'neon' || t.mode === 'custom') {
-        localStorage.removeItem('mathpop_theme');
-        setTheme('light', 'orange');
-      }
-    }
-  } catch(e) {}
+  // Always reset to default theme on sign-out (user theme is already saved to user-keyed key)
+  try { localStorage.removeItem('mathpop_theme'); } catch(e) {}
+  setTheme('light', 'orange');
 };
 
 window.unlockWheel = function(silent = false) {
@@ -2794,6 +2798,10 @@ window.loadAchievements = (data) => {
 };
 window.updateRankBanner = updateRankBanner;
 window.getAchData = () => achData;
+window.saveThemeForUser = function(userId) {
+  if (!userId) return;
+  try { localStorage.setItem('mathpop_theme_' + userId, JSON.stringify(currentTheme)); } catch(e) {}
+};
 
 // Called on sign-out — wipe all progress from memory and show clean default state
 window.resetToGuest = function() {
@@ -2825,6 +2833,9 @@ window.addEventListener('beforeunload', () => {
   const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
   if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
   try { localStorage.setItem('mathpop_theme', JSON.stringify(currentTheme)); } catch(e){}
+  if (window.currentUserId) {
+    try { localStorage.setItem('mathpop_theme_' + window.currentUserId, JSON.stringify(currentTheme)); } catch(e){}
+  }
 });
 
 function showAchievements() {
