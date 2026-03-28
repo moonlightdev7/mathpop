@@ -569,6 +569,116 @@
     left: 50%;
     transform: translateX(-50%);
   }
+
+  /* ── WHITEBOARD TEXT MODE ── */
+  .wb-text-area {
+    display: none; margin-bottom: 8px;
+  }
+  .wb-text-area.active { display: block; }
+  .wb-text-input {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--primary);
+    border-radius: 12px; font-size: 1.2rem; font-family: 'Nunito', sans-serif;
+    font-weight: 700; color: var(--text); background: var(--input-bg, #fff);
+    outline: none; box-sizing: border-box; margin-bottom: 8px;
+  }
+  .wb-stamp-btn {
+    padding: 7px 18px; border-radius: 10px; border: none;
+    background: var(--primary); color: white;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .wb-stamp-btn:hover { opacity: 0.85; }
+  .math-keyboard {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 5px; margin-top: 8px; max-height: 200px; overflow-y: auto;
+    padding: 8px; background: var(--bg); border-radius: 12px;
+    border: 2px solid var(--border);
+  }
+  .mk-group { grid-column: 1 / -1; font-size: 0.65rem; font-weight: 800;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 2px 0; margin-top: 4px; }
+  .mk-key {
+    padding: 6px 4px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--card); font-size: 0.95rem; text-align: center;
+    cursor: pointer; transition: all 0.1s; color: var(--text);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+  }
+  .mk-key:hover { background: var(--primary); color: white; border-color: var(--primary); }
+  .mk-key.wide { grid-column: span 2; }
+
+  /* ── TROPHY / ACHIEVEMENTS ── */
+  .trophy-btn {
+    background: transparent; border: none; font-size: 1.3rem;
+    cursor: pointer; padding: 4px; border-radius: 10px;
+    transition: transform 0.15s; line-height: 1;
+  }
+  .trophy-btn:hover { transform: scale(1.2); }
+
+  #achievement-screen {
+    display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
+  }
+  .ach-back-btn {
+    background: transparent; border: none; color: var(--primary);
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    cursor: pointer; padding: 8px 0; margin-bottom: 16px;
+  }
+  .ach-back-btn:hover { text-decoration: underline; }
+
+  .rank-card {
+    background: var(--card); border-radius: 20px; padding: 24px;
+    text-align: center; margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .rank-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--correct));
+  }
+  .rank-emoji { font-size: 3rem; margin-bottom: 6px; }
+  .rank-title { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--primary); }
+  .rank-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; font-weight: 700; }
+  .xp-bar-wrap { background: var(--border); border-radius: 99px; height: 14px; overflow: hidden; margin-bottom: 6px; }
+  .xp-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--correct)); transition: width 0.6s ease; }
+  .xp-label { font-size: 0.8rem; color: var(--muted); font-weight: 700; }
+  .xp-big { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); }
+
+  .ach-section { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s; }
+  .ach-section h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); margin: 0 0 14px 0; }
+
+  .ach-list { display: flex; flex-direction: column; gap: 10px; }
+  .ach-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-radius: 14px; border: 2px solid var(--border);
+    background: var(--bg); transition: all 0.2s;
+  }
+  .ach-item.earned { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 10%, var(--bg)); }
+  .ach-item.secret { border-color: var(--primary); border-style: dashed; }
+  .ach-item.secret.earned { border-style: solid; border-color: gold; background: color-mix(in srgb, gold 12%, var(--bg)); }
+  .ach-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .ach-info { flex: 1; }
+  .ach-name { font-weight: 800; font-size: 0.9rem; color: var(--text); }
+  .ach-desc { font-size: 0.78rem; color: var(--muted); }
+  .ach-xp { font-family: 'Fredoka One', cursive; font-size: 0.85rem; color: var(--primary); flex-shrink: 0; }
+  .ach-item.earned .ach-xp::after { content: ' ✓'; color: var(--correct); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-box { background: var(--bg); border-radius: 12px; padding: 12px; text-align: center; border: 2px solid var(--border); }
+  .stat-num { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--primary); }
+  .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 800; text-transform: uppercase; }
+
+  /* Toast notification for new achievement */
+  .ach-toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--card); border: 2px solid var(--correct);
+    border-radius: 16px; padding: 12px 20px; z-index: 999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18); display: flex; align-items: center;
+    gap: 10px; transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none; max-width: 340px; text-align: left;
+  }
+  .ach-toast.show { transform: translateX(-50%) translateY(0); }
+  .ach-toast-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .ach-toast-text { font-weight: 800; font-size: 0.85rem; color: var(--text); }
+  .ach-toast-sub  { font-size: 0.75rem; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -582,10 +692,17 @@
     </button>
   </div>
   <div id="signedIn">
+    <button class="trophy-btn" id="trophyBtn" onclick="showAchievements()" title="Achievements">🏆</button>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar">
     <span class="user-name" id="userName"></span>
     <button class="signout-btn" onclick="signOut()">Sign out</button>
   </div>
+</div>
+
+<!-- ── ACHIEVEMENT TOAST ── -->
+<div class="ach-toast" id="achToast">
+  <div class="ach-toast-icon" id="achToastIcon">🏅</div>
+  <div><div class="ach-toast-text" id="achToastText"></div><div class="ach-toast-sub" id="achToastSub"></div></div>
 </div>
 
 <!-- ── MODALS ── -->
@@ -776,6 +893,54 @@
   <button class="tutorial-link-btn" onclick="showTutorials()">🎬 Watch Tutorials</button>
 </div>
 
+<!-- ── ACHIEVEMENTS ── -->
+<div id="achievement-screen">
+  <button class="ach-back-btn" onclick="hideAchievements()">← Back</button>
+
+  <!-- Rank card -->
+  <div class="rank-card">
+    <div class="rank-emoji" id="achRankEmoji">🧮</div>
+    <div class="rank-title" id="achRankTitle">Math Newbie</div>
+    <div class="rank-subtitle" id="achRankSub">Keep going!</div>
+    <div class="xp-big" id="achXpBig">0 XP</div>
+    <div class="xp-bar-wrap" style="margin-top:10px">
+      <div class="xp-bar-fill" id="achXpBar" style="width:0%"></div>
+    </div>
+    <div class="xp-label" id="achXpLabel">0 / 50 XP to next rank</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="ach-section">
+    <h3>📊 Your Stats</h3>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-num" id="statMultiply">0</div><div class="stat-label">✖️ Multiply</div></div>
+      <div class="stat-box"><div class="stat-num" id="statShort">0</div><div class="stat-label">➗ Short ÷</div></div>
+      <div class="stat-box"><div class="stat-num" id="statLong">0</div><div class="stat-label">📐 Long ÷</div></div>
+      <div class="stat-box"><div class="stat-num" id="statRemainder">0</div><div class="stat-label">📐R ÷ R</div></div>
+      <div class="stat-box"><div class="stat-num" id="statAdd">0</div><div class="stat-label">➕ Add</div></div>
+      <div class="stat-box"><div class="stat-num" id="statSubtract">0</div><div class="stat-label">➖ Subtract</div></div>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="ach-section">
+    <h3>🎯 Milestones</h3>
+    <div class="ach-list" id="achMilestoneList"></div>
+  </div>
+
+  <!-- Secret Quests -->
+  <div class="ach-section">
+    <h3>🔮 Secret Quests</h3>
+    <div class="ach-list" id="achSecretList"></div>
+  </div>
+
+  <!-- Titles earned -->
+  <div class="ach-section" id="achTitlesSection" style="display:none">
+    <h3>👑 Your Titles</h3>
+    <div class="ach-list" id="achTitlesList"></div>
+  </div>
+</div>
+
 <!-- ── TUTORIAL ── -->
 <div id="tutorial-screen">
   <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Practice</button>
@@ -892,7 +1057,159 @@
         <option value="8">Thick</option>
       </select>
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
+      <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear</button>
+    </div>
+    <!-- Text input mode -->
+    <div class="wb-text-area" id="wbTextArea">
+      <input type="text" class="wb-text-input" id="wbTextInput" placeholder="Type math here… then stamp to board ↓" autocomplete="off"/>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <button class="wb-stamp-btn" onclick="stampText()">✏️ Stamp to Board</button>
+        <select class="wb-select" id="wbFontSize">
+          <option value="20">Small</option>
+          <option value="28" selected>Medium</option>
+          <option value="38">Large</option>
+          <option value="52">XL</option>
+        </select>
+        <button class="wb-btn" onclick="resetStampY()" title="Reset stamp position to top">↑ Reset</button>
+      </div>
+      <div class="math-keyboard" id="mathKeyboard">
+        <div class="mk-group">Numbers &amp; Basics</div>
+        <button class="mk-key" onclick="mkInsert('0')">0</button>
+        <button class="mk-key" onclick="mkInsert('1')">1</button>
+        <button class="mk-key" onclick="mkInsert('2')">2</button>
+        <button class="mk-key" onclick="mkInsert('3')">3</button>
+        <button class="mk-key" onclick="mkInsert('4')">4</button>
+        <button class="mk-key" onclick="mkInsert('5')">5</button>
+        <button class="mk-key" onclick="mkInsert('6')">6</button>
+        <button class="mk-key" onclick="mkInsert('7')">7</button>
+        <button class="mk-key" onclick="mkInsert('8')">8</button>
+        <button class="mk-key" onclick="mkInsert('9')">9</button>
+        <button class="mk-key" onclick="mkInsert('.')">.</button>
+        <button class="mk-key" onclick="mkInsert(','">,</button>
+        <div class="mk-group">Operators</div>
+        <button class="mk-key" onclick="mkInsert('+')">+</button>
+        <button class="mk-key" onclick="mkInsert('−')">−</button>
+        <button class="mk-key" onclick="mkInsert('×')">×</button>
+        <button class="mk-key" onclick="mkInsert('÷')">÷</button>
+        <button class="mk-key" onclick="mkInsert('=')"> =</button>
+        <button class="mk-key" onclick="mkInsert('≠')">≠</button>
+        <button class="mk-key" onclick="mkInsert('±')">±</button>
+        <button class="mk-key" onclick="mkInsert('(')"> (</button>
+        <button class="mk-key" onclick="mkInsert(')')">)</button>
+        <button class="mk-key" onclick="mkInsert('[')"> [</button>
+        <button class="mk-key" onclick="mkInsert(']')">]</button>
+        <button class="mk-key" onclick="mkInsert('{')"> {</button>
+        <button class="mk-key" onclick="mkInsert('}')">}</button>
+        <button class="mk-key" onclick="mkInsert('/')">/</button>
+        <div class="mk-group">Comparison</div>
+        <button class="mk-key" onclick="mkInsert('<')"> &lt;</button>
+        <button class="mk-key" onclick="mkInsert('>')"> &gt;</button>
+        <button class="mk-key" onclick="mkInsert('≤')">≤</button>
+        <button class="mk-key" onclick="mkInsert('≥')">≥</button>
+        <button class="mk-key" onclick="mkInsert('≈')">≈</button>
+        <button class="mk-key" onclick="mkInsert('∞')">∞</button>
+        <div class="mk-group">Powers &amp; Roots</div>
+        <button class="mk-key" onclick="mkInsert('²')">x²</button>
+        <button class="mk-key" onclick="mkInsert('³')">x³</button>
+        <button class="mk-key" onclick="mkInsert('⁰')">x⁰</button>
+        <button class="mk-key" onclick="mkInsert('¹')">x¹</button>
+        <button class="mk-key" onclick="mkInsert('⁴')">x⁴</button>
+        <button class="mk-key" onclick="mkInsert('⁵')">x⁵</button>
+        <button class="mk-key" onclick="mkInsert('⁶')">x⁶</button>
+        <button class="mk-key" onclick="mkInsert('⁷')">x⁷</button>
+        <button class="mk-key" onclick="mkInsert('⁸')">x⁸</button>
+        <button class="mk-key" onclick="mkInsert('⁹')">x⁹</button>
+        <button class="mk-key" onclick="mkInsert('ⁿ')">xⁿ</button>
+        <button class="mk-key" onclick="mkInsert('√')">√</button>
+        <button class="mk-key" onclick="mkInsert('∛')">∛</button>
+        <button class="mk-key" onclick="mkInsert('∜')">∜</button>
+        <div class="mk-group">Fractions</div>
+        <button class="mk-key" onclick="mkInsert('½')">½</button>
+        <button class="mk-key" onclick="mkInsert('⅓')">⅓</button>
+        <button class="mk-key" onclick="mkInsert('⅔')">⅔</button>
+        <button class="mk-key" onclick="mkInsert('¼')">¼</button>
+        <button class="mk-key" onclick="mkInsert('¾')">¾</button>
+        <button class="mk-key" onclick="mkInsert('⅕')">⅕</button>
+        <button class="mk-key" onclick="mkInsert('⅖')">⅖</button>
+        <button class="mk-key" onclick="mkInsert('⅗')">⅗</button>
+        <button class="mk-key" onclick="mkInsert('⅘')">⅘</button>
+        <button class="mk-key" onclick="mkInsert('⅙')">⅙</button>
+        <button class="mk-key" onclick="mkInsert('⅚')">⅚</button>
+        <button class="mk-key" onclick="mkInsert('⅛')">⅛</button>
+        <button class="mk-key" onclick="mkInsert('⅜')">⅜</button>
+        <button class="mk-key" onclick="mkInsert('⅝')">⅝</button>
+        <button class="mk-key" onclick="mkInsert('⅞')">⅞</button>
+        <div class="mk-group">Greek Letters</div>
+        <button class="mk-key" onclick="mkInsert('π')">π</button>
+        <button class="mk-key" onclick="mkInsert('θ')">θ</button>
+        <button class="mk-key" onclick="mkInsert('α')">α</button>
+        <button class="mk-key" onclick="mkInsert('β')">β</button>
+        <button class="mk-key" onclick="mkInsert('γ')">γ</button>
+        <button class="mk-key" onclick="mkInsert('δ')">δ</button>
+        <button class="mk-key" onclick="mkInsert('λ')">λ</button>
+        <button class="mk-key" onclick="mkInsert('μ')">μ</button>
+        <button class="mk-key" onclick="mkInsert('σ')">σ</button>
+        <button class="mk-key" onclick="mkInsert('φ')">φ</button>
+        <button class="mk-key" onclick="mkInsert('ω')">ω</button>
+        <button class="mk-key" onclick="mkInsert('Σ')">Σ</button>
+        <button class="mk-key" onclick="mkInsert('Δ')">Δ</button>
+        <button class="mk-key" onclick="mkInsert('Ω')">Ω</button>
+        <button class="mk-key" onclick="mkInsert('Π')">Π</button>
+        <div class="mk-group">Variables</div>
+        <button class="mk-key" onclick="mkInsert('x')">x</button>
+        <button class="mk-key" onclick="mkInsert('y')">y</button>
+        <button class="mk-key" onclick="mkInsert('z')">z</button>
+        <button class="mk-key" onclick="mkInsert('n')">n</button>
+        <button class="mk-key" onclick="mkInsert('a')">a</button>
+        <button class="mk-key" onclick="mkInsert('b')">b</button>
+        <button class="mk-key" onclick="mkInsert('c')">c</button>
+        <button class="mk-key" onclick="mkInsert('m')">m</button>
+        <button class="mk-key" onclick="mkInsert('r')">r</button>
+        <button class="mk-key" onclick="mkInsert('h')">h</button>
+        <div class="mk-group">Calculus &amp; Advanced</div>
+        <button class="mk-key" onclick="mkInsert('∫')">∫</button>
+        <button class="mk-key" onclick="mkInsert('∂')">∂</button>
+        <button class="mk-key" onclick="mkInsert('∑')">∑</button>
+        <button class="mk-key" onclick="mkInsert('∏')">∏</button>
+        <button class="mk-key" onclick="mkInsert('∇')">∇</button>
+        <button class="mk-key" onclick="mkInsert('∈')">∈</button>
+        <button class="mk-key" onclick="mkInsert('∉')">∉</button>
+        <button class="mk-key" onclick="mkInsert('⊂')">⊂</button>
+        <button class="mk-key" onclick="mkInsert('⊃')">⊃</button>
+        <button class="mk-key" onclick="mkInsert('∪')">∪</button>
+        <button class="mk-key" onclick="mkInsert('∩')">∩</button>
+        <button class="mk-key" onclick="mkInsert('∅')">∅</button>
+        <button class="mk-key" onclick="mkInsert('ℝ')">ℝ</button>
+        <button class="mk-key" onclick="mkInsert('ℤ')">ℤ</button>
+        <button class="mk-key" onclick="mkInsert('ℕ')">ℕ</button>
+        <div class="mk-group">Logic &amp; Proof</div>
+        <button class="mk-key" onclick="mkInsert('→')">→</button>
+        <button class="mk-key" onclick="mkInsert('←')">←</button>
+        <button class="mk-key" onclick="mkInsert('⟹')">⟹</button>
+        <button class="mk-key" onclick="mkInsert('⟺')">⟺</button>
+        <button class="mk-key" onclick="mkInsert('∴')">∴</button>
+        <button class="mk-key" onclick="mkInsert('∵')">∵</button>
+        <button class="mk-key" onclick="mkInsert('∧')">∧</button>
+        <button class="mk-key" onclick="mkInsert('∨')">∨</button>
+        <button class="mk-key" onclick="mkInsert('¬')">¬</button>
+        <button class="mk-key" onclick="mkInsert('∀')">∀</button>
+        <button class="mk-key" onclick="mkInsert('∃')">∃</button>
+        <div class="mk-group">Geometry &amp; Trig</div>
+        <button class="mk-key" onclick="mkInsert('°')">°</button>
+        <button class="mk-key" onclick="mkInsert('∠')">∠</button>
+        <button class="mk-key" onclick="mkInsert('△')">△</button>
+        <button class="mk-key" onclick="mkInsert('□')">□</button>
+        <button class="mk-key" onclick="mkInsert('⊥')">⊥</button>
+        <button class="mk-key" onclick="mkInsert('∥')">∥</button>
+        <button class="mk-key" onclick="mkInsert('≅')">≅</button>
+        <button class="mk-key" onclick="mkInsert('∼')">∼</button>
+        <button class="mk-key wide" onclick="mkInsert('sin(')">sin(</button>
+        <button class="mk-key wide" onclick="mkInsert('cos(')">cos(</button>
+        <button class="mk-key wide" onclick="mkInsert('tan(')">tan(</button>
+        <button class="mk-key wide" onclick="mkInsert('log(')">log(</button>
+        <button class="mk-key wide" onclick="mkInsert('ln(')">ln(</button>
+      </div>
     </div>
     <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
   </div>
@@ -946,6 +1263,12 @@
     await setDoc(doc(db, 'users', user.uid), { theme: themeData }, { merge: true });
   };
 
+  window.saveAchievementsCloud = async (achData) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    await setDoc(doc(db, 'users', user.uid), { achievements: achData }, { merge: true });
+  };
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
@@ -962,6 +1285,9 @@
           if (data.neonPack)   window.unlockNeon(true);
           if (data.theme && window.applyThemeFromFirestore) {
             window.applyThemeFromFirestore(data.theme);
+          }
+          if (data.achievements && window.loadAchievements) {
+            window.loadAchievements(data.achievements);
           }
         }
       } catch(e) { console.error('Firestore error', e); }
@@ -1489,6 +1815,10 @@ function updateStartBtn() {
 // ── GAME ──
 function startGame() {
   correct=0; wrong=0; total=0;
+  // Reset per-session achievement tracking
+  achData.sessionTotal = 0;
+  achData.perfectSession = false;
+  currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
   document.getElementById('game-screen').style.display='block';
@@ -1564,18 +1894,23 @@ function handleRemainderKey(e) { if(e.key==='Enter') checkAnswer(); }
 function checkAnswer() {
   const qVal = parseInt(document.getElementById('answerInput').value);
   if (isNaN(qVal)) return;
+  let ok = false;
   if (currentMode === 'remainderdiv') {
     const rVal = parseInt(document.getElementById('remainderInput').value);
     if (isNaN(rVal)) { document.getElementById('remainderInput').focus(); return; }
     total++;
-    const ok = qVal === currentAnswer && rVal === currentRemainder;
+    ok = qVal === currentAnswer && rVal === currentRemainder;
     ok ? (correct++, showFeedback(true))
        : (wrong++,   showFeedback(false, currentAnswer, currentRemainder));
   } else {
     total++;
-    qVal === currentAnswer ? (correct++, showFeedback(true))
-                           : (wrong++,  showFeedback(false, currentAnswer));
+    ok = qVal === currentAnswer;
+    ok ? (correct++, showFeedback(true))
+       : (wrong++,  showFeedback(false, currentAnswer));
   }
+  if (ok) onCorrectAnswer(); else onWrongAnswer();
+  // Check perfect session
+  if (total >= 20 && wrong === 0) achData.perfectSession = true;
   updateScore();
   const delay = (currentMode === 'longdivide' || currentMode === 'remainderdiv') ? 2800 : 1400;
   setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
@@ -1673,6 +2008,303 @@ function clearWhiteboard() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// ── WHITEBOARD TYPE MODE ──
+let wbStampY = 40; // y position for next stamped line
+
+function toggleWbType() {
+  const btn  = document.getElementById('wbTypeBtn');
+  const area = document.getElementById('wbTextArea');
+  const on   = area.classList.toggle('active');
+  btn.classList.toggle('eraser-on', on);
+  btn.textContent = on ? '✏️ Draw' : '⌨️ Type';
+  if (on) document.getElementById('wbTextInput').focus();
+}
+
+function mkInsert(sym) {
+  const inp = document.getElementById('wbTextInput');
+  const s = inp.selectionStart, e = inp.selectionEnd;
+  inp.value = inp.value.slice(0, s) + sym + inp.value.slice(e);
+  inp.selectionStart = inp.selectionEnd = s + sym.length;
+  inp.focus();
+}
+
+function stampText() {
+  const inp  = document.getElementById('wbTextInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  const canvas = document.getElementById('whiteboardCanvas');
+  const ctx    = canvas.getContext('2d');
+  const sz     = parseInt(document.getElementById('wbFontSize').value) || 28;
+  const col    = document.getElementById('wbColor').value;
+  ctx.font      = `bold ${sz}px Nunito, sans-serif`;
+  ctx.fillStyle = col;
+  ctx.textBaseline = 'top';
+  if (wbStampY + sz > canvas.height - 10) wbStampY = 10; // wrap to top
+  ctx.fillText(text, 12, wbStampY);
+  wbStampY += sz + 8;
+  inp.value = '';
+  inp.focus();
+}
+
+function resetStampY() { wbStampY = 40; }
+
+// ── ACHIEVEMENTS ──
+const RANKS = [
+  { xp:      0, emoji:'🧮', title:'Math Newbie',         sub:'Every legend starts somewhere!' },
+  { xp:     50, emoji:'📝', title:'Number Nudger',        sub:'Getting the hang of it!' },
+  { xp:    150, emoji:'🔢', title:'Digit Dabbler',        sub:'Numbers are your friends now.' },
+  { xp:    300, emoji:'➕', title:'Addition Adventurer',  sub:'You\'re on a roll!' },
+  { xp:    600, emoji:'✖️', title:'Multiply Maverick',    sub:'Tables? No problem.' },
+  { xp:   1000, emoji:'📐', title:'Division Detective',   sub:'You\'re investigating equations!' },
+  { xp:   1750, emoji:'🧩', title:'Equation Explorer',   sub:'The math world is opening up.' },
+  { xp:   2750, emoji:'💡', title:'Formula Fanatic',      sub:'You live for the formula.' },
+  { xp:   4000, emoji:'⚡', title:'Variable Victor',      sub:'Variables bow before you.' },
+  { xp:   6000, emoji:'🌟', title:'Theorem Tamer',        sub:'You tame theorems for fun.' },
+  { xp:   9000, emoji:'🔥', title:'Algebra Ace',          sub:'Algebra? Child\'s play.' },
+  { xp:  13000, emoji:'🎯', title:'Geometry Genius',      sub:'Every angle accounted for.' },
+  { xp:  18000, emoji:'🌊', title:'Calculus Crusader',    sub:'Limits? You\'re limitless.' },
+  { xp:  25000, emoji:'🏆', title:'Math Champion',        sub:'The podium is yours.' },
+  { xp:  35000, emoji:'👑', title:'Math Legend',          sub:'They write songs about you.' },
+  { xp:  50000, emoji:'✨', title:'Math God',             sub:'Mortals seek your counsel.' },
+  { xp:  75000, emoji:'🧠', title:'The Mathematician',   sub:'You ARE the math.' },
+  { xp: 100000, emoji:'🌌', title:'Math Transcendent',   sub:'Beyond numbers. Beyond time.' },
+];
+
+const MILESTONE_STEPS = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+const MILESTONE_MODES = [
+  { key:'multiply',    emoji:'✖️', label:'Multiply' },
+  { key:'shortdivide', emoji:'➗', label:'Short Divide' },
+  { key:'longdivide',  emoji:'📐', label:'Long Divide' },
+  { key:'remainderdiv',emoji:'📐R',label:'Long ÷ Remainders' },
+  { key:'add',         emoji:'➕', label:'Addition' },
+  { key:'subtract',    emoji:'➖', label:'Subtraction' },
+];
+
+const SECRET_QUESTS = [
+  { id:'grinder',      emoji:'🔥', name:'The Grinder',       desc:'Solve 1,000 total questions across any mode.',         xp:200, check: d => d.totalCorrect >= 1000 },
+  { id:'speed_demon',  emoji:'⚡', name:'Speed Demon',        desc:'Get 15 correct in a row without a single mistake.',     xp:150, check: d => d.maxStreak >= 15 },
+  { id:'perfectionist',emoji:'🎯', name:'The Perfectionist',  desc:'Finish a session with 20+ questions at 100% accuracy.', xp:200, check: d => d.perfectSession },
+  { id:'night_owl',    emoji:'🌙', name:'Night Owl',          desc:'Practice math between midnight and 4 AM.',              xp:100, check: () => { const h=new Date().getHours(); return h>=0&&h<4; } },
+  { id:'completionist',emoji:'🗺️', name:'The Completionist',  desc:'Use every single practice mode at least once.',        xp:250, check: d => Object.values(d.stats||{}).every(v=>v>0) },
+  { id:'remainder_royalty',emoji:'🔢',name:'Remainder Royalty',desc:'Solve 50 long division with remainder problems.',       xp:150, check: d => (d.stats?.remainderdiv||0) >= 50 },
+  { id:'long_hauler',  emoji:'📏', name:'Long Hauler',        desc:'Solve 100 long division problems.',                     xp:150, check: d => (d.stats?.longdivide||0) >= 100 },
+  { id:'comeback_kid', emoji:'💪', name:'Comeback Kid',       desc:'Get 10 correct in a row after getting 3 wrong.',        xp:175, check: d => d.comebackKid },
+  { id:'century_club', emoji:'💯', name:'Century Club',       desc:'Answer 100 questions in a single session.',             xp:200, check: d => d.sessionTotal >= 100 },
+  { id:'pi_day',       emoji:'π',  name:'Pi Day Pilgrim',     desc:'Practice math on March 14th.',                          xp:314, check: () => { const n=new Date(); return n.getMonth()===2&&n.getDate()===14; } },
+  { id:'all_modes_ace',emoji:'🌈', name:'Rainbow Mathematician',desc:'Get at least 10 correct in every single mode.',       xp:300, check: d => Object.values(d.stats||{}).every(v=>v>=10) },
+  { id:'mega_grinder', emoji:'💎', name:'Diamond Grinder',    desc:'Solve 10,000 total questions. A true legend.',          xp:1000, check: d => d.totalCorrect >= 10000 },
+];
+
+// In-memory achievement state (synced to Firestore)
+let achData = {
+  xp: 0,
+  stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
+  totalCorrect: 0,
+  earned: [],       // achievement IDs already awarded
+  maxStreak: 0,
+  perfectSession: false,
+  comebackKid: false,
+  sessionTotal: 0,
+};
+let currentStreak  = 0;
+let wrongStreak    = 0; // consecutive wrongs for comeback kid tracking
+let comingBack     = false;
+let comebackCount  = 0;
+
+function getRank(xp) {
+  let rank = RANKS[0];
+  for (const r of RANKS) { if (xp >= r.xp) rank = r; else break; }
+  return rank;
+}
+function getNextRank(xp) {
+  return RANKS.find(r => r.xp > xp) || null;
+}
+
+function awardXP(amount, reason, icon) {
+  achData.xp += amount;
+  saveAchievements();
+  showAchToast(icon || '⭐', `+${amount} XP`, reason);
+}
+
+function checkMilestones(mode) {
+  const count = achData.stats[mode];
+  for (const step of MILESTONE_STEPS) {
+    const id = `${mode}_${step}`;
+    if (count >= step && !achData.earned.includes(id)) {
+      achData.earned.push(id);
+      const m = MILESTONE_MODES.find(x => x.key === mode);
+      const xpGain = step;
+      achData.xp += xpGain;
+      saveAchievements();
+      showAchToast(m.emoji, `${m.label} × ${step}!`, `+${xpGain} XP earned`);
+    }
+  }
+}
+
+function checkSecrets() {
+  for (const q of SECRET_QUESTS) {
+    if (!achData.earned.includes('secret_' + q.id) && q.check(achData)) {
+      achData.earned.push('secret_' + q.id);
+      achData.xp += q.xp;
+      saveAchievements();
+      showAchToast(q.emoji, `Secret Quest: ${q.name}!`, `+${q.xp} XP — "${q.desc}"`);
+    }
+  }
+}
+
+function onCorrectAnswer() {
+  achData.xp += 1;
+  achData.totalCorrect++;
+  achData.sessionTotal++;
+  achData.stats[currentMode] = (achData.stats[currentMode] || 0) + 1;
+  currentStreak++;
+  wrongStreak = 0;
+  if (currentStreak > achData.maxStreak) achData.maxStreak = currentStreak;
+  // comeback kid
+  if (comingBack) {
+    comebackCount++;
+    if (comebackCount >= 10) { achData.comebackKid = true; comingBack = false; comebackCount = 0; }
+  }
+  checkMilestones(currentMode);
+  checkSecrets();
+  saveAchievements();
+}
+
+function onWrongAnswer() {
+  currentStreak = 0;
+  wrongStreak++;
+  if (wrongStreak >= 3) { comingBack = true; comebackCount = 0; }
+}
+
+let toastTimer = null;
+function showAchToast(icon, text, sub) {
+  const toast = document.getElementById('achToast');
+  document.getElementById('achToastIcon').textContent = icon;
+  document.getElementById('achToastText').textContent = text;
+  document.getElementById('achToastSub').textContent  = sub;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function saveAchievements() {
+  // localStorage for immediate persistence
+  try { localStorage.setItem('mathpop_ach', JSON.stringify(achData)); } catch(e){}
+  // Firestore if signed in
+  if (window.saveAchievementsCloud) window.saveAchievementsCloud(achData).catch(()=>{});
+}
+
+function loadAchievements(data) {
+  if (data) {
+    achData = { ...achData, ...data };
+    if (!achData.stats) achData.stats = { multiply:0,shortdivide:0,longdivide:0,remainderdiv:0,add:0,subtract:0 };
+  }
+}
+window.loadAchievements = loadAchievements;
+
+// Try loading from localStorage on boot
+try {
+  const saved = localStorage.getItem('mathpop_ach');
+  if (saved) loadAchievements(JSON.parse(saved));
+} catch(e){}
+
+function showAchievements() {
+  // hide whatever screen is visible
+  ['setup-screen','game-screen','end-screen','tutorial-screen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el._prevDisplay = el.style.display;
+  });
+  document.getElementById('achievement-screen').style.display = 'block';
+  document.getElementById('setup-screen').style.display = 'none';
+  renderAchievementScreen();
+}
+
+function hideAchievements() {
+  document.getElementById('achievement-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+}
+
+function renderAchievementScreen() {
+  const xp   = achData.xp;
+  const rank = getRank(xp);
+  const next = getNextRank(xp);
+
+  document.getElementById('achRankEmoji').textContent = rank.emoji;
+  document.getElementById('achRankTitle').textContent = rank.title;
+  document.getElementById('achRankSub').textContent   = rank.sub;
+  document.getElementById('achXpBig').textContent     = `${xp.toLocaleString()} XP`;
+
+  if (next) {
+    const pct = Math.min(100, Math.round(((xp - rank.xp) / (next.xp - rank.xp)) * 100));
+    document.getElementById('achXpBar').style.width   = pct + '%';
+    document.getElementById('achXpLabel').textContent = `${(xp - rank.xp).toLocaleString()} / ${(next.xp - rank.xp).toLocaleString()} XP to "${next.title}"`;
+  } else {
+    document.getElementById('achXpBar').style.width   = '100%';
+    document.getElementById('achXpLabel').textContent = 'MAX RANK — you are transcendent.';
+  }
+
+  // Stats
+  document.getElementById('statMultiply').textContent  = (achData.stats.multiply||0).toLocaleString();
+  document.getElementById('statShort').textContent     = (achData.stats.shortdivide||0).toLocaleString();
+  document.getElementById('statLong').textContent      = (achData.stats.longdivide||0).toLocaleString();
+  document.getElementById('statRemainder').textContent = (achData.stats.remainderdiv||0).toLocaleString();
+  document.getElementById('statAdd').textContent       = (achData.stats.add||0).toLocaleString();
+  document.getElementById('statSubtract').textContent  = (achData.stats.subtract||0).toLocaleString();
+
+  // Milestones
+  const mList = document.getElementById('achMilestoneList');
+  mList.innerHTML = '';
+  for (const m of MILESTONE_MODES) {
+    const count = achData.stats[m.key] || 0;
+    // find next uncompleted step and last 2 completed
+    const steps = MILESTONE_STEPS.filter(s => s <= count);
+    const upcoming = MILESTONE_STEPS.filter(s => s > count).slice(0, 3);
+    [...steps.slice(-2), ...upcoming].forEach(step => {
+      const id = `${m.key}_${step}`;
+      const earned = achData.earned.includes(id);
+      const div = document.createElement('div');
+      div.className = 'ach-item' + (earned ? ' earned' : '');
+      div.innerHTML = `<div class="ach-icon">${m.emoji}</div>
+        <div class="ach-info">
+          <div class="ach-name">${m.label} × ${step.toLocaleString()}</div>
+          <div class="ach-desc">${earned ? '✅ Completed!' : `${count.toLocaleString()} / ${step.toLocaleString()} solved`}</div>
+        </div>
+        <div class="ach-xp">${step} XP</div>`;
+      mList.appendChild(div);
+    });
+  }
+
+  // Secret quests
+  const sList = document.getElementById('achSecretList');
+  sList.innerHTML = '';
+  for (const q of SECRET_QUESTS) {
+    const earned = achData.earned.includes('secret_' + q.id);
+    const div = document.createElement('div');
+    div.className = 'ach-item secret' + (earned ? ' earned' : '');
+    div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🔮'}</div>
+      <div class="ach-info">
+        <div class="ach-name">${earned ? q.name : '??? Secret Quest'}</div>
+        <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this quest...'}</div>
+      </div>
+      <div class="ach-xp">${earned ? q.xp + ' XP' : '???'}</div>`;
+    sList.appendChild(div);
+  }
+
+  // Titles section (show only earned secret quests names as titles)
+  const earnedSecrets = SECRET_QUESTS.filter(q => achData.earned.includes('secret_' + q.id));
+  const titlesSection = document.getElementById('achTitlesSection');
+  titlesSection.style.display = earnedSecrets.length ? 'block' : 'none';
+  const tList = document.getElementById('achTitlesList');
+  tList.innerHTML = '';
+  earnedSecrets.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'ach-item secret earned';
+    div.innerHTML = `<div class="ach-icon">${q.emoji}</div>
+      <div class="ach-info"><div class="ach-name">${q.name}</div><div class="ach-desc">Rare title earned</div></div>`;
+    tList.appendChild(div);
+  });
 }
 
 // Init
