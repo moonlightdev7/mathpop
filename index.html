@@ -1507,14 +1507,26 @@
   };
 
   onAuthStateChanged(auth, async (user) => {
+    window.currentUserId = user ? user.uid : null; // expose so saveAchievements can key localStorage
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
       document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Friend';
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
 
-      // Load saved purchases + theme
+      // Load saved purchases + theme + achievements
       try {
+        // First: load localStorage for this user as an instant baseline
+        if (window.loadAchievements) {
+          try {
+            const lsKey = 'mathpop_ach_' + user.uid;
+            const lsSaved = localStorage.getItem(lsKey)
+                         || localStorage.getItem('mathpop_ach'); // legacy fallback
+            if (lsSaved) window.loadAchievements(JSON.parse(lsSaved));
+          } catch(e) {}
+        }
+
+        // Then: fetch Firestore and merge (Firestore is the source of truth)
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
@@ -1524,16 +1536,18 @@
             window.applyThemeFromFirestore(data.theme);
           }
           if (data.achievements && window.loadAchievements) {
-            window.loadAchievements(data.achievements);
+            window.loadAchievements(data.achievements); // smart merge + banner update
           } else if (!data.achievements && window.saveAchievementsCloud && window.getAchData) {
-            // Firestore has no achievements yet — push localStorage data up now
+            // Firestore has no achievements yet — push what we have up now
             window.saveAchievementsCloud(window.getAchData());
+            if (window.updateRankBanner) window.updateRankBanner();
           }
         } else {
-          // Brand new user doc — push whatever is in localStorage up to Firestore
+          // Brand new user — push current state up to Firestore
           if (window.saveAchievementsCloud && window.getAchData) {
             window.saveAchievementsCloud(window.getAchData());
           }
+          if (window.updateRankBanner) window.updateRankBanner();
         }
       } catch(e) { console.error('Firestore error', e); }
 
@@ -1541,6 +1555,7 @@
       document.getElementById('signedOut').style.display = 'flex';
       document.getElementById('signedIn').style.display  = 'none';
       if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
+      if (window.resetToGuest) window.resetToGuest(); // wipe XP/rank back to default
     }
   });
 </script>
@@ -2608,17 +2623,15 @@ const SECRET_QUESTS = [
 ];
 
 // In-memory achievement state (synced to Firestore)
-let achData = {
-  xp: 0,
-  stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
-  totalCorrect: 0,
-  earned: [],          // achievement IDs already awarded
-  maxStreak: 0,
-  perfectSession: false,
-  comebackKid: false,
-  sessionTotal: 0,
-  equippedTitle: null, // null = auto (highest rank reached); otherwise a title ID
-};
+function freshAchData() {
+  return {
+    xp: 0,
+    stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
+    totalCorrect: 0, earned: [], maxStreak: 0,
+    perfectSession: false, comebackKid: false, sessionTotal: 0, equippedTitle: null,
+  };
+}
+let achData = freshAchData();
 let currentStreak  = 0;
 let wrongStreak    = 0; // consecutive wrongs for comeback kid tracking
 let comingBack     = false;
@@ -2722,6 +2735,7 @@ function onCorrectAnswer() {
   }
   checkMilestones(currentMode);
   checkSecrets();
+  updateRankBanner(); // reflect XP gain instantly on every correct answer
   saveAchievements();
 }
 
@@ -2743,8 +2757,9 @@ function showAchToast(icon, text, sub) {
 }
 
 function saveAchievements() {
-  // localStorage for immediate persistence
-  try { localStorage.setItem('mathpop_ach', JSON.stringify(achData)); } catch(e){}
+  // localStorage — keyed per user so multiple Google accounts don't collide
+  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
+  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
   // Firestore if signed in
   if (window.saveAchievementsCloud) window.saveAchievementsCloud(achData).catch(()=>{});
 }
@@ -2771,28 +2786,42 @@ function loadAchievements(data) {
     achData.equippedTitle = data.equippedTitle;
   }
 }
-window.loadAchievements = (data) => {
+window.loadAchievements = (data, uid) => {
   loadAchievements(data);
   updateRankBanner();
-  // Write merged result back to localStorage so next refresh is instant
-  try { localStorage.setItem('mathpop_ach', JSON.stringify(achData)); } catch(e) {}
+  // Write merged result back to user-keyed localStorage for instant load next time
+  const key = uid ? 'mathpop_ach_' + uid : 'mathpop_ach';
+  try { localStorage.setItem(key, JSON.stringify(achData)); } catch(e) {}
 };
+window.updateRankBanner = updateRankBanner;
 window.getAchData = () => achData;
+
+// Called on sign-out — wipe all progress from memory and show clean default state
+window.resetToGuest = function() {
+  achData = freshAchData();
+  currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
+  updateRankBanner();
+};
 
 // Try loading from localStorage on boot, then refresh banner
 try {
-  const saved = localStorage.getItem('mathpop_ach');
-  if (saved) {
-    loadAchievements(JSON.parse(saved));
-    updateRankBanner(); // show immediately — don't wait for timeout
-  }
+  // Don't pre-load localStorage — wait for Firebase auth to confirm sign-in status.
+  // This prevents showing stale XP briefly before the guest reset kicks in.
 } catch(e){}
-// Fallback update in case localStorage was empty (Firestore will fill it in shortly)
-setTimeout(updateRankBanner, 100);
+// Show a "loading" state in the banner while Firebase resolves auth (~200-500ms)
+(function() {
+  const banner = document.getElementById('rankBanner');
+  if (banner) banner.classList.add('visible');
+  const t = document.getElementById('rankBannerTitle');
+  const x = document.getElementById('rankBannerXp');
+  if (t) t.textContent = '…';
+  if (x) x.textContent = 'Loading';
+})();
 
-// Save everything to localStorage (and Firestore if signed in) on page close/refresh
+// Save to user-keyed localStorage on page close/refresh (only if signed in)
 window.addEventListener('beforeunload', () => {
-  try { localStorage.setItem('mathpop_ach',   JSON.stringify(achData));   } catch(e){}
+  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
+  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
   try { localStorage.setItem('mathpop_theme', JSON.stringify(currentTheme)); } catch(e){}
 });
 
