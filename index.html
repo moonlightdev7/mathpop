@@ -490,6 +490,9 @@
     cursor: pointer; transition: all 0.15s;
   }
   .wb-btn:hover { border-color: var(--wrong); color: var(--wrong); }
+  .wb-btn.eraser-on { border-color: var(--primary); color: var(--primary); background: var(--bg); }
+  .digit-grid-sm { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .digit-grid-sm .digit-btn { padding: 9px 6px; font-size: 0.8rem; }
   .whiteboard-canvas {
     width: 100%; height: 320px; border-radius: 12px;
     border: 2px solid var(--border); background: #fff;
@@ -676,7 +679,7 @@
   <!-- ── LONG DIVIDE SETUP ── -->
   <div id="setup-longdivide" style="display:none">
     <p class="section-label">Problem Size</p>
-    <div class="digit-grid" id="longDivGrid"></div>
+    <div class="digit-grid digit-grid-sm" id="longDivGrid"></div>
   </div>
 
   <!-- ── ADD SETUP ── -->
@@ -715,14 +718,21 @@
       <span class="wb-label">🖊️ Scratch Pad</span>
       <select class="wb-select" id="wbColor">
         <option value="#1a1a1a">Black</option>
-        <option value="#2563eb">Blue</option>
-        <option value="#dc2626">Red</option>
+        <option value="#374151">Dark Gray</option>
+        <option value="#1e3a5f">Navy</option>
+        <option value="#1d4ed8">Blue</option>
+        <option value="#166534">Dark Green</option>
+        <option value="#991b1b">Dark Red</option>
+        <option value="#6b21a8">Purple</option>
+        <option value="#92400e">Brown</option>
+        <option value="#134e4a">Teal</option>
       </select>
       <select class="wb-select" id="wbSize">
         <option value="2">Fine</option>
         <option value="4" selected>Medium</option>
         <option value="8">Thick</option>
       </select>
+      <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear</button>
     </div>
     <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
@@ -1094,18 +1104,21 @@ const DIGIT_CONFIGS = [
   { id:'10+10', addLabel:'10-digit + 10-digit', subLabel:'10-digit − 10-digit', aMin:1000000000, aMax:9999999999, bMin:1000000000, bMax:9999999999 },
 ];
 
-const LONG_DIV_CONFIGS = [
-  { id:'ld1', label:'3-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:100,        dividendMax:999        },
-  { id:'ld1b',label:'3-digit ÷ 2-digit', divisorMin:11,    divisorMax:99,    dividendMin:100,        dividendMax:999        },
-  { id:'ld2', label:'4-digit ÷ 1-digit',  divisorMin:2,     divisorMax:9,     dividendMin:1000,       dividendMax:9999       },
-  { id:'ld3', label:'4-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:1000,       dividendMax:9999       },
-  { id:'ld4', label:'5-digit ÷ 2-digit',  divisorMin:11,    divisorMax:99,    dividendMin:10000,      dividendMax:99999      },
-  { id:'ld5', label:'6-digit ÷ 3-digit',  divisorMin:101,   divisorMax:999,   dividendMin:100000,     dividendMax:999999     },
-  { id:'ld6', label:'7-digit ÷ 3-digit',  divisorMin:101,   divisorMax:999,   dividendMin:1000000,    dividendMax:9999999    },
-  { id:'ld7', label:'8-digit ÷ 4-digit',  divisorMin:1001,  divisorMax:9999,  dividendMin:10000000,   dividendMax:99999999   },
-  { id:'ld8', label:'9-digit ÷ 5-digit',  divisorMin:10001, divisorMax:99999, dividendMin:100000000,  dividendMax:999999999  },
-  { id:'ld9', label:'10-digit ÷ 5-digit', divisorMin:10001, divisorMax:99999, dividendMin:1000000000, dividendMax:9999999999 },
-];
+// Generate every combo: dividend digits 2–10, divisor digits 1–dividendDigs
+const LONG_DIV_CONFIGS = [];
+for (let dDigs = 2; dDigs <= 10; dDigs++) {
+  for (let vDigs = 1; vDigs <= dDigs; vDigs++) {
+    const dividendMin = Math.pow(10, dDigs - 1);
+    const dividendMax = Math.pow(10, dDigs) - 1;
+    const divisorMin  = vDigs === 1 ? 2 : Math.pow(10, vDigs - 1);
+    const divisorMax  = Math.pow(10, vDigs) - 1;
+    LONG_DIV_CONFIGS.push({
+      id: `ld${dDigs}x${vDigs}`,
+      label: `${dDigs}-digit ÷ ${vDigs}-digit`,
+      divisorMin, divisorMax, dividendMin, dividendMax,
+    });
+  }
+}
 
 function genLongDiv(cfg) {
   const divisor = rnd(cfg.divisorMin, cfg.divisorMax);
@@ -1362,8 +1375,9 @@ function initWhiteboard() {
     const p = getPos(e);
     const ctx2 = canvas.getContext('2d');
     ctx2.beginPath(); ctx2.moveTo(wbLastX, wbLastY); ctx2.lineTo(p.x, p.y);
-    ctx2.strokeStyle = document.getElementById('wbColor').value;
-    ctx2.lineWidth   = parseInt(document.getElementById('wbSize').value);
+    const erasing = document.getElementById('wbEraserBtn').classList.contains('eraser-on');
+    ctx2.strokeStyle = erasing ? '#ffffff' : document.getElementById('wbColor').value;
+    ctx2.lineWidth   = parseInt(document.getElementById('wbSize').value) * (erasing ? 5 : 1);
     ctx2.lineCap = 'round'; ctx2.lineJoin = 'round'; ctx2.stroke();
     wbLastX = p.x; wbLastY = p.y;
   }
@@ -1375,6 +1389,12 @@ function initWhiteboard() {
   canvas.addEventListener('touchstart', startDraw, { passive: false });
   canvas.addEventListener('touchmove',  draw,      { passive: false });
   canvas.addEventListener('touchend',   endDraw);
+}
+
+function toggleEraser() {
+  const btn = document.getElementById('wbEraserBtn');
+  const on = btn.classList.toggle('eraser-on');
+  btn.textContent = on ? '✏️ Pen' : '🧹 Eraser';
 }
 
 function clearWhiteboard() {
