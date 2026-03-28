@@ -633,6 +633,19 @@
     outline: none; box-sizing: border-box;
   }
   .frac-input:focus { border-color: var(--primary); }
+  .frac-input.wide { width: 100px; }
+  .frac-sides { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; justify-content: center; }
+  .frac-sides-label { font-size: 0.72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .frac-type-row { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+  .frac-type-btn {
+    padding: 4px 10px; border-radius: 20px; border: 2px solid var(--border);
+    font-size: 0.78rem; font-weight: 700; font-family: 'Nunito', sans-serif;
+    cursor: pointer; background: var(--card); color: var(--muted); transition: all 0.15s;
+  }
+  .frac-type-btn.active { border-color: var(--primary); color: var(--primary); background: var(--bg); }
+  .frac-type-panel { display: none; }
+  .frac-type-panel.active { display: flex; }
+  .frac-builder-row { display: flex; align-items: center; gap: 8px; }
   /* Power */
   .power-wrap { display: inline-flex; align-items: flex-start; gap: 2px; }
   .power-base, .power-exp {
@@ -1182,7 +1195,7 @@
         <button class="formula-tab" onclick="setFormulaTab('frac',this)">½ Fraction</button>
         <button class="formula-tab" onclick="setFormulaTab('sqrt',this)">√ Root</button>
         <button class="formula-tab" onclick="setFormulaTab('power',this)">xⁿ Power</button>
-        <button class="formula-tab" onclick="setFormulaTab('log',this)">log Log</button>
+        <button class="formula-tab" onclick="setFormulaTab('log',this)">log</button>
       </div>
 
       <!-- Plain text -->
@@ -1190,14 +1203,55 @@
         <input type="text" class="wb-text-input" id="wbTextInput" placeholder="Type math here… e.g. 2x + 5 = 13" autocomplete="off"/>
       </div>
 
-      <!-- Fraction: numerator / denominator -->
-      <div class="formula-panel" id="fp-frac">
-        <div class="formula-builder">
-          <span class="formula-lbl">Fraction:</span>
-          <div class="frac-wrap">
-            <input class="frac-input" id="fracNum" placeholder="top" autocomplete="off"/>
-            <div class="frac-bar"></div>
-            <input class="frac-input" id="fracDen" placeholder="bottom" autocomplete="off"/>
+      <!-- Fraction: multi-layer builder -->
+      <div class="formula-panel" id="fp-frac" style="flex-direction:column;align-items:flex-start;gap:0">
+        <!-- Before / After (optional variables on each side) -->
+        <div class="frac-sides">
+          <span class="frac-sides-label">Before:</span>
+          <input class="frac-input wide" id="fracBefore" placeholder="e.g. 2·" autocomplete="off"/>
+          <span class="frac-sides-label" style="margin-left:4px">After:</span>
+          <input class="frac-input wide" id="fracAfter" placeholder="e.g. + 1" autocomplete="off"/>
+        </div>
+        <!-- Fraction type selector -->
+        <div class="frac-type-row">
+          <button class="frac-type-btn active" onclick="setFracType(2,this)">½ Simple</button>
+          <button class="frac-type-btn" onclick="setFracType(3,this)">⅓ Three-layer</button>
+          <button class="frac-type-btn" onclick="setFracType(4,this)">¼ Four-layer</button>
+        </div>
+        <!-- 2-layer -->
+        <div class="frac-type-panel active" id="ftp-2">
+          <div class="formula-builder">
+            <div class="frac-wrap">
+              <input class="frac-input" id="fracNum" placeholder="numerator" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="fracDen" placeholder="denominator" autocomplete="off"/>
+            </div>
+          </div>
+        </div>
+        <!-- 3-layer: a / b / c -->
+        <div class="frac-type-panel" id="ftp-3">
+          <div class="formula-builder">
+            <div class="frac-wrap">
+              <input class="frac-input" id="frac3a" placeholder="top" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="frac3b" placeholder="middle" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="frac3c" placeholder="bottom" autocomplete="off"/>
+            </div>
+          </div>
+        </div>
+        <!-- 4-layer: a / b / c / d -->
+        <div class="frac-type-panel" id="ftp-4">
+          <div class="formula-builder">
+            <div class="frac-wrap">
+              <input class="frac-input" id="frac4a" placeholder="1st" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="frac4b" placeholder="2nd" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="frac4c" placeholder="3rd" autocomplete="off"/>
+              <div class="frac-bar"></div>
+              <input class="frac-input" id="frac4d" placeholder="4th" autocomplete="off"/>
+            </div>
           </div>
         </div>
       </div>
@@ -2201,16 +2255,22 @@ function initWhiteboard() {
     return { x: (src.clientX - rect.left) * (tc.width / rect.width),
              y: (src.clientY - rect.top)  * (tc.height / rect.height) };
   }
+  function objBounds(obj, ctx2) {
+    ctx2.font = `bold ${obj.sz}px Nunito, sans-serif`;
+    const isFracStack = obj.type === 'frac' || obj.type === 'frac3' || obj.type === 'frac4';
+    const terms = isFracStack ? obj.lines.slice(1, -1) : obj.lines;
+    const maxW = Math.max(...obj.lines.map(l => ctx2.measureText(l).width));
+    const totalH = terms.length * obj.sz + (terms.length - 1) * 11; // sz + bars+gaps
+    return { w: maxW + 20, h: totalH };
+  }
   function hitTest(p) {
     // iterate in reverse so top-drawn objects win
     for (let i = textObjects.length - 1; i >= 0; i--) {
       const obj = textObjects[i];
       const tcCtx = tc.getContext('2d');
-      tcCtx.font = `bold ${obj.sz}px Nunito, sans-serif`;
-      const maxW = Math.max(...obj.lines.map(l => tcCtx.measureText(l).width));
-      const totalH = obj.lines.length * (obj.sz + 6);
-      if (p.x >= obj.x - 10 && p.x <= obj.x + maxW + 10 &&
-          p.y >= obj.y - 10 && p.y <= obj.y + totalH + 10) return obj;
+      const b = objBounds(obj, tcCtx);
+      if (p.x >= obj.x - 10 && p.x <= obj.x + b.w + 10 &&
+          p.y >= obj.y - 10 && p.y <= obj.y + b.h + 10) return obj;
     }
     return null;
   }
@@ -2255,12 +2315,14 @@ function redrawTextLayer() {
     const isSelected = (obj === selectedObj && wbMoveMode);
     if (isSelected) {
       // draw selection box
+      const isFracStack = obj.type === 'frac' || obj.type === 'frac3' || obj.type === 'frac4';
       ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
-      const maxW = Math.max(...obj.lines.map(l => ctx.measureText(l).width));
-      const totalH = obj.lines.length * (obj.sz + 6);
+      const selTerms = isFracStack ? obj.lines.slice(1, -1) : obj.lines;
+      const selW = Math.max(...obj.lines.map(l => ctx.measureText(l).width)) + 20;
+      const selH = selTerms.length * obj.sz + (selTerms.length - 1) * 11;
       ctx.strokeStyle = '#6b21a8'; ctx.lineWidth = 2;
       ctx.setLineDash([5, 3]);
-      ctx.strokeRect(obj.x - 6, obj.y - 6, maxW + 12, totalH + 12);
+      ctx.strokeRect(obj.x - 6, obj.y - 6, selW + 12, selH + 12);
       ctx.setLineDash([]);
     }
     renderTextObj(ctx, obj);
@@ -2273,15 +2335,40 @@ function renderTextObj(ctx, obj) {
   ctx.font = `bold ${obj.sz}px Nunito, sans-serif`;
   if (obj.type === 'text') {
     obj.lines.forEach((line, i) => ctx.fillText(line, obj.x, obj.y + i * (obj.sz + 6)));
-  } else if (obj.type === 'frac') {
-    const [num, den] = obj.lines;
-    const numW = ctx.measureText(num).width;
-    const denW = ctx.measureText(den).width;
-    const barW = Math.max(numW, denW) + 16;
-    const cx   = obj.x + barW / 2;
-    ctx.fillText(num, cx - numW / 2, obj.y);
-    ctx.fillRect(obj.x, obj.y + obj.sz + 6, barW, 3);
-    ctx.fillText(den, cx - denW / 2, obj.y + obj.sz + 14);
+  } else if (obj.type === 'frac' || obj.type === 'frac3' || obj.type === 'frac4') {
+    // lines = [before, ...terms, after]
+    const before  = obj.lines[0] || '';
+    const after   = obj.lines[obj.lines.length - 1] || '';
+    const terms   = obj.lines.slice(1, -1);  // the stacked values
+    const GAP = 4, BAR_H = 3;
+    const termWidths = terms.map(t => ctx.measureText(t).width);
+    const barW = Math.max(...termWidths) + 20;
+    // vertical centre the whole stack so baseline aligns with before/after text
+    const stackH = terms.length * obj.sz + (terms.length - 1) * (GAP * 2 + BAR_H);
+    let ox = obj.x;
+    // Draw before text — vertically centred to the stack
+    if (before) {
+      const beforeW = ctx.measureText(before + ' ').width;
+      const beforeY = obj.y + (stackH - obj.sz) / 2;
+      ctx.fillText(before + ' ', ox, beforeY);
+      ox += beforeW;
+    }
+    const fracX = ox;
+    const cx    = fracX + barW / 2;
+    let oy = obj.y;
+    for (let i = 0; i < terms.length; i++) {
+      ctx.fillText(terms[i], cx - termWidths[i] / 2, oy);
+      oy += obj.sz + GAP;
+      if (i < terms.length - 1) {
+        ctx.fillRect(fracX, oy, barW, BAR_H);
+        oy += BAR_H + GAP;
+      }
+    }
+    // Draw after text — vertically centred
+    if (after) {
+      const afterY = obj.y + (stackH - obj.sz) / 2;
+      ctx.fillText(' ' + after, fracX + barW, afterY);
+    }
   } else if (obj.type === 'sqrt') {
     const [index, radicand] = obj.lines;
     const smallSz = Math.round(obj.sz * 0.65);
@@ -2354,6 +2441,15 @@ function clearTextLayer() {
 
 // ── WHITEBOARD TYPE MODE ──
 let activeFormulaTab = 'text';
+let fracLayers = 2;
+
+function setFracType(n, btn) {
+  fracLayers = n;
+  document.querySelectorAll('.frac-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.frac-type-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('ftp-' + n).classList.add('active');
+}
 
 function setFormulaTab(tab, btn) {
   activeFormulaTab = tab;
@@ -2422,9 +2518,24 @@ function stampFormula() {
     addTextObject('text', [text], sz, col);
     inp.value = ''; inp.focus();
   } else if (activeFormulaTab === 'frac') {
-    const num = document.getElementById('fracNum').value.trim() || '□';
-    const den = document.getElementById('fracDen').value.trim() || '□';
-    addTextObject('frac', [num, den], sz, col);
+    const before = document.getElementById('fracBefore').value.trim();
+    const after  = document.getElementById('fracAfter').value.trim();
+    if (fracLayers === 3) {
+      const a = document.getElementById('frac3a').value.trim() || '□';
+      const b = document.getElementById('frac3b').value.trim() || '□';
+      const c = document.getElementById('frac3c').value.trim() || '□';
+      addTextObject('frac3', [before, a, b, c, after], sz, col);
+    } else if (fracLayers === 4) {
+      const a = document.getElementById('frac4a').value.trim() || '□';
+      const b = document.getElementById('frac4b').value.trim() || '□';
+      const c = document.getElementById('frac4c').value.trim() || '□';
+      const d = document.getElementById('frac4d').value.trim() || '□';
+      addTextObject('frac4', [before, a, b, c, d, after], sz, col);
+    } else {
+      const num = document.getElementById('fracNum').value.trim() || '□';
+      const den = document.getElementById('fracDen').value.trim() || '□';
+      addTextObject('frac', [before, num, den, after], sz, col);
+    }
   } else if (activeFormulaTab === 'sqrt') {
     const idx = document.getElementById('sqrtIndex').value.trim();
     const rad = document.getElementById('sqrtContent').value.trim() || '□';
