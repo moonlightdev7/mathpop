@@ -1320,7 +1320,7 @@
         <button class="mk-key" onclick="mkInsert('8')">8</button>
         <button class="mk-key" onclick="mkInsert('9')">9</button>
         <button class="mk-key" onclick="mkInsert('.')">.</button>
-        <button class="mk-key" onclick="mkInsert(','">,</button>
+        <button class="mk-key" onclick="mkInsert(',')"> ,</button>
         <div class="mk-group">Operators</div>
         <button class="mk-key" onclick="mkInsert('+')">+</button>
         <button class="mk-key" onclick="mkInsert('−')">−</button>
@@ -1512,7 +1512,6 @@
 
   onAuthStateChanged(auth, async (user) => {
     const prevUserId = window.currentUserId;
-    const prevUserId = window.currentUserId;
     window.currentUserId = user ? user.uid : null;
     if (user) {
       document.getElementById('userAvatar').src = user.photoURL || '';
@@ -1529,12 +1528,6 @@
         } else if (window.updateRankBanner) {
           // No localStorage yet — still clear the loading state with defaults
           window.updateRankBanner();
-        }
-
-        // Step 1b: Restore user's theme instantly from user-keyed localStorage (before Firestore)
-        const lsTheme = localStorage.getItem('mathpop_theme_' + user.uid);
-        if (lsTheme && window.applyThemeFromFirestore) {
-          window.applyThemeFromFirestore(JSON.parse(lsTheme));
         }
 
         // Step 1b: Restore user's theme instantly from user-keyed localStorage (before Firestore)
