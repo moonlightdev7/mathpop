@@ -1510,61 +1510,67 @@
     }
   };
 
+  // Track whether auth has resolved at least once.
+  // Firebase always fires onAuthStateChanged(null) first on page load before
+  // confirming the persisted session — we must NOT wipe data on that first null.
+  let _authInitialized = false;
+
   onAuthStateChanged(auth, async (user) => {
     const prevUserId = window.currentUserId;
     window.currentUserId = user ? user.uid : null;
+
     if (user) {
+      _authInitialized = true;
       document.getElementById('userAvatar').src = user.photoURL || '';
       document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Friend';
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
 
+      // Step 1: Load localStorage instantly (own try-catch so a bad value can't abort later steps)
       try {
-        // Step 1: Load localStorage instantly — clears the loading state right away
         const lsKey = 'mathpop_ach_' + user.uid;
         const lsSaved = localStorage.getItem(lsKey) || localStorage.getItem('mathpop_ach');
         if (lsSaved && window.loadAchievements) {
           window.loadAchievements(JSON.parse(lsSaved));
         } else if (window.updateRankBanner) {
-          // No localStorage yet — still clear the loading state with defaults
           window.updateRankBanner();
         }
+      } catch(e) { console.error('[MathPop] localStorage load error:', e); if (window.updateRankBanner) window.updateRankBanner(); }
 
-        // Step 1b: Restore user's theme instantly from user-keyed localStorage (before Firestore)
+      // Step 1b: Restore theme from localStorage (own try-catch so a bad theme can't abort Firestore load)
+      try {
         const lsTheme = localStorage.getItem('mathpop_theme_' + user.uid);
         if (lsTheme && window.applyThemeFromFirestore) {
           window.applyThemeFromFirestore(JSON.parse(lsTheme));
         }
+      } catch(e) { console.error('[MathPop] theme restore error:', e); }
 
-        // Step 2: Fetch Firestore (source of truth) and merge on top
+      // Step 2: Fetch Firestore — source of truth, merges on top of localStorage
+      try {
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
           if (data.colorWheel) window.unlockWheel(true);
           if (data.neonPack)   window.unlockNeon(true);
-          if (data.theme && window.applyThemeFromFirestore) {
-            window.applyThemeFromFirestore(data.theme);
-          }
-          if (data.achievements && window.loadAchievements) {
-            window.loadAchievements(data.achievements);
-          } else if (!data.achievements && window.saveAchievementsCloud && window.getAchData) {
-            window.saveAchievementsCloud(window.getAchData());
-          }
+          if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
+          if (data.achievements && window.loadAchievements) window.loadAchievements(data.achievements);
         } else {
-          // Brand new user — seed Firestore with current state
-          if (window.saveAchievementsCloud && window.getAchData) {
-            window.saveAchievementsCloud(window.getAchData());
-          }
+          // Brand new user — seed Firestore
+          if (window.saveAchievementsCloud && window.getAchData) window.saveAchievementsCloud(window.getAchData());
         }
-      } catch(e) { console.error('Firestore error', e); }
+      } catch(e) { console.error('[MathPop] Firestore read error — check Security Rules:', e); }
 
     } else {
-      // Save current theme to user-keyed key before resetting (prevUserId still valid here)
-      if (prevUserId && window.saveThemeForUser) window.saveThemeForUser(prevUserId);
-      document.getElementById('signedOut').style.display = 'flex';
-      document.getElementById('signedIn').style.display  = 'none';
-      if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
-      if (window.resetToGuest) window.resetToGuest();
+      // Only reset UI/data if auth was already confirmed (real sign-out).
+      // If _authInitialized is false this is just the initial page-load null — ignore it.
+      if (_authInitialized) {
+        if (prevUserId && window.saveThemeForUser) window.saveThemeForUser(prevUserId);
+        document.getElementById('signedOut').style.display = 'flex';
+        document.getElementById('signedIn').style.display  = 'none';
+        if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
+        if (window.resetToGuest) window.resetToGuest();
+      }
+      _authInitialized = true;
     }
   });
 </script>
@@ -2818,10 +2824,6 @@ window.saveThemeForUser = function(userId) {
   if (!userId) return;
   try { localStorage.setItem('mathpop_theme_' + userId, JSON.stringify(currentTheme)); } catch(e) {}
 };
-window.saveThemeForUser = function(userId) {
-  if (!userId) return;
-  try { localStorage.setItem('mathpop_theme_' + userId, JSON.stringify(currentTheme)); } catch(e) {}
-};
 
 // Called on sign-out — wipe all progress from memory and show clean default state
 window.resetToGuest = function() {
@@ -2833,20 +2835,8 @@ window.resetToGuest = function() {
   if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
 };
 
-// Show a loading state while Firebase resolves auth (usually < 500ms)
-// updateRankBanner() in the auth handler below is guaranteed to clear it
-(function() {
-  const banner = document.getElementById('rankBanner');
-  if (banner) banner.classList.add('visible');
-  const emoji = document.getElementById('rankBannerEmoji');
-  const title = document.getElementById('rankBannerTitle');
-  const xp    = document.getElementById('rankBannerXp');
-  const fill  = document.getElementById('rankBannerFill');
-  if (emoji) emoji.textContent = '⏳';
-  if (title) title.textContent = 'Loading…';
-  if (xp)    xp.textContent   = '';
-  if (fill)  fill.style.width = '0%';
-})();
+// Banner stays hidden until updateRankBanner() is called with real data.
+// (No loading spinner — auth now skips the initial null so there's no flicker.)
 
 // Save to user-keyed localStorage on page close/refresh (only if signed in)
 // Also flush any pending debounced Firestore save so progress isn't lost on navigation
