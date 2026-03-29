@@ -1561,8 +1561,6 @@
     } else {
       // Save current theme to user-keyed key before resetting (prevUserId still valid here)
       if (prevUserId && window.saveThemeForUser) window.saveThemeForUser(prevUserId);
-      // Save current theme to user-keyed key before resetting (prevUserId still valid here)
-      if (prevUserId && window.saveThemeForUser) window.saveThemeForUser(prevUserId);
       document.getElementById('signedOut').style.display = 'flex';
       document.getElementById('signedIn').style.display  = 'none';
       if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
