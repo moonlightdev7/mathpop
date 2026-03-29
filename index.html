@@ -1840,7 +1840,8 @@
   window.updateAvatarURL = async (dataURL) => {
     const user = auth.currentUser;
     if (!user) throw new Error('Not signed in');
-    await updateProfile(user, { photoURL: dataURL });
+    // Save to Firestore only — Firebase Auth's updateProfile rejects data URLs
+    // The photo is restored from Firestore on sign-in via onAuthStateChanged
     await setDoc(doc(db, 'users', user.uid), { photoURL: dataURL }, { merge: true });
     document.getElementById('userAvatar').src = dataURL;
   };
@@ -3244,12 +3245,12 @@ async function saveCroppedAvatar() {
   const sx = Math.max(0, Math.min(cx - half, _cropImg.width - viewSize));
   const sy = Math.max(0, Math.min(cy - half, _cropImg.height - viewSize));
 
-  // Export at 256x256 for good quality
+  // Export at 160x160 — crisp enough for avatars, small enough for Firestore
   const outCanvas = document.createElement('canvas');
-  outCanvas.width = 256; outCanvas.height = 256;
+  outCanvas.width = 160; outCanvas.height = 160;
   const outCtx = outCanvas.getContext('2d');
-  outCtx.drawImage(_cropImg, sx, sy, viewSize, viewSize, 0, 0, 256, 256);
-  const dataURL = outCanvas.toDataURL('image/jpeg', 0.85);
+  outCtx.drawImage(_cropImg, sx, sy, viewSize, viewSize, 0, 0, 160, 160);
+  const dataURL = outCanvas.toDataURL('image/jpeg', 0.75);
 
   closeCropModal();
   try {
