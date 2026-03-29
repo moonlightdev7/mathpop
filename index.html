@@ -133,22 +133,18 @@
     transition: color 0.3s;
   }
   .subtitle { text-align: center; color: var(--muted); font-size: 0.95rem; margin-bottom: 10px; }
-  /* ── RANK BANNER ── */
-  .rank-banner {
-    display: none; align-items: center; justify-content: center; gap: 10px;
-    background: var(--card); border-radius: 16px; padding: 10px 20px;
+  /* ── TITLE BANNER ── */
+  .title-banner {
+    display: none; align-items: center; justify-content: center; gap: 8px;
+    background: var(--card); border-radius: 16px; padding: 8px 20px;
     margin: 0 auto 16px; width: fit-content; max-width: 100%;
     box-shadow: 0 3px 14px rgba(0,0,0,0.09);
-    border: 2px solid var(--border); transition: background 0.3s, border-color 0.3s;
+    border: 2px solid var(--primary); transition: background 0.3s, border-color 0.3s;
     cursor: pointer;
   }
-  .rank-banner.visible { display: flex; }
-  .rank-banner-emoji { font-size: 1.5rem; line-height: 1; }
-  .rank-banner-info { display: flex; flex-direction: column; gap: 2px; }
-  .rank-banner-title { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--primary); line-height: 1; }
-  .rank-banner-xp { font-size: 0.72rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
-  .rank-banner-bar { width: 90px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-  .rank-banner-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--correct)); transition: width 0.5s ease; }
+  .title-banner.visible { display: flex; }
+  .title-banner-emoji { font-size: 1.3rem; line-height: 1; }
+  .title-banner-name { font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: var(--primary); }
 
   /* ── THEME TOGGLE ── */
   .theme-toggle-btn {
@@ -727,23 +723,19 @@
   }
   .ach-back-btn:hover { text-decoration: underline; }
 
-  .rank-card {
-    background: var(--card); border-radius: 20px; padding: 24px;
+  /* quest screen header card */
+  .quest-header-card {
+    background: var(--card); border-radius: 20px; padding: 20px 24px;
     text-align: center; margin-bottom: 20px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: background 0.3s;
     position: relative; overflow: hidden;
   }
-  .rank-card::before {
+  .quest-header-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
     background: linear-gradient(90deg, var(--primary), var(--correct));
   }
-  .rank-emoji { font-size: 3rem; margin-bottom: 6px; }
-  .rank-title { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--primary); }
-  .rank-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; font-weight: 700; }
-  .xp-bar-wrap { background: var(--border); border-radius: 99px; height: 14px; overflow: hidden; margin-bottom: 6px; }
-  .xp-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--correct)); transition: width 0.6s ease; }
-  .xp-label { font-size: 0.8rem; color: var(--muted); font-weight: 700; }
-  .xp-big { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); }
+  .quest-header-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--primary); margin-bottom: 4px; }
+  .quest-header-sub { font-size: 0.85rem; color: var(--muted); font-weight: 700; }
 
   .ach-section { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s; }
   .ach-section h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); margin: 0 0 14px 0; }
@@ -761,13 +753,6 @@
   .ach-info { flex: 1; }
   .ach-name { font-weight: 800; font-size: 0.9rem; color: var(--text); }
   .ach-desc { font-size: 0.78rem; color: var(--muted); }
-  .ach-xp { font-family: 'Fredoka One', cursive; font-size: 0.85rem; color: var(--primary); flex-shrink: 0; }
-  .ach-item.earned .ach-xp::after { content: ' ✓'; color: var(--correct); }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .stat-box { background: var(--bg); border-radius: 12px; padding: 12px; text-align: center; border: 2px solid var(--border); }
-  .stat-num { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--primary); }
-  .stat-label { font-size: 0.7rem; color: var(--muted); font-weight: 800; text-transform: uppercase; }
 
   /* Toast notification for new achievement */
   .ach-toast {
@@ -807,7 +792,7 @@
     </button>
   </div>
   <div id="signedIn">
-    <button class="trophy-btn" id="trophyBtn" onclick="showAchievements()" title="Achievements">🏆</button>
+    <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Quests &amp; Titles">🏆</button>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar">
     <span class="user-name" id="userName"></span>
     <button class="signout-btn" onclick="signOut()">Sign out</button>
@@ -886,14 +871,10 @@
   <h1><span id="modeEmoji">✖️</span> Mathpop</h1>
   <p class="subtitle" id="modeSubtitle">Pick your tables and start practicing!</p>
 
-  <!-- Rank banner — click to open achievements -->
-  <div class="rank-banner" id="rankBanner" onclick="showAchievements()" title="View Achievements">
-    <div class="rank-banner-emoji" id="rankBannerEmoji">🧮</div>
-    <div class="rank-banner-info">
-      <div class="rank-banner-title" id="rankBannerTitle">Math Newbie</div>
-      <div class="rank-banner-xp" id="rankBannerXp">0 XP</div>
-    </div>
-    <div class="rank-banner-bar"><div class="rank-banner-fill" id="rankBannerFill" style="width:0%"></div></div>
+  <!-- Title banner — shows equipped quest title, click to open quests -->
+  <div class="title-banner" id="titleBanner" onclick="showQuests()" title="Your Titles">
+    <span class="title-banner-emoji" id="titleBannerEmoji"></span>
+    <span class="title-banner-name" id="titleBannerName"></span>
   </div>
 
   <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
@@ -1020,50 +1001,24 @@
 
 <!-- ── ACHIEVEMENTS ── -->
 <div id="achievement-screen">
-  <button class="ach-back-btn" onclick="hideAchievements()">← Back</button>
+  <button class="ach-back-btn" onclick="hideQuests()">← Back</button>
 
-  <!-- Rank card -->
-  <div class="rank-card">
-    <div class="rank-emoji" id="achRankEmoji">🧮</div>
-    <div class="rank-title" id="achRankTitle">Math Newbie</div>
-    <div class="rank-subtitle" id="achRankSub">Keep going!</div>
-    <div class="xp-big" id="achXpBig">0 XP</div>
-    <div class="xp-bar-wrap" style="margin-top:10px">
-      <div class="xp-bar-fill" id="achXpBar" style="width:0%"></div>
-    </div>
-    <div class="xp-label" id="achXpLabel">0 / 50 XP to next rank</div>
+  <div class="quest-header-card">
+    <div class="quest-header-title">🔮 Quests &amp; Titles</div>
+    <div class="quest-header-sub">Complete quests to unlock titles you can show on your homepage</div>
   </div>
 
-  <!-- Stats -->
+  <!-- Quest list -->
   <div class="ach-section">
-    <h3>📊 Your Stats</h3>
-    <div class="stats-grid">
-      <div class="stat-box"><div class="stat-num" id="statMultiply">0</div><div class="stat-label">✖️ Multiply</div></div>
-      <div class="stat-box"><div class="stat-num" id="statShort">0</div><div class="stat-label">➗ Short ÷</div></div>
-      <div class="stat-box"><div class="stat-num" id="statLong">0</div><div class="stat-label">📐 Long ÷</div></div>
-      <div class="stat-box"><div class="stat-num" id="statRemainder">0</div><div class="stat-label">📐R ÷ R</div></div>
-      <div class="stat-box"><div class="stat-num" id="statAdd">0</div><div class="stat-label">➕ Add</div></div>
-      <div class="stat-box"><div class="stat-num" id="statSubtract">0</div><div class="stat-label">➖ Subtract</div></div>
-    </div>
+    <h3>🗺️ Quests</h3>
+    <div class="ach-list" id="questList"></div>
   </div>
 
-  <!-- Milestones -->
+  <!-- Title chooser (only shows earned titles) -->
   <div class="ach-section">
-    <h3>🎯 Milestones</h3>
-    <div class="ach-list" id="achMilestoneList"></div>
-  </div>
-
-  <!-- Secret Quests -->
-  <div class="ach-section">
-    <h3>🔮 Secret Quests</h3>
-    <div class="ach-list" id="achSecretList"></div>
-  </div>
-
-  <!-- Title chooser -->
-  <div class="ach-section" id="achTitlesSection">
-    <h3>👑 Choose Your Title</h3>
-    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to show a title on your rank banner. Tap again to go back to auto.</p>
-    <div class="ach-list" id="achTitlesList"></div>
+    <h3>👑 Your Titles</h3>
+    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to display a title on your homepage. Tap again to remove it.</p>
+    <div class="ach-list" id="titlesList"></div>
   </div>
 </div>
 
@@ -1500,11 +1455,11 @@
     await setDoc(doc(db, 'users', user.uid), { theme: themeData }, { merge: true });
   };
 
-  window.saveAchievementsCloud = async (achData) => {
+  window.saveUserDataCloud = async (userData) => {
     const user = auth.currentUser;
     if (!user) return;
     try {
-      await setDoc(doc(db, 'users', user.uid), { achievements: achData }, { merge: true });
+      await setDoc(doc(db, 'users', user.uid), { userData }, { merge: true });
     } catch(e) {
       console.error('[MathPop] Firestore save failed — check Security Rules at firebase.google.com:', e);
     }
@@ -1526,18 +1481,18 @@
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
 
-      // Step 1: Load localStorage instantly (own try-catch so a bad value can't abort later steps)
+      // Step 1: Load from localStorage instantly
       try {
-        const lsKey = 'mathpop_ach_' + user.uid;
-        const lsSaved = localStorage.getItem(lsKey) || localStorage.getItem('mathpop_ach');
-        if (lsSaved && window.loadAchievements) {
-          window.loadAchievements(JSON.parse(lsSaved));
-        } else if (window.updateRankBanner) {
-          window.updateRankBanner();
+        const lsKey = 'mathpop_user_' + user.uid;
+        const lsSaved = localStorage.getItem(lsKey);
+        if (lsSaved && window.loadUserData) {
+          window.loadUserData(JSON.parse(lsSaved));
+        } else if (window.updateTitleBanner) {
+          window.updateTitleBanner();
         }
-      } catch(e) { console.error('[MathPop] localStorage load error:', e); if (window.updateRankBanner) window.updateRankBanner(); }
+      } catch(e) { console.error('[MathPop] localStorage load error:', e); }
 
-      // Step 1b: Restore theme from localStorage (own try-catch so a bad theme can't abort Firestore load)
+      // Step 1b: Restore theme from localStorage
       try {
         const lsTheme = localStorage.getItem('mathpop_theme_' + user.uid);
         if (lsTheme && window.applyThemeFromFirestore) {
@@ -1545,7 +1500,7 @@
         }
       } catch(e) { console.error('[MathPop] theme restore error:', e); }
 
-      // Step 2: Fetch Firestore — source of truth, merges on top of localStorage
+      // Step 2: Fetch Firestore — source of truth
       try {
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
@@ -1553,10 +1508,10 @@
           if (data.colorWheel) window.unlockWheel(true);
           if (data.neonPack)   window.unlockNeon(true);
           if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
-          if (data.achievements && window.loadAchievements) window.loadAchievements(data.achievements);
+          if (data.userData && window.loadUserData) window.loadUserData(data.userData);
         } else {
           // Brand new user — seed Firestore
-          if (window.saveAchievementsCloud && window.getAchData) window.saveAchievementsCloud(window.getAchData());
+          if (window.saveUserDataCloud && window.getUserData) window.saveUserDataCloud(window.getUserData());
         }
       } catch(e) { console.error('[MathPop] Firestore read error — check Security Rules:', e); }
 
@@ -2093,8 +2048,8 @@ function updateStartBtn() {
 function startGame() {
   correct=0; wrong=0; total=0;
   // Reset per-session achievement tracking
-  achData.sessionTotal = 0;
-  achData.perfectSession = false;
+  userData.sessionTotal = 0;
+  userData.perfectSession = false;
   currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
@@ -2187,7 +2142,7 @@ function checkAnswer() {
   }
   if (ok) onCorrectAnswer(); else onWrongAnswer();
   // Check perfect session
-  if (total >= 20 && wrong === 0) achData.perfectSession = true;
+  if (total >= 20 && wrong === 0) userData.perfectSession = true;
   updateScore();
   const delay = (currentMode === 'longdivide' || currentMode === 'remainderdiv') ? 2800 : 1400;
   setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
@@ -2591,168 +2546,83 @@ function stampFormula() {
   }
 }
 
-// ── ACHIEVEMENTS ──
-const RANKS = [
-  { xp:      0, emoji:'🧮', title:'Math Newbie',         sub:'Every legend starts somewhere!' },
-  { xp:     50, emoji:'📝', title:'Number Nudger',        sub:'Getting the hang of it!' },
-  { xp:    150, emoji:'🔢', title:'Digit Dabbler',        sub:'Numbers are your friends now.' },
-  { xp:    300, emoji:'➕', title:'Addition Adventurer',  sub:'You\'re on a roll!' },
-  { xp:    600, emoji:'✖️', title:'Multiply Maverick',    sub:'Tables? No problem.' },
-  { xp:   1000, emoji:'📐', title:'Division Detective',   sub:'You\'re investigating equations!' },
-  { xp:   1750, emoji:'🧩', title:'Equation Explorer',   sub:'The math world is opening up.' },
-  { xp:   2750, emoji:'💡', title:'Formula Fanatic',      sub:'You live for the formula.' },
-  { xp:   4000, emoji:'⚡', title:'Variable Victor',      sub:'Variables bow before you.' },
-  { xp:   6000, emoji:'🌟', title:'Theorem Tamer',        sub:'You tame theorems for fun.' },
-  { xp:   9000, emoji:'🔥', title:'Algebra Ace',          sub:'Algebra? Child\'s play.' },
-  { xp:  13000, emoji:'🎯', title:'Geometry Genius',      sub:'Every angle accounted for.' },
-  { xp:  18000, emoji:'🌊', title:'Calculus Crusader',    sub:'Limits? You\'re limitless.' },
-  { xp:  25000, emoji:'🏆', title:'Math Champion',        sub:'The podium is yours.' },
-  { xp:  35000, emoji:'👑', title:'Math Legend',          sub:'They write songs about you.' },
-  { xp:  50000, emoji:'✨', title:'Math Extraordinaire',  sub:'Mortals seek your counsel.' },
-  { xp:  75000, emoji:'🧠', title:'The Mathematician',   sub:'You ARE the math.' },
-  { xp: 100000, emoji:'🌌', title:'Math Transcendent',   sub:'Beyond numbers. Beyond time.' },
+// ── QUESTS ──
+const QUESTS = [
+  { id:'grinder',           emoji:'🔥', name:'The Grinder',          desc:'Solve 1,000 total questions across any mode.',          check: d => d.totalCorrect >= 1000 },
+  { id:'speed_demon',       emoji:'⚡', name:'Speed Demon',           desc:'Get 15 correct in a row without a single mistake.',      check: d => d.maxStreak >= 15 },
+  { id:'perfectionist',     emoji:'🎯', name:'The Perfectionist',     desc:'Finish a session with 20+ questions at 100% accuracy.',  check: d => d.perfectSession },
+  { id:'night_owl',         emoji:'🌙', name:'Night Owl',             desc:'Practice math between midnight and 4 AM.',               check: () => { const h=new Date().getHours(); return h>=0&&h<4; } },
+  { id:'completionist',     emoji:'🗺️', name:'The Completionist',     desc:'Use every single practice mode at least once.',          check: d => Object.values(d.stats||{}).every(v=>v>0) },
+  { id:'remainder_royalty', emoji:'🔢', name:'Remainder Royalty',     desc:'Solve 50 long division with remainder problems.',        check: d => (d.stats?.remainderdiv||0) >= 50 },
+  { id:'long_hauler',       emoji:'📏', name:'Long Hauler',           desc:'Solve 100 long division problems.',                      check: d => (d.stats?.longdivide||0) >= 100 },
+  { id:'comeback_kid',      emoji:'💪', name:'Comeback Kid',          desc:'Get 10 correct in a row after getting 3 wrong.',         check: d => d.comebackKid },
+  { id:'century_club',      emoji:'💯', name:'Century Club',          desc:'Answer 100 questions in a single session.',              check: d => d.sessionTotal >= 100 },
+  { id:'pi_day',            emoji:'π',  name:'Pi Day Pilgrim',        desc:'Practice math on March 14th.',                           check: () => { const n=new Date(); return n.getMonth()===2&&n.getDate()===14; } },
+  { id:'all_modes_ace',     emoji:'🌈', name:'Rainbow Mathematician', desc:'Get at least 10 correct in every single mode.',          check: d => Object.values(d.stats||{}).every(v=>v>=10) },
+  { id:'mega_grinder',      emoji:'💎', name:'Diamond Grinder',       desc:'Solve 10,000 total questions. A true legend.',           check: d => d.totalCorrect >= 10000 },
 ];
 
-const MILESTONE_STEPS = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
-const MILESTONE_MODES = [
-  { key:'multiply',    emoji:'✖️', label:'Multiply' },
-  { key:'shortdivide', emoji:'➗', label:'Short Divide' },
-  { key:'longdivide',  emoji:'📐', label:'Long Divide' },
-  { key:'remainderdiv',emoji:'📐R',label:'Long ÷ Remainders' },
-  { key:'add',         emoji:'➕', label:'Addition' },
-  { key:'subtract',    emoji:'➖', label:'Subtraction' },
-];
-
-const SECRET_QUESTS = [
-  { id:'grinder',      emoji:'🔥', name:'The Grinder',       desc:'Solve 1,000 total questions across any mode.',         xp:200, check: d => d.totalCorrect >= 1000 },
-  { id:'speed_demon',  emoji:'⚡', name:'Speed Demon',        desc:'Get 15 correct in a row without a single mistake.',     xp:150, check: d => d.maxStreak >= 15 },
-  { id:'perfectionist',emoji:'🎯', name:'The Perfectionist',  desc:'Finish a session with 20+ questions at 100% accuracy.', xp:200, check: d => d.perfectSession },
-  { id:'night_owl',    emoji:'🌙', name:'Night Owl',          desc:'Practice math between midnight and 4 AM.',              xp:100, check: () => { const h=new Date().getHours(); return h>=0&&h<4; } },
-  { id:'completionist',emoji:'🗺️', name:'The Completionist',  desc:'Use every single practice mode at least once.',        xp:250, check: d => Object.values(d.stats||{}).every(v=>v>0) },
-  { id:'remainder_royalty',emoji:'🔢',name:'Remainder Royalty',desc:'Solve 50 long division with remainder problems.',       xp:150, check: d => (d.stats?.remainderdiv||0) >= 50 },
-  { id:'long_hauler',  emoji:'📏', name:'Long Hauler',        desc:'Solve 100 long division problems.',                     xp:150, check: d => (d.stats?.longdivide||0) >= 100 },
-  { id:'comeback_kid', emoji:'💪', name:'Comeback Kid',       desc:'Get 10 correct in a row after getting 3 wrong.',        xp:175, check: d => d.comebackKid },
-  { id:'century_club', emoji:'💯', name:'Century Club',       desc:'Answer 100 questions in a single session.',             xp:200, check: d => d.sessionTotal >= 100 },
-  { id:'pi_day',       emoji:'π',  name:'Pi Day Pilgrim',     desc:'Practice math on March 14th.',                          xp:314, check: () => { const n=new Date(); return n.getMonth()===2&&n.getDate()===14; } },
-  { id:'all_modes_ace',emoji:'🌈', name:'Rainbow Mathematician',desc:'Get at least 10 correct in every single mode.',       xp:300, check: d => Object.values(d.stats||{}).every(v=>v>=10) },
-  { id:'mega_grinder', emoji:'💎', name:'Diamond Grinder',    desc:'Solve 10,000 total questions. A true legend.',          xp:1000, check: d => d.totalCorrect >= 10000 },
-];
-
-// In-memory achievement state (synced to Firestore)
-function freshAchData() {
+// ── USER DATA (quests + selected title, synced to Firestore) ──
+function freshUserData() {
   return {
-    xp: 0,
     stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
-    totalCorrect: 0, earned: [], maxStreak: 0,
-    perfectSession: false, comebackKid: false, sessionTotal: 0, equippedTitle: null,
+    totalCorrect: 0, maxStreak: 0,
+    perfectSession: false, comebackKid: false, sessionTotal: 0,
+    earnedQuests: [],    // quest IDs the user has completed
+    selectedTitle: null, // quest ID of the title shown on homepage
   };
 }
-let achData = freshAchData();
-let currentStreak  = 0;
-let wrongStreak    = 0; // consecutive wrongs for comeback kid tracking
-let comingBack     = false;
-let comebackCount  = 0;
+let userData = freshUserData();
+let currentStreak = 0;
+let wrongStreak   = 0;
+let comingBack    = false;
+let comebackCount = 0;
 
-function getRank(xp) {
-  let rank = RANKS[0];
-  for (const r of RANKS) { if (xp >= r.xp) rank = r; else break; }
-  return rank;
-}
-function getNextRank(xp) {
-  return RANKS.find(r => r.xp > xp) || null;
-}
-
-// Returns the rank/title object currently displayed (respects equipped choice)
-function getDisplayRank() {
-  const auto = getRank(achData.xp);
-  const eq   = achData.equippedTitle;
-  if (!eq) return auto;
-  if (eq.startsWith('rank_')) {
-    const idx = parseInt(eq.split('_')[1]);
-    return RANKS[idx] || auto;
-  }
-  if (eq.startsWith('secret_')) {
-    const qId = eq.replace('secret_', '');
-    const q = SECRET_QUESTS.find(q => q.id === qId);
-    if (q) return { emoji: q.emoji, title: q.name, sub: '✨ Secret title' };
-  }
-  return auto;
-}
-
-// Equip a title by ID ('rank_3', 'secret_speed_demon', null for auto, or 'null' string from onclick)
-function equipTitle(titleId) {
-  achData.equippedTitle = (titleId === 'null' || titleId === null) ? null : titleId;
-  saveAchievements();
-  updateRankBanner();
-  renderAchievementScreen();
-}
-
-function updateRankBanner() {
-  const xp      = achData.xp;
-  const display = getDisplayRank();
-  const autoRank = getRank(xp);
-  const next    = getNextRank(xp);
-  const banner  = document.getElementById('rankBanner');
+function updateTitleBanner() {
+  const banner = document.getElementById('titleBanner');
   if (!banner) return;
-  banner.classList.add('visible');
-  document.getElementById('rankBannerEmoji').textContent = display.emoji;
-  document.getElementById('rankBannerTitle').textContent = display.title;
-  document.getElementById('rankBannerXp').textContent    = `${xp.toLocaleString()} XP`;
-  // Progress bar always shows real XP progress to next rank
-  const pct = next ? Math.min(100, Math.round(((xp - autoRank.xp) / (next.xp - autoRank.xp)) * 100)) : 100;
-  document.getElementById('rankBannerFill').style.width  = pct + '%';
-}
-
-function awardXP(amount, reason, icon) {
-  achData.xp += amount;
-  saveAchievements();
-  updateRankBanner();
-  showAchToast(icon || '⭐', `+${amount} XP`, reason);
-}
-
-function checkMilestones(mode) {
-  const count = achData.stats[mode];
-  for (const step of MILESTONE_STEPS) {
-    const id = `${mode}_${step}`;
-    if (count >= step && !achData.earned.includes(id)) {
-      achData.earned.push(id);
-      const m = MILESTONE_MODES.find(x => x.key === mode);
-      const xpGain = step;
-      achData.xp += xpGain;
-      saveAchievements();
-      showAchToast(m.emoji, `${m.label} × ${step}!`, `+${xpGain} XP earned`);
+  if (userData.selectedTitle) {
+    const q = QUESTS.find(q => q.id === userData.selectedTitle);
+    if (q) {
+      document.getElementById('titleBannerEmoji').textContent = q.emoji;
+      document.getElementById('titleBannerName').textContent  = q.name;
+      banner.classList.add('visible');
+      return;
     }
   }
+  banner.classList.remove('visible');
 }
 
-function checkSecrets() {
-  for (const q of SECRET_QUESTS) {
-    if (!achData.earned.includes('secret_' + q.id) && q.check(achData)) {
-      achData.earned.push('secret_' + q.id);
-      achData.xp += q.xp;
-      saveAchievements();
-      showAchToast(q.emoji, `Secret Quest: ${q.name}!`, `+${q.xp} XP — "${q.desc}"`);
+function selectTitle(questId) {
+  userData.selectedTitle = (questId === 'null' || questId === null) ? null : questId;
+  saveUserData();
+  updateTitleBanner();
+  renderQuestScreen();
+}
+
+function checkQuests() {
+  for (const q of QUESTS) {
+    if (!userData.earnedQuests.includes(q.id) && q.check(userData)) {
+      userData.earnedQuests.push(q.id);
+      saveUserData();
+      showQuestToast(q.emoji, `Quest Unlocked: ${q.name}!`, q.desc);
     }
   }
 }
 
 function onCorrectAnswer() {
-  achData.xp += 1;
-  achData.totalCorrect++;
-  achData.sessionTotal++;
-  achData.stats[currentMode] = (achData.stats[currentMode] || 0) + 1;
+  userData.totalCorrect++;
+  userData.sessionTotal++;
+  userData.stats[currentMode] = (userData.stats[currentMode] || 0) + 1;
   currentStreak++;
   wrongStreak = 0;
-  if (currentStreak > achData.maxStreak) achData.maxStreak = currentStreak;
-  // comeback kid
+  if (currentStreak > userData.maxStreak) userData.maxStreak = currentStreak;
   if (comingBack) {
     comebackCount++;
-    if (comebackCount >= 10) { achData.comebackKid = true; comingBack = false; comebackCount = 0; }
+    if (comebackCount >= 10) { userData.comebackKid = true; comingBack = false; comebackCount = 0; }
   }
-  checkMilestones(currentMode);
-  checkSecrets();
-  updateRankBanner(); // reflect XP gain instantly on every correct answer
-  saveAchievements();
+  checkQuests();
+  saveUserData();
 }
 
 function onWrongAnswer() {
@@ -2762,7 +2632,7 @@ function onWrongAnswer() {
 }
 
 let toastTimer = null;
-function showAchToast(icon, text, sub) {
+function showQuestToast(icon, text, sub) {
   const toast = document.getElementById('achToast');
   document.getElementById('achToastIcon').textContent = icon;
   document.getElementById('achToastText').textContent = text;
@@ -2773,232 +2643,118 @@ function showAchToast(icon, text, sub) {
 }
 
 let _cloudSaveTimer = null;
-function saveAchievements() {
-  // localStorage — keyed per user so multiple Google accounts don't collide (saves instantly)
-  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
-  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
-  // Firestore — debounced so we don't write on every single correct answer
-  if (window.saveAchievementsCloud) {
+function saveUserData() {
+  const lsKey = window.currentUserId ? 'mathpop_user_' + window.currentUserId : null;
+  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(userData)); } catch(e){}
+  if (window.saveUserDataCloud) {
     clearTimeout(_cloudSaveTimer);
-    _cloudSaveTimer = setTimeout(() => {
-      window.saveAchievementsCloud(achData);
-    }, 1500);
+    _cloudSaveTimer = setTimeout(() => { window.saveUserDataCloud(userData); }, 1500);
   }
 }
 
-function loadAchievements(data) {
+window.loadUserData = (data) => {
   if (!data) return;
-  // Take the best values — never let stale cloud data roll back local progress
-  achData.xp           = Math.max(achData.xp,           data.xp           || 0);
-  achData.totalCorrect = Math.max(achData.totalCorrect,  data.totalCorrect || 0);
-  achData.maxStreak    = Math.max(achData.maxStreak,     data.maxStreak    || 0);
-  // Union of earned arrays — keep everything from both sources
-  const combined = new Set([...achData.earned, ...(data.earned || [])]);
-  achData.earned = Array.from(combined);
-  // Merge per-mode stats (take higher of each)
+  // Merge — always take the highest values so stale data never rolls back progress
+  userData.totalCorrect = Math.max(userData.totalCorrect, data.totalCorrect || 0);
+  userData.maxStreak    = Math.max(userData.maxStreak,    data.maxStreak    || 0);
   const remoteStats = data.stats || {};
-  Object.keys(achData.stats).forEach(k => {
-    achData.stats[k] = Math.max(achData.stats[k] || 0, remoteStats[k] || 0);
+  Object.keys(userData.stats).forEach(k => {
+    userData.stats[k] = Math.max(userData.stats[k] || 0, remoteStats[k] || 0);
   });
-  // Boolean flags — once true, always true
-  achData.perfectSession = achData.perfectSession || !!data.perfectSession;
-  achData.comebackKid    = achData.comebackKid    || !!data.comebackKid;
-  // Equipped title — trust the remote value if we don't have one locally
-  if (!achData.equippedTitle && data.equippedTitle) {
-    achData.equippedTitle = data.equippedTitle;
-  }
-}
-window.loadAchievements = (data) => {
-  loadAchievements(data);
-  updateRankBanner();
-  // If achievements screen is open, refresh it so rank/XP shows immediately
+  userData.perfectSession = userData.perfectSession || !!data.perfectSession;
+  userData.comebackKid    = userData.comebackKid    || !!data.comebackKid;
+  // Union of earned quests
+  const combined = new Set([...userData.earnedQuests, ...(data.earnedQuests || [])]);
+  userData.earnedQuests = Array.from(combined);
+  // Selected title — trust remote if nothing local
+  if (!userData.selectedTitle && data.selectedTitle) userData.selectedTitle = data.selectedTitle;
+
+  updateTitleBanner();
   const achScreen = document.getElementById('achievement-screen');
-  if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
-  // Write merged result back to user-keyed localStorage for instant load next time
-  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : 'mathpop_ach';
-  try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e) {}
+  if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
+  const lsKey = window.currentUserId ? 'mathpop_user_' + window.currentUserId : null;
+  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(userData)); } catch(e) {}
 };
-window.updateRankBanner = updateRankBanner;
-window.getAchData = () => achData;
+
+window.updateTitleBanner = updateTitleBanner;
+window.getUserData = () => userData;
 window.saveThemeForUser = function(userId) {
   if (!userId) return;
   try { localStorage.setItem('mathpop_theme_' + userId, JSON.stringify(currentTheme)); } catch(e) {}
 };
 
-// Called on sign-out — wipe all progress from memory and show clean default state
 window.resetToGuest = function() {
-  achData = freshAchData();
+  userData = freshUserData();
   currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
-  updateRankBanner();
-  // If achievements screen is open, re-render it with default state
+  updateTitleBanner();
   const achScreen = document.getElementById('achievement-screen');
-  if (achScreen && achScreen.style.display !== 'none') renderAchievementScreen();
+  if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
 };
 
-// Banner stays hidden until updateRankBanner() is called with real data.
-// (No loading spinner — auth now skips the initial null so there's no flicker.)
-
-// Save to user-keyed localStorage on page close/refresh (only if signed in)
-// Also flush any pending debounced Firestore save so progress isn't lost on navigation
 window.addEventListener('beforeunload', () => {
-  const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
-  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
+  const lsKey = window.currentUserId ? 'mathpop_user_' + window.currentUserId : null;
+  if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(userData)); } catch(e){}
   try { localStorage.setItem('mathpop_theme', JSON.stringify(currentTheme)); } catch(e){}
   if (window.currentUserId) {
     try { localStorage.setItem('mathpop_theme_' + window.currentUserId, JSON.stringify(currentTheme)); } catch(e){}
   }
-  if (window.currentUserId) {
-    try { localStorage.setItem('mathpop_theme_' + window.currentUserId, JSON.stringify(currentTheme)); } catch(e){}
-  }
-  // Flush any pending Firestore save immediately so rankings aren't lost
   clearTimeout(_cloudSaveTimer);
-  if (window.saveAchievementsCloud && window.currentUserId) {
-    window.saveAchievementsCloud(achData);
+  if (window.saveUserDataCloud && window.currentUserId) {
+    window.saveUserDataCloud(userData);
   }
 });
 
-function showAchievements() {
-  // hide whatever screen is visible
-  ['setup-screen','game-screen','end-screen','tutorial-screen'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el._prevDisplay = el.style.display;
-  });
+function showQuests() {
   document.getElementById('achievement-screen').style.display = 'block';
   document.getElementById('setup-screen').style.display = 'none';
-  renderAchievementScreen();
+  renderQuestScreen();
 }
 
-function hideAchievements() {
+function hideQuests() {
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
-  updateRankBanner();
 }
 
-function renderAchievementScreen() {
-  const xp      = achData.xp;
-  const autoRank = getRank(xp);
-  const display  = getDisplayRank();
-  const next     = getNextRank(xp);
-
-  // Rank card shows equipped title
-  document.getElementById('achRankEmoji').textContent = display.emoji;
-  document.getElementById('achRankTitle').textContent = display.title;
-  document.getElementById('achRankSub').textContent   = display.sub || '';
-  document.getElementById('achXpBig').textContent     = `${xp.toLocaleString()} XP`;
-
-  if (next) {
-    const pct = Math.min(100, Math.round(((xp - autoRank.xp) / (next.xp - autoRank.xp)) * 100));
-    document.getElementById('achXpBar').style.width   = pct + '%';
-    document.getElementById('achXpLabel').textContent = `${(xp - autoRank.xp).toLocaleString()} / ${(next.xp - autoRank.xp).toLocaleString()} XP to "${next.title}"`;
-  } else {
-    document.getElementById('achXpBar').style.width   = '100%';
-    document.getElementById('achXpLabel').textContent = 'MAX RANK — you are transcendent.';
-  }
-
-  // Stats
-  document.getElementById('statMultiply').textContent  = (achData.stats.multiply||0).toLocaleString();
-  document.getElementById('statShort').textContent     = (achData.stats.shortdivide||0).toLocaleString();
-  document.getElementById('statLong').textContent      = (achData.stats.longdivide||0).toLocaleString();
-  document.getElementById('statRemainder').textContent = (achData.stats.remainderdiv||0).toLocaleString();
-  document.getElementById('statAdd').textContent       = (achData.stats.add||0).toLocaleString();
-  document.getElementById('statSubtract').textContent  = (achData.stats.subtract||0).toLocaleString();
-
-  // Milestones
-  const mList = document.getElementById('achMilestoneList');
-  mList.innerHTML = '';
-  for (const m of MILESTONE_MODES) {
-    const count = achData.stats[m.key] || 0;
-    // find next uncompleted step and last 2 completed
-    const steps = MILESTONE_STEPS.filter(s => s <= count);
-    const upcoming = MILESTONE_STEPS.filter(s => s > count).slice(0, 3);
-    [...steps.slice(-2), ...upcoming].forEach(step => {
-      const id = `${m.key}_${step}`;
-      const earned = achData.earned.includes(id);
-      const div = document.createElement('div');
-      div.className = 'ach-item' + (earned ? ' earned' : '');
-      div.innerHTML = `<div class="ach-icon">${m.emoji}</div>
-        <div class="ach-info">
-          <div class="ach-name">${m.label} × ${step.toLocaleString()}</div>
-          <div class="ach-desc">${earned ? '✅ Completed!' : `${count.toLocaleString()} / ${step.toLocaleString()} solved`}</div>
-        </div>
-        <div class="ach-xp">${step} XP</div>`;
-      mList.appendChild(div);
-    });
-  }
-
-  // Secret quests
-  const sList = document.getElementById('achSecretList');
-  sList.innerHTML = '';
-  for (const q of SECRET_QUESTS) {
-    const earned = achData.earned.includes('secret_' + q.id);
+function renderQuestScreen() {
+  // Quest list
+  const qList = document.getElementById('questList');
+  qList.innerHTML = '';
+  for (const q of QUESTS) {
+    const earned = userData.earnedQuests.includes(q.id);
     const div = document.createElement('div');
-    div.className = 'ach-item secret' + (earned ? ' earned' : '');
+    div.className = 'ach-item' + (earned ? ' earned' : '');
     div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🔮'}</div>
       <div class="ach-info">
-        <div class="ach-name">${earned ? q.name : '??? Secret Quest'}</div>
-        <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this quest...'}</div>
-      </div>
-      <div class="ach-xp">${earned ? q.xp + ' XP' : '???'}</div>`;
-    sList.appendChild(div);
+        <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
+        <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
+      </div>`;
+    qList.appendChild(div);
   }
 
-  // ── Title Chooser ──
-  const titlesSection = document.getElementById('achTitlesSection');
-  titlesSection.style.display = 'block';
-  const tList = document.getElementById('achTitlesList');
+  // Title chooser — only earned quests
+  const tList = document.getElementById('titlesList');
   tList.innerHTML = '';
-
-  // All rank titles the user has reached
-  const unlockedRanks = RANKS.filter(r => xp >= r.xp);
-  unlockedRanks.forEach((r, i) => {
-    const titleId   = `rank_${RANKS.indexOf(r)}`;
-    const isEquipped = achData.equippedTitle === titleId ||
-                       (!achData.equippedTitle && r === autoRank);
+  const earned = QUESTS.filter(q => userData.earnedQuests.includes(q.id));
+  if (!earned.length) {
+    tList.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:10px">Complete quests to unlock titles!</div>';
+    return;
+  }
+  earned.forEach(q => {
+    const isEquipped = userData.selectedTitle === q.id;
     const div = document.createElement('div');
     div.className = 'ach-item title-item' + (isEquipped ? ' title-equipped' : '');
     div.innerHTML = `
-      <div class="ach-icon">${r.emoji}</div>
+      <div class="ach-icon">${q.emoji}</div>
       <div class="ach-info">
-        <div class="ach-name">${r.title}</div>
-        <div class="ach-desc">${r.sub}</div>
+        <div class="ach-name">${q.name}</div>
+        <div class="ach-desc">${q.desc}</div>
       </div>
       <button class="equip-btn ${isEquipped ? 'equipped' : ''}"
-        onclick="equipTitle('${isEquipped && achData.equippedTitle ? 'null' : titleId}')">
+        onclick="selectTitle('${isEquipped ? 'null' : q.id}')">
         ${isEquipped ? '✓ Equipped' : 'Equip'}
       </button>`;
     tList.appendChild(div);
   });
-
-  // Secret quest titles the user has earned
-  const earnedSecrets = SECRET_QUESTS.filter(q => achData.earned.includes('secret_' + q.id));
-  if (earnedSecrets.length) {
-    const hdr = document.createElement('div');
-    hdr.className = 'mk-group';
-    hdr.style.cssText = 'margin: 12px 0 6px; padding: 0;';
-    hdr.textContent = '✨ Secret Titles';
-    tList.appendChild(hdr);
-    earnedSecrets.forEach(q => {
-      const titleId   = `secret_${q.id}`;
-      const isEquipped = achData.equippedTitle === titleId;
-      const div = document.createElement('div');
-      div.className = 'ach-item secret earned title-item' + (isEquipped ? ' title-equipped' : '');
-      div.innerHTML = `
-        <div class="ach-icon">${q.emoji}</div>
-        <div class="ach-info">
-          <div class="ach-name">${q.name}</div>
-          <div class="ach-desc">✨ Rare secret title</div>
-        </div>
-        <button class="equip-btn ${isEquipped ? 'equipped' : ''}"
-          onclick="equipTitle('${isEquipped ? 'null' : titleId}')">
-          ${isEquipped ? '✓ Equipped' : 'Equip'}
-        </button>`;
-      tList.appendChild(div);
-    });
-  }
-
-  if (!unlockedRanks.length) {
-    tList.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:10px">Keep earning XP to unlock titles!</div>';
-  }
 }
 
 // Init — only apply default theme if nothing is saved
