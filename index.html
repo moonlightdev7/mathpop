@@ -99,25 +99,121 @@
     border-radius: 50%;
     border: 2px solid var(--primary);
     object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
   }
+  .user-avatar:hover { transform: scale(1.1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 30%, transparent); }
   .user-name {
     font-weight: 700;
     font-size: 0.85rem;
     color: var(--text);
-  }
-  .signout-btn {
-    padding: 5px 12px;
-    border-radius: 14px;
-    border: 2px solid var(--border);
-    background: transparent;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 0.78rem;
-    color: var(--muted);
     cursor: pointer;
+  }
+  .user-name:hover { text-decoration: underline; }
+
+  /* ── SETTINGS SCREEN ── */
+  #settings-screen {
+    display: none; max-width: 500px; margin: 0 auto; padding-bottom: 40px;
+  }
+  .settings-header {
+    background: var(--card); border-radius: 20px; padding: 24px;
+    text-align: center; margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .settings-header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--correct));
+  }
+  .settings-avatar-wrap {
+    position: relative; display: inline-block; margin-bottom: 12px;
+  }
+  .settings-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 3px solid var(--primary); object-fit: cover;
+  }
+  .settings-avatar-edit {
+    position: absolute; bottom: 0; right: 0;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: white;
+    border: 2px solid var(--card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; cursor: pointer; transition: transform 0.15s;
+  }
+  .settings-avatar-edit:hover { transform: scale(1.15); }
+  .settings-display-name {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    color: var(--primary); margin-bottom: 2px;
+  }
+  .settings-email {
+    font-size: 0.8rem; color: var(--muted); font-weight: 600;
+  }
+  .settings-section {
+    background: var(--card); border-radius: 20px; padding: 20px;
+    margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: background 0.3s;
+  }
+  .settings-section h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    color: var(--primary); margin: 0 0 14px 0;
+  }
+  .settings-field { margin-bottom: 14px; }
+  .settings-field:last-child { margin-bottom: 0; }
+  .settings-label {
+    font-size: 0.8rem; font-weight: 700; color: var(--muted);
+    margin-bottom: 6px; display: block;
+  }
+  .settings-input {
+    width: 100%; padding: 10px 14px; border-radius: 12px;
+    border: 2px solid var(--border); background: var(--bg);
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem;
+    font-weight: 700; color: var(--text);
+    transition: border-color 0.2s; outline: none;
+  }
+  .settings-input:focus { border-color: var(--primary); }
+  .settings-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px; border-radius: 14px;
+    border: 2px solid var(--primary); background: transparent;
+    color: var(--primary); font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.9rem; cursor: pointer;
     transition: all 0.15s;
   }
-  .signout-btn:hover { border-color: var(--wrong); color: var(--wrong); }
+  .settings-btn:hover { background: var(--primary); color: white; }
+  .settings-btn.save-btn { background: var(--primary); color: white; border-color: var(--primary); }
+  .settings-btn.save-btn:hover { opacity: 0.9; }
+  .settings-btn.danger {
+    border-color: var(--wrong); color: var(--wrong);
+  }
+  .settings-btn.danger:hover { background: var(--wrong); color: white; }
+  .settings-status {
+    text-align: center; font-size: 0.82rem; font-weight: 700;
+    padding: 8px; border-radius: 10px; margin-top: 10px; display: none;
+  }
+  .settings-status.success { display: block; color: var(--correct); background: color-mix(in srgb, var(--correct) 10%, var(--bg)); }
+  .settings-status.error { display: block; color: var(--wrong); background: color-mix(in srgb, var(--wrong) 10%, var(--bg)); }
+
+  /* Delete confirmation modal */
+  .delete-confirm-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 200;
+    justify-content: center; align-items: center;
+  }
+  .delete-confirm-overlay.visible { display: flex; }
+  .delete-confirm-box {
+    background: var(--card); border-radius: 20px; padding: 28px 24px;
+    max-width: 360px; width: 90%; text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  }
+  .delete-confirm-box h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1.2rem;
+    color: var(--wrong); margin-bottom: 10px;
+  }
+  .delete-confirm-box p {
+    font-size: 0.85rem; color: var(--muted); font-weight: 600; margin-bottom: 18px; line-height: 1.5;
+  }
+  .delete-confirm-btns { display: flex; gap: 10px; }
+  .delete-confirm-btns button { flex: 1; }
 
 
   /* ── PAGE CONTENT ── */
@@ -735,10 +831,15 @@
   /* ── TROPHY / ACHIEVEMENTS ── */
   .trophy-btn {
     background: transparent; border: none; font-size: 1.3rem;
-    cursor: pointer; padding: 4px; border-radius: 10px;
+    cursor: pointer; padding: 4px 8px; border-radius: 10px;
     transition: transform 0.15s; line-height: 1;
+    display: flex; align-items: center; gap: 4px;
   }
-  .trophy-btn:hover { transform: scale(1.2); }
+  .trophy-btn:hover { transform: scale(1.05); }
+  .trophy-label {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem;
+    color: var(--muted); letter-spacing: 0.3px;
+  }
 
   #achievement-screen {
     display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
@@ -866,10 +967,9 @@
     </button>
   </div>
   <div id="signedIn">
-    <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Quests &amp; Titles">🏆</button>
-    <img class="user-avatar" id="userAvatar" src="" alt="avatar">
-    <span class="user-name" id="userName"></span>
-    <button class="signout-btn" onclick="signOut()">Sign out</button>
+    <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
+    <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
+    <span class="user-name" id="userName" onclick="showSettings()" title="Account Settings"></span>
   </div>
 </div>
 
@@ -1105,6 +1205,57 @@
     <h3>👑 Your Titles</h3>
     <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to display a title on your homepage. Tap again to remove it.</p>
     <div class="ach-list" id="titlesList"></div>
+  </div>
+</div>
+
+<!-- ── SETTINGS ── -->
+<div id="settings-screen">
+  <button class="ach-back-btn" onclick="hideSettings()">← Back</button>
+
+  <div class="settings-header">
+    <div class="settings-avatar-wrap">
+      <img class="settings-avatar" id="settingsAvatar" src="" alt="avatar">
+      <label class="settings-avatar-edit" for="avatarUpload" title="Change photo">📷</label>
+      <input type="file" id="avatarUpload" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+    </div>
+    <div class="settings-display-name" id="settingsName"></div>
+    <div class="settings-email" id="settingsEmail"></div>
+  </div>
+
+  <div class="settings-section">
+    <h3>✏️ Profile</h3>
+    <div class="settings-field">
+      <label class="settings-label">Display Name / Nickname</label>
+      <input class="settings-input" id="settingsNameInput" type="text" placeholder="Enter a name or nickname" maxlength="30">
+    </div>
+    <button class="settings-btn save-btn" onclick="saveDisplayName()">💾 Save Name</button>
+    <div class="settings-status" id="nameStatus"></div>
+  </div>
+
+  <div class="settings-section">
+    <h3>📸 Profile Picture</h3>
+    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;font-weight:600">Tap the camera icon on your photo above, or use the button below.</p>
+    <button class="settings-btn" onclick="document.getElementById('avatarUpload').click()">📷 Choose New Photo</button>
+    <div class="settings-status" id="avatarStatus"></div>
+  </div>
+
+  <div class="settings-section">
+    <h3>🚪 Account</h3>
+    <button class="settings-btn" onclick="signOut()">👋 Sign Out</button>
+    <div style="height:10px"></div>
+    <button class="settings-btn danger" onclick="showDeleteConfirm()">🗑️ Delete Account</button>
+  </div>
+</div>
+
+<!-- Delete account confirmation -->
+<div class="delete-confirm-overlay" id="deleteConfirmOverlay" onclick="hideDeleteConfirm()">
+  <div class="delete-confirm-box" onclick="event.stopPropagation()">
+    <h3>Delete Your Account?</h3>
+    <p>This will permanently erase all your progress, quests, ranks, and data. This cannot be undone.</p>
+    <div class="delete-confirm-btns">
+      <button class="settings-btn" onclick="hideDeleteConfirm()">Cancel</button>
+      <button class="settings-btn danger" onclick="confirmDeleteAccount()">Delete Forever</button>
+    </div>
   </div>
 </div>
 
@@ -1508,8 +1659,8 @@
 <!-- ── FIREBASE ── -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut, deleteUser, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyCiyIdj0ATLrzf8EpppuG0ZVhAgs9YdkBE",
@@ -1595,6 +1746,9 @@
           if (data.neonPack)   window.unlockNeon(true);
           if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
           if (data.userData && window.loadUserData) window.loadUserData(data.userData);
+          // Restore custom display name / photo if user changed them in settings
+          if (data.displayName) document.getElementById('userName').textContent = data.displayName;
+          if (data.photoURL) document.getElementById('userAvatar').src = data.photoURL;
         } else {
           // Brand new user — seed Firestore
           if (window.saveUserDataCloud && window.getUserData) window.saveUserDataCloud(window.getUserData());
@@ -1614,6 +1768,36 @@
       _authInitialized = true;
     }
   });
+
+  // ── SETTINGS FUNCTIONS (exposed to global) ──
+  window.updateDisplayName = async (newName) => {
+    const user = auth.currentUser;
+    if (!user || !newName) throw new Error('Not signed in or empty name');
+    await updateProfile(user, { displayName: newName });
+    await setDoc(doc(db, 'users', user.uid), { displayName: newName }, { merge: true });
+    document.getElementById('userName').textContent = newName;
+  };
+
+  window.updateAvatarURL = async (dataURL) => {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Not signed in');
+    await updateProfile(user, { photoURL: dataURL });
+    await setDoc(doc(db, 'users', user.uid), { photoURL: dataURL }, { merge: true });
+    document.getElementById('userAvatar').src = dataURL;
+  };
+
+  window.deleteAccount = async () => {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Not signed in');
+    const uid = user.uid;
+    // Clear Firestore document
+    try { await deleteDoc(doc(db, 'users', uid)); } catch(e) { console.error('[MathPop] Firestore delete error:', e); }
+    // Clear localStorage
+    try { localStorage.removeItem('mathpop_user_' + uid); } catch(e) {}
+    try { localStorage.removeItem('mathpop_theme_' + uid); } catch(e) {}
+    // Delete Firebase Auth account
+    await deleteUser(user);
+  };
 </script>
 
 <!-- ── MAIN SCRIPT ── -->
@@ -2844,6 +3028,121 @@ window.resetToGuest = function() {
   const achScreen = document.getElementById('achievement-screen');
   if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
 };
+
+// ── SETTINGS ──
+function showSettings() {
+  const avatar = document.getElementById('userAvatar');
+  const name = document.getElementById('userName');
+  document.getElementById('settingsAvatar').src = avatar ? avatar.src : '';
+  document.getElementById('settingsName').textContent = name ? name.textContent : '';
+  document.getElementById('settingsEmail').textContent = window.currentUserId ? 'Signed in with Google' : '';
+  document.getElementById('settingsNameInput').value = name ? name.textContent : '';
+  // Clear statuses
+  document.getElementById('nameStatus').className = 'settings-status';
+  document.getElementById('nameStatus').textContent = '';
+  document.getElementById('avatarStatus').className = 'settings-status';
+  document.getElementById('avatarStatus').textContent = '';
+
+  document.getElementById('settings-screen').style.display = 'block';
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('achievement-screen').style.display = 'none';
+}
+
+function hideSettings() {
+  document.getElementById('settings-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+}
+
+async function saveDisplayName() {
+  const input = document.getElementById('settingsNameInput');
+  const status = document.getElementById('nameStatus');
+  const newName = input.value.trim();
+  if (!newName) { status.className = 'settings-status error'; status.textContent = 'Name cannot be empty.'; return; }
+  if (newName.length > 30) { status.className = 'settings-status error'; status.textContent = 'Name is too long (max 30 characters).'; return; }
+  try {
+    await window.updateDisplayName(newName);
+    document.getElementById('settingsName').textContent = newName;
+    status.className = 'settings-status success';
+    status.textContent = 'Name updated!';
+  } catch(e) {
+    console.error('[MathPop] Name update error:', e);
+    status.className = 'settings-status error';
+    status.textContent = 'Failed to update name. Try again.';
+  }
+}
+
+function handleAvatarUpload(event) {
+  const file = event.target.files[0];
+  const status = document.getElementById('avatarStatus');
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    status.className = 'settings-status error';
+    status.textContent = 'Please select an image file.';
+    return;
+  }
+  if (file.size > 200 * 1024) {
+    status.className = 'settings-status error';
+    status.textContent = 'Image too large (max 200 KB). Try a smaller photo.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    // Resize to 128x128 to keep Firestore doc small
+    const img = new Image();
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128; canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const sx = (img.width - size) / 2;
+      const sy = (img.height - size) / 2;
+      ctx.drawImage(img, sx, sy, size, size, 0, 0, 128, 128);
+      const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+      try {
+        await window.updateAvatarURL(dataURL);
+        document.getElementById('settingsAvatar').src = dataURL;
+        status.className = 'settings-status success';
+        status.textContent = 'Profile picture updated!';
+      } catch(e) {
+        console.error('[MathPop] Avatar update error:', e);
+        status.className = 'settings-status error';
+        status.textContent = 'Failed to update photo. Try again.';
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function showDeleteConfirm() {
+  document.getElementById('deleteConfirmOverlay').classList.add('visible');
+}
+function hideDeleteConfirm() {
+  document.getElementById('deleteConfirmOverlay').classList.remove('visible');
+}
+
+async function confirmDeleteAccount() {
+  hideDeleteConfirm();
+  try {
+    await window.deleteAccount();
+    // Clear all local data
+    userData = freshUserData();
+    updateTitleBanner();
+    updateXpBanner();
+    document.getElementById('settings-screen').style.display = 'none';
+    document.getElementById('setup-screen').style.display = 'block';
+    document.getElementById('signedOut').style.display = 'flex';
+    document.getElementById('signedIn').style.display  = 'none';
+  } catch(e) {
+    console.error('[MathPop] Account deletion error:', e);
+    // If requires-recent-login, tell user
+    if (e.code === 'auth/requires-recent-login') {
+      alert('For security, please sign out, sign back in, then try deleting again.');
+    } else {
+      alert('Failed to delete account. Please try again.');
+    }
+  }
+}
 
 window.addEventListener('beforeunload', () => {
   const lsKey = window.currentUserId ? 'mathpop_user_' + window.currentUserId : null;
