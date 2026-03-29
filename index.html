@@ -146,6 +146,33 @@
   .title-banner-emoji { font-size: 1.3rem; line-height: 1; }
   .title-banner-name { font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: var(--primary); }
 
+  /* ── XP RANK BANNER ── */
+  .xp-banner {
+    display: none; max-width: 340px; margin: 0 auto 14px; padding: 10px 16px;
+    background: var(--card); border-radius: 16px; box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+    border: 2px solid var(--border); transition: background 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .xp-banner.visible { display: block; }
+  .xp-banner-top {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+  }
+  .xp-rank-label {
+    font-family: 'Fredoka One', cursive; font-size: 0.92rem; color: var(--primary);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .xp-count {
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+  }
+  .xp-bar-track {
+    width: 100%; height: 8px; background: var(--border); border-radius: 8px; overflow: hidden;
+  }
+  .xp-bar-fill {
+    height: 100%; border-radius: 8px;
+    background: linear-gradient(90deg, var(--primary), var(--correct));
+    transition: width 0.5s ease;
+  }
+
   /* ── THEME TOGGLE ── */
   .theme-toggle-btn {
     display: flex;
@@ -777,6 +804,53 @@
     font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.78rem;
     cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
   }
+
+  /* Rank progression in quests page */
+  .rank-progress-card {
+    background: var(--card); border-radius: 20px; padding: 20px 24px;
+    margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: background 0.3s;
+  }
+  .rank-progress-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+  }
+  .rank-progress-header h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); margin: 0;
+  }
+  .rank-progress-total {
+    font-size: 0.82rem; font-weight: 700; color: var(--muted);
+  }
+  .rank-bar-track {
+    width: 100%; height: 12px; background: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px;
+  }
+  .rank-bar-fill {
+    height: 100%; border-radius: 12px;
+    background: linear-gradient(90deg, var(--primary), var(--correct));
+    transition: width 0.5s ease;
+  }
+  .rank-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px;
+  }
+  .rank-tile {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 12px;
+    border: 2px solid var(--border); background: var(--bg);
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+    transition: all 0.2s;
+  }
+  .rank-tile.unlocked {
+    border-color: var(--correct); color: var(--text);
+    background: color-mix(in srgb, var(--correct) 10%, var(--bg));
+  }
+  .rank-tile.current {
+    border-color: var(--primary); color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 10%, var(--bg));
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .rank-tile-emoji { font-size: 1.2rem; flex-shrink: 0; }
+  .rank-tile-info { line-height: 1.3; }
+  .rank-tile-name { font-weight: 800; font-size: 0.8rem; }
+  .rank-tile-req { font-size: 0.7rem; font-weight: 600; opacity: 0.7; }
   .equip-btn:hover { background: var(--primary); color: white; }
   .equip-btn.equipped { background: var(--primary); color: white; }
 </style>
@@ -875,6 +949,15 @@
   <div class="title-banner" id="titleBanner" onclick="showQuests()" title="Your Titles">
     <span class="title-banner-emoji" id="titleBannerEmoji"></span>
     <span class="title-banner-name" id="titleBannerName"></span>
+  </div>
+
+  <!-- XP rank banner — minimal progress tracker -->
+  <div class="xp-banner" id="xpBanner" onclick="showQuests()" title="View your rank & quests">
+    <div class="xp-banner-top">
+      <span class="xp-rank-label"><span id="xpRankEmoji"></span> <span id="xpRankName"></span></span>
+      <span class="xp-count" id="xpCount"></span>
+    </div>
+    <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
   </div>
 
   <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
@@ -1004,9 +1087,12 @@
   <button class="ach-back-btn" onclick="hideQuests()">← Back</button>
 
   <div class="quest-header-card">
-    <div class="quest-header-title">🔮 Quests &amp; Titles</div>
-    <div class="quest-header-sub">Complete quests to unlock titles you can show on your homepage</div>
+    <div class="quest-header-title">🔮 Ranks, Quests &amp; Titles</div>
+    <div class="quest-header-sub">Answer questions to rank up, complete quests, and equip titles for your homepage</div>
   </div>
+
+  <!-- Rank progression -->
+  <div class="rank-progress-card" id="rankProgressCard"></div>
 
   <!-- Quest list -->
   <div class="ach-section">
@@ -2546,6 +2632,45 @@ function stampFormula() {
   }
 }
 
+// ── RANKS (new title every 25 questions, 25 ranks) ──
+const RANKS = [
+  { emoji:'🌱', name:'Seedling',          req:0 },
+  { emoji:'🐣', name:'Hatchling',         req:25 },
+  { emoji:'🐾', name:'Explorer',          req:50 },
+  { emoji:'📖', name:'Apprentice',        req:75 },
+  { emoji:'🧮', name:'Number Cruncher',   req:100 },
+  { emoji:'🔑', name:'Problem Solver',    req:125 },
+  { emoji:'⚙️', name:'Mechanist',         req:150 },
+  { emoji:'🛡️', name:'Defender',          req:175 },
+  { emoji:'⚔️', name:'Warrior',           req:200 },
+  { emoji:'🏹', name:'Sharpshooter',      req:225 },
+  { emoji:'🧙', name:'Math Mage',         req:250 },
+  { emoji:'🔥', name:'Blazer',            req:275 },
+  { emoji:'⚡', name:'Thunderbolt',        req:300 },
+  { emoji:'🌊', name:'Tidal Force',       req:325 },
+  { emoji:'🦅', name:'Sky Captain',       req:350 },
+  { emoji:'🏔️', name:'Summit Seeker',     req:375 },
+  { emoji:'💎', name:'Diamond Mind',      req:400 },
+  { emoji:'🐉', name:'Dragon Tamer',      req:425 },
+  { emoji:'👑', name:'Royalty',            req:450 },
+  { emoji:'🌟', name:'Supernova',         req:475 },
+  { emoji:'🧬', name:'Mastermind',        req:500 },
+  { emoji:'🔮', name:'Oracle',            req:525 },
+  { emoji:'🪐', name:'Cosmic Brain',      req:550 },
+  { emoji:'🏆', name:'Grand Champion',    req:575 },
+  { emoji:'🌌', name:'Mathpop Legend',     req:600 },
+];
+
+function getRank(total) {
+  let rank = RANKS[0];
+  for (const r of RANKS) { if (total >= r.req) rank = r; else break; }
+  return rank;
+}
+function getNextRank(total) {
+  for (const r of RANKS) { if (total < r.req) return r; }
+  return null; // maxed out
+}
+
 // ── QUESTS ──
 const QUESTS = [
   { id:'grinder',           emoji:'🔥', name:'The Grinder',          desc:'Solve 1,000 total questions across any mode.',          check: d => d.totalCorrect >= 1000 },
@@ -2580,17 +2705,39 @@ let comebackCount = 0;
 
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
-  if (!banner) return;
-  if (userData.selectedTitle) {
-    const q = QUESTS.find(q => q.id === userData.selectedTitle);
-    if (q) {
-      document.getElementById('titleBannerEmoji').textContent = q.emoji;
-      document.getElementById('titleBannerName').textContent  = q.name;
-      banner.classList.add('visible');
-      return;
+  if (banner) {
+    if (userData.selectedTitle) {
+      const q = QUESTS.find(q => q.id === userData.selectedTitle);
+      if (q) {
+        document.getElementById('titleBannerEmoji').textContent = q.emoji;
+        document.getElementById('titleBannerName').textContent  = q.name;
+        banner.classList.add('visible');
+      } else {
+        banner.classList.remove('visible');
+      }
+    } else {
+      banner.classList.remove('visible');
     }
   }
-  banner.classList.remove('visible');
+  updateXpBanner();
+}
+
+function updateXpBanner() {
+  const xpBanner = document.getElementById('xpBanner');
+  if (!xpBanner) return;
+  const rank = getRank(userData.totalCorrect);
+  const next = getNextRank(userData.totalCorrect);
+  document.getElementById('xpRankEmoji').textContent = rank.emoji;
+  document.getElementById('xpRankName').textContent  = rank.name;
+  if (next) {
+    document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req;
+    const progress = ((userData.totalCorrect - rank.req) / (next.req - rank.req)) * 100;
+    document.getElementById('xpBarFill').style.width = Math.min(progress, 100) + '%';
+  } else {
+    document.getElementById('xpCount').textContent = userData.totalCorrect + ' — MAX RANK!';
+    document.getElementById('xpBarFill').style.width = '100%';
+  }
+  xpBanner.classList.add('visible');
 }
 
 function selectTitle(questId) {
@@ -2611,6 +2758,7 @@ function checkQuests() {
 }
 
 function onCorrectAnswer() {
+  const prevRank = getRank(userData.totalCorrect);
   userData.totalCorrect++;
   userData.sessionTotal++;
   userData.stats[currentMode] = (userData.stats[currentMode] || 0) + 1;
@@ -2621,6 +2769,12 @@ function onCorrectAnswer() {
     comebackCount++;
     if (comebackCount >= 10) { userData.comebackKid = true; comingBack = false; comebackCount = 0; }
   }
+  // Check for rank up
+  const newRank = getRank(userData.totalCorrect);
+  if (newRank.req > prevRank.req) {
+    showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
+  }
+  updateXpBanner();
   checkQuests();
   saveUserData();
 }
@@ -2716,6 +2870,35 @@ function hideQuests() {
 }
 
 function renderQuestScreen() {
+  // Rank progression card
+  const rankCard = document.getElementById('rankProgressCard');
+  if (rankCard) {
+    const rank = getRank(userData.totalCorrect);
+    const next = getNextRank(userData.totalCorrect);
+    const pct = next ? Math.min(((userData.totalCorrect - rank.req) / (next.req - rank.req)) * 100, 100) : 100;
+    let html = `<div class="rank-progress-header">
+      <h3>⭐ Rank Progression</h3>
+      <span class="rank-progress-total">${userData.totalCorrect} questions solved</span>
+    </div>
+    <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${pct}%"></div></div>
+    <div class="rank-grid">`;
+    for (let i = 0; i < RANKS.length; i++) {
+      const r = RANKS[i];
+      const unlocked = userData.totalCorrect >= r.req;
+      const isCurrent = r.req === rank.req;
+      const cls = isCurrent ? 'rank-tile current' : (unlocked ? 'rank-tile unlocked' : 'rank-tile');
+      html += `<div class="${cls}">
+        <span class="rank-tile-emoji">${unlocked ? r.emoji : '🔒'}</span>
+        <div class="rank-tile-info">
+          <div class="rank-tile-name">${unlocked ? r.name : '???'}</div>
+          <div class="rank-tile-req">${r.req} solved</div>
+        </div>
+      </div>`;
+    }
+    html += '</div>';
+    rankCard.innerHTML = html;
+  }
+
   // Quest list
   const qList = document.getElementById('questList');
   qList.innerHTML = '';
