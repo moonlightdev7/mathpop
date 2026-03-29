@@ -215,6 +215,46 @@
   .delete-confirm-btns { display: flex; gap: 10px; }
   .delete-confirm-btns button { flex: 1; }
 
+  /* ── AVATAR CROP MODAL ── */
+  .crop-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7); z-index: 300;
+    justify-content: center; align-items: center;
+    flex-direction: column;
+  }
+  .crop-overlay.visible { display: flex; }
+  .crop-box {
+    background: var(--card); border-radius: 24px; padding: 24px;
+    max-width: 380px; width: 92%; text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  }
+  .crop-box h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1.15rem;
+    color: var(--primary); margin-bottom: 4px;
+  }
+  .crop-box .crop-hint {
+    font-size: 0.8rem; color: var(--muted); font-weight: 600; margin-bottom: 14px;
+  }
+  .crop-canvas-wrap {
+    position: relative; width: 240px; height: 240px;
+    margin: 0 auto 14px; border-radius: 50%; overflow: hidden;
+    border: 3px solid var(--primary); cursor: grab;
+    touch-action: none; user-select: none;
+  }
+  .crop-canvas-wrap:active { cursor: grabbing; }
+  .crop-canvas-wrap canvas {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  }
+  .crop-zoom {
+    display: flex; align-items: center; gap: 10px; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .crop-zoom label { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+  .crop-zoom input[type="range"] {
+    flex: 1; max-width: 180px; accent-color: var(--primary);
+  }
+  .crop-btns { display: flex; gap: 10px; }
+  .crop-btns button { flex: 1; }
 
   /* ── PAGE CONTENT ── */
   .page { padding: 24px 16px 0; }
@@ -1255,6 +1295,25 @@
     <div class="delete-confirm-btns">
       <button class="settings-btn" onclick="hideDeleteConfirm()">Cancel</button>
       <button class="settings-btn danger" onclick="confirmDeleteAccount()">Delete Forever</button>
+    </div>
+  </div>
+</div>
+
+<!-- Avatar crop modal -->
+<div class="crop-overlay" id="cropOverlay">
+  <div class="crop-box" onclick="event.stopPropagation()">
+    <h3>Position Your Photo</h3>
+    <p class="crop-hint">Drag to reposition, use the slider to zoom</p>
+    <div class="crop-canvas-wrap" id="cropCanvasWrap">
+      <canvas id="cropCanvas" width="480" height="480"></canvas>
+    </div>
+    <div class="crop-zoom">
+      <label>🔍</label>
+      <input type="range" id="cropZoom" min="100" max="400" value="100" oninput="cropRedraw()">
+    </div>
+    <div class="crop-btns">
+      <button class="settings-btn" onclick="closeCropModal()">Cancel</button>
+      <button class="settings-btn save-btn" onclick="saveCroppedAvatar()">✓ Save</button>
     </div>
   </div>
 </div>
@@ -3071,6 +3130,12 @@ async function saveDisplayName() {
   }
 }
 
+// ── AVATAR CROP SYSTEM ──
+let _cropImg = null;
+let _cropX = 0, _cropY = 0; // pan offset (in image pixels)
+let _cropDragging = false;
+let _cropLastPointer = null;
+
 function handleAvatarUpload(event) {
   const file = event.target.files[0];
   const status = document.getElementById('avatarStatus');
@@ -3080,38 +3145,123 @@ function handleAvatarUpload(event) {
     status.textContent = 'Please select an image file.';
     return;
   }
-  if (file.size > 200 * 1024) {
-    status.className = 'settings-status error';
-    status.textContent = 'Image too large (max 200 KB). Try a smaller photo.';
-    return;
-  }
+  status.className = 'settings-status';
+  status.textContent = '';
   const reader = new FileReader();
-  reader.onload = async (e) => {
-    // Resize to 128x128 to keep Firestore doc small
+  reader.onload = (e) => {
     const img = new Image();
-    img.onload = async () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 128; canvas.height = 128;
-      const ctx = canvas.getContext('2d');
-      const size = Math.min(img.width, img.height);
-      const sx = (img.width - size) / 2;
-      const sy = (img.height - size) / 2;
-      ctx.drawImage(img, sx, sy, size, size, 0, 0, 128, 128);
-      const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-      try {
-        await window.updateAvatarURL(dataURL);
-        document.getElementById('settingsAvatar').src = dataURL;
-        status.className = 'settings-status success';
-        status.textContent = 'Profile picture updated!';
-      } catch(e) {
-        console.error('[MathPop] Avatar update error:', e);
-        status.className = 'settings-status error';
-        status.textContent = 'Failed to update photo. Try again.';
-      }
-    };
+    img.onload = () => { openCropModal(img); };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
+  // Reset so the same file can be re-selected
+  event.target.value = '';
+}
+
+function openCropModal(img) {
+  _cropImg = img;
+  _cropX = 0; _cropY = 0;
+  document.getElementById('cropZoom').value = 100;
+  document.getElementById('cropOverlay').classList.add('visible');
+  cropRedraw();
+  // Attach pointer events to the canvas wrap
+  const wrap = document.getElementById('cropCanvasWrap');
+  wrap.onpointerdown = cropPointerDown;
+  wrap.onpointermove = cropPointerMove;
+  wrap.onpointerup = cropPointerUp;
+  wrap.onpointerleave = cropPointerUp;
+}
+
+function closeCropModal() {
+  document.getElementById('cropOverlay').classList.remove('visible');
+  _cropImg = null;
+}
+
+function cropRedraw() {
+  if (!_cropImg) return;
+  const canvas = document.getElementById('cropCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; // 480
+  const zoom = parseInt(document.getElementById('cropZoom').value) / 100;
+
+  // The visible area maps to a square region of the source image
+  // At zoom=1, fit the shorter side of the image to the canvas
+  const fitScale = Math.min(_cropImg.width, _cropImg.height);
+  const viewSize = fitScale / zoom; // how many source pixels the canvas shows
+
+  // Center of crop (with pan offset)
+  const cx = _cropImg.width / 2 + _cropX;
+  const cy = _cropImg.height / 2 + _cropY;
+
+  // Clamp so we don't go out of bounds
+  const half = viewSize / 2;
+  const sx = Math.max(0, Math.min(cx - half, _cropImg.width - viewSize));
+  const sy = Math.max(0, Math.min(cy - half, _cropImg.height - viewSize));
+
+  ctx.clearRect(0, 0, W, W);
+  ctx.drawImage(_cropImg, sx, sy, viewSize, viewSize, 0, 0, W, W);
+}
+
+function cropPointerDown(e) {
+  _cropDragging = true;
+  _cropLastPointer = { x: e.clientX, y: e.clientY };
+  e.currentTarget.setPointerCapture(e.pointerId);
+}
+
+function cropPointerMove(e) {
+  if (!_cropDragging || !_cropLastPointer || !_cropImg) return;
+  const zoom = parseInt(document.getElementById('cropZoom').value) / 100;
+  const fitScale = Math.min(_cropImg.width, _cropImg.height);
+  const viewSize = fitScale / zoom;
+  const canvasDisplaySize = document.getElementById('cropCanvasWrap').offsetWidth;
+  // Convert pixel drag to image-pixel offset
+  const scale = viewSize / canvasDisplaySize;
+  _cropX -= (e.clientX - _cropLastPointer.x) * scale;
+  _cropY -= (e.clientY - _cropLastPointer.y) * scale;
+  // Clamp pan
+  const maxPan = Math.max(0, (_cropImg.width - viewSize) / 2);
+  const maxPanY = Math.max(0, (_cropImg.height - viewSize) / 2);
+  _cropX = Math.max(-maxPan, Math.min(maxPan, _cropX));
+  _cropY = Math.max(-maxPanY, Math.min(maxPanY, _cropY));
+  _cropLastPointer = { x: e.clientX, y: e.clientY };
+  cropRedraw();
+}
+
+function cropPointerUp() {
+  _cropDragging = false;
+  _cropLastPointer = null;
+}
+
+async function saveCroppedAvatar() {
+  if (!_cropImg) return;
+  const status = document.getElementById('avatarStatus');
+  const zoom = parseInt(document.getElementById('cropZoom').value) / 100;
+  const fitScale = Math.min(_cropImg.width, _cropImg.height);
+  const viewSize = fitScale / zoom;
+  const cx = _cropImg.width / 2 + _cropX;
+  const cy = _cropImg.height / 2 + _cropY;
+  const half = viewSize / 2;
+  const sx = Math.max(0, Math.min(cx - half, _cropImg.width - viewSize));
+  const sy = Math.max(0, Math.min(cy - half, _cropImg.height - viewSize));
+
+  // Export at 256x256 for good quality
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = 256; outCanvas.height = 256;
+  const outCtx = outCanvas.getContext('2d');
+  outCtx.drawImage(_cropImg, sx, sy, viewSize, viewSize, 0, 0, 256, 256);
+  const dataURL = outCanvas.toDataURL('image/jpeg', 0.85);
+
+  closeCropModal();
+  try {
+    await window.updateAvatarURL(dataURL);
+    document.getElementById('settingsAvatar').src = dataURL;
+    status.className = 'settings-status success';
+    status.textContent = 'Profile picture updated!';
+  } catch(e) {
+    console.error('[MathPop] Avatar update error:', e);
+    status.className = 'settings-status error';
+    status.textContent = 'Failed to update photo. Try again.';
+  }
 }
 
 function showDeleteConfirm() {
