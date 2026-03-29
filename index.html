@@ -1506,7 +1506,7 @@
     try {
       await setDoc(doc(db, 'users', user.uid), { achievements: achData }, { merge: true });
     } catch(e) {
-      console.error('[MathPop] Firestore save failed — check your Security Rules at firebase.google.com:', e);
+      console.error('[MathPop] Firestore save failed — check Security Rules at firebase.google.com:', e);
     }
   };
 
@@ -2770,7 +2770,7 @@ function saveAchievements() {
     clearTimeout(_cloudSaveTimer);
     _cloudSaveTimer = setTimeout(() => {
       window.saveAchievementsCloud(achData);
-    }, 2000); // waits 2s after last XP change before writing to Firestore
+    }, 1500);
   }
 }
 
@@ -2839,13 +2839,11 @@ window.resetToGuest = function() {
 })();
 
 // Save to user-keyed localStorage on page close/refresh (only if signed in)
+// Also flush any pending debounced Firestore save so progress isn't lost on navigation
 window.addEventListener('beforeunload', () => {
   const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
   if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
   try { localStorage.setItem('mathpop_theme', JSON.stringify(currentTheme)); } catch(e){}
-  if (window.currentUserId) {
-    try { localStorage.setItem('mathpop_theme_' + window.currentUserId, JSON.stringify(currentTheme)); } catch(e){}
-  }
 });
 
 function showAchievements() {
