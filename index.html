@@ -1503,7 +1503,11 @@
   window.saveAchievementsCloud = async (achData) => {
     const user = auth.currentUser;
     if (!user) return;
-    await setDoc(doc(db, 'users', user.uid), { achievements: achData }, { merge: true });
+    try {
+      await setDoc(doc(db, 'users', user.uid), { achievements: achData }, { merge: true });
+    } catch(e) {
+      console.error('[MathPop] Firestore save failed — check your Security Rules at firebase.google.com:', e);
+    }
   };
 
   onAuthStateChanged(auth, async (user) => {
@@ -2756,12 +2760,18 @@ function showAchToast(icon, text, sub) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
+let _cloudSaveTimer = null;
 function saveAchievements() {
-  // localStorage — keyed per user so multiple Google accounts don't collide
+  // localStorage — keyed per user so multiple Google accounts don't collide (saves instantly)
   const lsKey = window.currentUserId ? 'mathpop_ach_' + window.currentUserId : null;
   if (lsKey) try { localStorage.setItem(lsKey, JSON.stringify(achData)); } catch(e){}
-  // Firestore if signed in
-  if (window.saveAchievementsCloud) window.saveAchievementsCloud(achData).catch(()=>{});
+  // Firestore — debounced so we don't write on every single correct answer
+  if (window.saveAchievementsCloud) {
+    clearTimeout(_cloudSaveTimer);
+    _cloudSaveTimer = setTimeout(() => {
+      window.saveAchievementsCloud(achData);
+    }, 2000); // waits 2s after last XP change before writing to Firestore
+  }
 }
 
 function loadAchievements(data) {
