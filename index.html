@@ -700,7 +700,7 @@
     display: flex; justify-content: space-between; align-items: center;
     background: var(--card); border-radius: 12px; padding: 6px 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
-    position: sticky; top: 52px; z-index: 100;
+    position: sticky; top: 62px; z-index: 100;
   }
   .score-item { text-align: center; }
   .score-num { font-family: 'Fredoka One', cursive; font-size: 1.2rem; line-height: 1; }
@@ -1977,7 +1977,7 @@
       </select>
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
-      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">✋ Move</button>
+      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Pan</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
       <div class="wb-zoom-controls">
         <button class="wb-zoom-btn" onclick="wbUndo()" title="Undo" id="wbUndoBtn" style="font-size:13px">↩</button>
@@ -3713,15 +3713,9 @@ function applyWbTransform() {
 }
 function toggleWbPan() {
   wbPanMode = !wbPanMode;
-  wbMoveMode = wbPanMode;
   document.getElementById('wbPanBtn').classList.toggle('eraser-on', wbPanMode);
   const vp = document.getElementById('wbViewport');
   vp.style.cursor = wbPanMode ? 'grab' : '';
-  const tc = document.getElementById('textCanvas');
-  if (tc) {
-    tc.style.pointerEvents = wbPanMode ? 'auto' : 'none';
-    tc.style.cursor = wbPanMode ? 'grab' : 'default';
-  }
 }
 
 function initWhiteboard() {
@@ -4039,20 +4033,45 @@ function setFormulaTab(tab, btn) {
   document.getElementById('fp-' + tab).classList.add('active');
 }
 
+let wbTypeState = 0; // 0=draw, 1=type, 2=move text
 function toggleWbType() {
   const btn  = document.getElementById('wbTypeBtn');
   const area = document.getElementById('wbTextArea');
-  const on   = area.classList.toggle('active');
-  btn.classList.toggle('eraser-on', on);
-  btn.textContent = on ? '✏️ Draw' : '⌨️ Type';
-  if (on) { setMoveOff(); document.getElementById('wbTextInput').focus(); }
+  wbTypeState = (wbTypeState + 1) % 3;
+  // Reset all first
+  area.classList.remove('active');
+  wbMoveMode = false;
+  const tc = document.getElementById('textCanvas');
+  if (tc) { tc.style.pointerEvents = 'none'; tc.style.cursor = 'default'; }
+  selectedObj = null; dragObj = null;
+
+  if (wbTypeState === 1) {
+    // Type mode
+    area.classList.add('active');
+    btn.classList.add('eraser-on');
+    btn.textContent = '✋ Move';
+    document.getElementById('wbTextInput').focus();
+  } else if (wbTypeState === 2) {
+    // Move text mode
+    wbMoveMode = true;
+    btn.classList.add('eraser-on');
+    btn.textContent = '✏️ Draw';
+    if (tc) { tc.style.pointerEvents = 'auto'; tc.style.cursor = 'grab'; }
+  } else {
+    // Draw mode
+    btn.classList.remove('eraser-on');
+    btn.textContent = '⌨️ Type';
+  }
+  redrawTextLayer();
 }
 
 function setMoveOff() {
-  wbMoveMode = false; wbPanMode = false; dragObj = null; selectedObj = null;
-  document.getElementById('wbPanBtn').classList.remove('eraser-on');
-  const vp = document.getElementById('wbViewport');
-  if (vp) vp.style.cursor = '';
+  wbMoveMode = false; dragObj = null; selectedObj = null;
+  wbTypeState = 0;
+  const btn = document.getElementById('wbTypeBtn');
+  if (btn) { btn.classList.remove('eraser-on'); btn.textContent = '⌨️ Type'; }
+  const area = document.getElementById('wbTextArea');
+  if (area) area.classList.remove('active');
   const tc = document.getElementById('textCanvas');
   if (tc) { tc.style.cursor = 'default'; tc.style.pointerEvents = 'none'; }
   redrawTextLayer();
@@ -4060,7 +4079,6 @@ function setMoveOff() {
 
 function toggleWbMove() {
   toggleWbPan();
-  if (!wbMoveMode) { selectedObj = null; redrawTextLayer(); }
 }
 
 function mkInsert(sym) {
