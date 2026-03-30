@@ -1977,8 +1977,7 @@
       </select>
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
-      <button class="wb-btn" id="wbMoveBtn" onclick="toggleWbMove()">✋ Move</button>
-      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Move</button>
+      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">✋ Move</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
       <div class="wb-zoom-controls">
         <button class="wb-zoom-btn" onclick="wbUndo()" title="Undo" id="wbUndoBtn" style="font-size:13px">↩</button>
@@ -3714,14 +3713,14 @@ function applyWbTransform() {
 }
 function toggleWbPan() {
   wbPanMode = !wbPanMode;
+  wbMoveMode = wbPanMode;
   document.getElementById('wbPanBtn').classList.toggle('eraser-on', wbPanMode);
   const vp = document.getElementById('wbViewport');
   vp.style.cursor = wbPanMode ? 'grab' : '';
-  // Disable other modes when panning
-  if (wbPanMode) {
-    wbMoveMode = false;
-    document.getElementById('wbMoveBtn').classList.remove('eraser-on');
-    document.getElementById('textCanvas').style.pointerEvents = 'none';
+  const tc = document.getElementById('textCanvas');
+  if (tc) {
+    tc.style.pointerEvents = wbPanMode ? 'auto' : 'none';
+    tc.style.cursor = wbPanMode ? 'grab' : 'default';
   }
 }
 
@@ -4050,35 +4049,17 @@ function toggleWbType() {
 }
 
 function setMoveOff() {
-  wbMoveMode = false; dragObj = null; selectedObj = null;
-  const btn = document.getElementById('wbMoveBtn');
-  btn.classList.remove('move-on');
-  btn.textContent = '✋ Move';
+  wbMoveMode = false; wbPanMode = false; dragObj = null; selectedObj = null;
+  document.getElementById('wbPanBtn').classList.remove('eraser-on');
+  const vp = document.getElementById('wbViewport');
+  if (vp) vp.style.cursor = '';
   const tc = document.getElementById('textCanvas');
-  if (tc) tc.style.cursor = 'default';
+  if (tc) { tc.style.cursor = 'default'; tc.style.pointerEvents = 'none'; }
   redrawTextLayer();
 }
 
 function toggleWbMove() {
-  wbMoveMode = !wbMoveMode;
-  const btn = document.getElementById('wbMoveBtn');
-  btn.classList.toggle('move-on', wbMoveMode);
-  btn.textContent = wbMoveMode ? '✏️ Draw' : '✋ Move';
-  const tc = document.getElementById('textCanvas');
-  if (tc) {
-    // In draw mode, pass pointer events through to the draw canvas below
-    tc.style.pointerEvents = wbMoveMode ? 'auto' : 'none';
-    tc.style.cursor = wbMoveMode ? 'grab' : 'default';
-  }
-  if (wbMoveMode) {
-    // turn off eraser and type mode when entering move mode
-    const area = document.getElementById('wbTextArea');
-    if (area.classList.contains('active')) {
-      area.classList.remove('active');
-      document.getElementById('wbTypeBtn').classList.remove('eraser-on');
-      document.getElementById('wbTypeBtn').textContent = '⌨️ Type';
-    }
-  }
+  toggleWbPan();
   if (!wbMoveMode) { selectedObj = null; redrawTextLayer(); }
 }
 
