@@ -130,6 +130,8 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #signedOut { display: flex; align-items: center; gap: 6px; }
@@ -366,6 +368,13 @@
   .page { padding: 24px 16px 0; }
   @media (max-width: 600px) {
     .page { padding-top: 54px; }
+    .auth-float { gap: 4px; padding: 6px 10px; }
+    .trophy-label { display: none; }
+    .user-name { display: none; }
+    .settings-tap-area { padding: 4px 8px; gap: 4px; }
+    .trophy-btn { font-size: 1.15rem; padding: 6px 8px; }
+    .user-avatar { width: 26px; height: 26px; }
+    .google-btn { font-size: 0.75rem; padding: 6px 12px; }
   }
 
   h1 {
