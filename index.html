@@ -1983,6 +1983,7 @@
       <div class="wb-zoom-controls">
         <button class="wb-zoom-btn" onclick="wbUndo()" title="Undo" id="wbUndoBtn" style="font-size:13px">↩</button>
         <button class="wb-zoom-btn" onclick="wbRedo()" title="Redo" id="wbRedoBtn" style="font-size:13px">↪</button>
+        <button class="wb-zoom-btn" onclick="toggleWbPan()" title="Grab & move canvas" id="wbPanBtn2" style="font-size:13px">🖐️</button>
         <span style="width:6px"></span>
         <button class="wb-zoom-btn" onclick="wbZoom(-0.1)" title="Zoom out">−</button>
         <span class="wb-zoom-label" id="wbZoomLabel">100%</span>
@@ -3715,6 +3716,8 @@ function applyWbTransform() {
 function toggleWbPan() {
   wbPanMode = !wbPanMode;
   document.getElementById('wbPanBtn').classList.toggle('eraser-on', wbPanMode);
+  const pb2 = document.getElementById('wbPanBtn2');
+  if (pb2) pb2.classList.toggle('eraser-on', wbPanMode);
   const vp = document.getElementById('wbViewport');
   vp.style.cursor = wbPanMode ? 'grab' : '';
   // Disable other modes when panning
