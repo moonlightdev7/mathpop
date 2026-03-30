@@ -121,7 +121,7 @@
     position: fixed;
     top: 12px;
     right: 14px;
-    z-index: 50;
+    z-index: 10000;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -4328,11 +4328,13 @@ function showSettings() {
   document.getElementById('leaderboard-screen').style.display = 'none';
   document.getElementById('gamepass-screen').style.display = 'none';
 }
+window.showSettings = showSettings;
 
 function hideSettings() {
   document.getElementById('settings-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
 }
+window.hideSettings = hideSettings;
 
 function showGamepasses() {
   if (!window.currentUserId) {
