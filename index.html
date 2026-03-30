@@ -2546,6 +2546,7 @@ function persistThemeLocally(t) {
 
 
 function setTheme(mode, color) {
+  document.body.style.background = '';
   applyThemeVars(mode === 'dark' ? DARK[color] : LIGHT[color]);
   clearActive();
   const rows = document.querySelectorAll('.theme-row');
@@ -2556,6 +2557,7 @@ function setTheme(mode, color) {
 }
 
 function setNeon(name) {
+  document.body.style.background = '';
   applyThemeVars(NEON[name]);
   clearActive();
   document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(name)]?.classList.add('active');
