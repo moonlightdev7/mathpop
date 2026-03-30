@@ -103,7 +103,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <!-- PayPal SDK (live) -->
-<script src="https://www.paypal.com/sdk/js?client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -3175,6 +3175,18 @@ function nextQuestion() {
     clearWhiteboard();
     document.getElementById('remainderInput').value = '';
     document.getElementById('remainderInput').focus();
+  } else if (currentMode === 'wordproblems') {
+    const wp = generateWordProblem();
+    currentAnswer = wp.answer;
+    currentWordProblemRemainder = wp.remainder;
+    // Show remainder input only for remainder word problems
+    const isRemWP = wp.op === 'wp_remdiv';
+    document.getElementById('remainderWrap').style.display = isRemWP ? 'flex' : 'none';
+    if (isRemWP) {
+      currentRemainder = wp.remainder;
+      document.getElementById('remainderInput').value = '';
+    }
+    setQuestion(wp.text);
   } else {
     const cfgIds = Array.from(selectedDigits);
     const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
@@ -3191,18 +3203,6 @@ function nextQuestion() {
       currentAnswer = a + b;
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
-  } else if (currentMode === 'wordproblems') {
-    const wp = generateWordProblem();
-    currentAnswer = wp.answer;
-    currentWordProblemRemainder = wp.remainder;
-    // Show remainder input only for remainder word problems
-    const isRemWP = wp.op === 'wp_remdiv';
-    document.getElementById('remainderWrap').style.display = isRemWP ? 'flex' : 'none';
-    if (isRemWP) {
-      currentRemainder = wp.remainder;
-      document.getElementById('remainderInput').value = '';
-    }
-    setQuestion(wp.text);
   }
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
