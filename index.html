@@ -4035,14 +4035,14 @@ function getNextRank(total) {
 // ── QUESTS ──
 const QUESTS = [
   // ── Per-category quests (repeatable) ──
-  { id:'mul_10',    emoji:'✖️', name:'Multiplication Whiz',     desc:'Solve 10 multiplication problems.',     repeatable:true, check: d => (d.stats?.multiply||0) >= 10 * ((d._questCompletions?.mul_10||0) + 1) },
-  { id:'longmul_10', emoji:'✖️', name:'Long Multiply Master',   desc:'Solve 10 long multiplication problems.', repeatable:true, check: d => (d.stats?.longmultiply||0) >= 10 * ((d._questCompletions?.longmul_10||0) + 1) },
-  { id:'shortdiv_10', emoji:'➗', name:'Short Division Pro',    desc:'Solve 10 short division problems.',      repeatable:true, check: d => (d.stats?.shortdivide||0) >= 10 * ((d._questCompletions?.shortdiv_10||0) + 1) },
-  { id:'longdiv_10',  emoji:'📐', name:'Long Division Expert',  desc:'Solve 10 long division problems.',       repeatable:true, check: d => (d.stats?.longdivide||0) >= 10 * ((d._questCompletions?.longdiv_10||0) + 1) },
-  { id:'remdiv_10',   emoji:'📐', name:'Remainder Specialist',  desc:'Solve 10 remainder division problems.',  repeatable:true, check: d => (d.stats?.remainderdiv||0) >= 10 * ((d._questCompletions?.remdiv_10||0) + 1) },
-  { id:'add_10',      emoji:'➕', name:'Addition Ace',          desc:'Solve 10 addition problems.',             repeatable:true, check: d => (d.stats?.add||0) >= 10 * ((d._questCompletions?.add_10||0) + 1) },
-  { id:'sub_10',      emoji:'➖', name:'Subtraction Star',      desc:'Solve 10 subtraction problems.',          repeatable:true, check: d => (d.stats?.subtract||0) >= 10 * ((d._questCompletions?.sub_10||0) + 1) },
-  { id:'wp_10',       emoji:'📝', name:'Word Problem Warrior',  desc:'Solve 10 word problems.',                repeatable:true, check: d => (d.stats?.wordproblems||0) >= 10 * ((d._questCompletions?.wp_10||0) + 1) },
+  { id:'mul_100',      emoji:'✖️', name:'Multiplication Whiz',     desc:'Solve 100 multiplication problems.',      check: d => (d.stats?.multiply||0) >= 100 },
+  { id:'longmul_100',  emoji:'✖️', name:'Long Multiply Master',   desc:'Solve 100 long multiplication problems.', check: d => (d.stats?.longmultiply||0) >= 100 },
+  { id:'shortdiv_100', emoji:'➗', name:'Short Division Pro',     desc:'Solve 100 short division problems.',      check: d => (d.stats?.shortdivide||0) >= 100 },
+  { id:'longdiv_100',  emoji:'📐', name:'Long Division Expert',   desc:'Solve 100 long division problems.',       check: d => (d.stats?.longdivide||0) >= 100 },
+  { id:'remdiv_100',   emoji:'📐', name:'Remainder Specialist',   desc:'Solve 100 remainder division problems.',  check: d => (d.stats?.remainderdiv||0) >= 100 },
+  { id:'add_100',      emoji:'➕', name:'Addition Ace',           desc:'Solve 100 addition problems.',             check: d => (d.stats?.add||0) >= 100 },
+  { id:'sub_100',      emoji:'➖', name:'Subtraction Star',       desc:'Solve 100 subtraction problems.',          check: d => (d.stats?.subtract||0) >= 100 },
+  { id:'wp_100',       emoji:'📝', name:'Word Problem Warrior',   desc:'Solve 100 word problems.',                check: d => (d.stats?.wordproblems||0) >= 100 },
   // ── Hidden quests (one-time, discovered by playing) ──
   { id:'grinder',           emoji:'🔥', name:'The Grinder',          desc:'Solve 1,000 total questions across any mode.',          secret:true, check: d => d.totalCorrect >= 1000 },
   { id:'speed_demon',       emoji:'⚡', name:'Speed Demon',           desc:'Get 15 correct in a row without a single mistake.',      secret:true, check: d => d.maxStreak >= 15 },
@@ -4166,28 +4166,18 @@ function selectTitle(questId) {
 }
 
 // Map repeatable quest IDs to their mode so we only check the relevant quest
-const QUEST_MODE_MAP = { mul_10:'multiply', longmul_10:'longmultiply', shortdiv_10:'shortdivide', longdiv_10:'longdivide', remdiv_10:'remainderdiv', add_10:'add', sub_10:'subtract', wp_10:'wordproblems' };
+const QUEST_MODE_MAP = { mul_100:'multiply', longmul_100:'longmultiply', shortdiv_100:'shortdivide', longdiv_100:'longdivide', remdiv_100:'remainderdiv', add_100:'add', sub_100:'subtract', wp_100:'wordproblems' };
 
 function checkQuests() {
-  if (!userData._questCompletions) userData._questCompletions = {};
   for (const q of QUESTS) {
-    if (q.repeatable) {
-      // Only check repeatable quest if it matches the current mode
-      const questMode = QUEST_MODE_MAP[q.id];
-      if (questMode && questMode !== currentMode) continue;
-      const completions = userData._questCompletions[q.id] || 0;
-      if (q.check(userData)) {
-        userData._questCompletions[q.id] = completions + 1;
-        if (!userData.earnedQuests.includes(q.id)) userData.earnedQuests.push(q.id);
-        saveUserData();
-        showQuestToast(q.emoji, `Quest Complete: ${q.name}!`, q.desc + ` (×${completions + 1})`);
-      }
-    } else {
-      if (!userData.earnedQuests.includes(q.id) && q.check(userData)) {
-        userData.earnedQuests.push(q.id);
-        saveUserData();
-        showQuestToast(q.emoji, `Quest Unlocked: ${q.name}!`, q.desc);
-      }
+    if (userData.earnedQuests.includes(q.id)) continue;
+    // For category quests, only check the one matching the current mode
+    const questMode = QUEST_MODE_MAP[q.id];
+    if (questMode && questMode !== currentMode) continue;
+    if (q.check(userData)) {
+      userData.earnedQuests.push(q.id);
+      saveUserData();
+      showQuestToast(q.emoji, `Quest Unlocked: ${q.name}!`, q.desc);
     }
   }
 }
@@ -4651,7 +4641,6 @@ function renderQuestScreen() {
     qList.innerHTML = '';
     for (const q of quests) {
       const earned = userData.earnedQuests.includes(q.id);
-      const completions = userData._questCompletions && userData._questCompletions[q.id] ? userData._questCompletions[q.id] : 0;
       const div = document.createElement('div');
       div.className = 'ach-item' + (earned ? ' earned' : '') + (q.secret ? ' secret' : '');
 
@@ -4664,21 +4653,17 @@ function renderQuestScreen() {
           </div>`;
       } else {
         // Normal quests: always show name, desc, and progress
-        const completionStr = q.repeatable && completions > 0 ? ` (×${completions})` : '';
-        // Calculate progress for repeatable quests
         let progressHtml = '';
         if (q.repeatable) {
-          const statKey = { mul_10:'multiply', longmul_10:'longmultiply', shortdiv_10:'shortdivide', longdiv_10:'longdivide', remdiv_10:'remainderdiv', add_10:'add', sub_10:'subtract', wp_10:'wordproblems' }[q.id];
+          const statKey = QUEST_MODE_MAP[q.id];
           if (statKey) {
-            const current = userData.stats?.[statKey] || 0;
-            const nextMilestone = 10 * (completions + 1);
-            const progress = current % 10;
-            progressHtml = `<div style="margin-top:4px;"><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;background:var(--primary);border-radius:3px;width:${Math.min((progress/10)*100,100)}%;transition:width 0.3s;"></div></div><div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-weight:700;">${progress}/10 to next completion</div></div>`;
+            const current = Math.min(userData.stats?.[statKey] || 0, 100);
+            progressHtml = `<div style="margin-top:4px;"><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;background:var(--primary);border-radius:3px;width:${(current/100)*100}%;transition:width 0.3s;"></div></div><div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-weight:700;">${current}/100</div></div>`;
           }
         }
         div.innerHTML = `<div class="ach-icon">${q.emoji}</div>
           <div class="ach-info">
-            <div class="ach-name">${q.name}${completionStr}</div>
+            <div class="ach-name">${q.name}</div>
             <div class="ach-desc">${earned ? '✅ ' : ''}${q.desc}</div>
             ${progressHtml}
           </div>`;
