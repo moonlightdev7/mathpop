@@ -103,7 +103,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <!-- PayPal SDK (live) -->
-<script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1504,7 +1504,7 @@
       </div>
       <div style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center">
         👑 These categories are coming soon with the <strong>Premium Pass</strong>!
-        <button class="gp-buy-btn gp-premium-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem">🛒 View Premium Pass</button>
+        <button class="gp-buy-btn gp-premium-btn" disabled style="margin-top:10px;padding:8px 20px;font-size:0.85rem;opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
       </div>
     </div>
   </div>
@@ -1604,7 +1604,7 @@
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)"></div>
     </div>
-    <button class="gp-buy-btn" id="gpCustomizationBtn" onclick="openCustomization()">🔓 Unlock Customization Pass</button>
+    <button class="gp-buy-btn" id="gpCustomizationBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
     <div class="gp-owned" id="gpCustomizationOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
   </div>
 
@@ -1627,7 +1627,7 @@
       </div>
       <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
-    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="openPremiumModal()">👑 Subscribe to Premium</button>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
   </div>
 </div>
@@ -1721,8 +1721,8 @@
       </div>
       <div class="theme-row">
         <span class="row-label">✨ Plus</span>
-        <button class="premium-chip" id="chipCustomization" onclick="openCustomization()">
-          🎨 Customization Pass <span class="chip-price" id="priceCustomization">$2.99</span>
+        <button class="premium-chip" id="chipCustomization" disabled style="opacity:0.5;cursor:default;pointer-events:none;">
+          🎨 Customization Pass <span class="chip-price" id="priceCustomization">Soon</span>
         </button>
         <span id="neonSwatches" style="display:none; gap:6px; align-items:center; flex-wrap:wrap;">
           <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
