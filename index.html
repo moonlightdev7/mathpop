@@ -700,7 +700,7 @@
     display: flex; justify-content: space-between; align-items: center;
     background: var(--card); border-radius: 12px; padding: 6px 16px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
-    position: sticky; top: 62px; z-index: 100;
+    position: sticky; top: 8px; z-index: 100;
   }
   .score-item { text-align: center; }
   .score-num { font-family: 'Fredoka One', cursive; font-size: 1.2rem; line-height: 1; }
@@ -3482,6 +3482,7 @@ function startGame() {
   document.getElementById('setup-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
   document.getElementById('game-screen').style.display='flex';
+  document.getElementById('authFloat').style.display='none';
   document.getElementById('whiteboardWrap').style.display = 'block';
   initWhiteboard();
   hideFeedback(); updateScore(); nextQuestion();
@@ -3620,6 +3621,7 @@ function updateScore()  { document.getElementById('correctCount').textContent=co
 
 function stopGame() {
   document.getElementById('game-screen').style.display='none';
+  document.getElementById('authFloat').style.display='';
   document.getElementById('end-screen').style.display='block';
   const pct=total>0?Math.round((correct/total)*100):0;
   let emoji='🌟',title='Amazing!';
