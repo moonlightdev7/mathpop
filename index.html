@@ -1006,11 +1006,12 @@
   /* ── TROPHY / ACHIEVEMENTS ── */
   .trophy-btn {
     background: transparent; border: none; font-size: 1.3rem;
-    cursor: pointer; padding: 4px 8px; border-radius: 10px;
-    transition: transform 0.15s; line-height: 1;
+    cursor: pointer; padding: 6px 10px; border-radius: 12px;
+    transition: background 0.15s, transform 0.15s; line-height: 1;
     display: flex; align-items: center; gap: 4px;
+    -webkit-tap-highlight-color: transparent;
   }
-  .trophy-btn:hover { transform: scale(1.05); }
+  .trophy-btn:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); transform: scale(1.03); }
   .trophy-label {
     font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem;
     color: var(--muted); letter-spacing: 0.3px;
@@ -1536,7 +1537,7 @@
     <div class="ach-toggle-body open" id="questSection">
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <button class="mode-btn active" id="questTabNormal" onclick="switchQuestTab('normal')">📋 Normal Quests</button>
-        <button class="mode-btn" id="questTabHidden" onclick="switchQuestTab('hidden')">🔮 Hidden Quests</button>
+        <button class="mode-btn" id="questTabHidden" onclick="switchQuestTab('hidden')">🌸 Hidden Quests</button>
       </div>
       <div class="ach-list" id="questListNormal"></div>
       <div class="ach-list" id="questListHidden" style="display:none"></div>
@@ -1745,21 +1746,21 @@
       <div class="theme-row" id="gradientRow" style="display:none">
         <span class="row-label">🌈 Gradients</span>
         <span id="gradientSwatches" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-          <button class="swatch-btn" title="Sunrise"   style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)" onclick="setGradientTheme('sunrise')"></button>
-          <button class="swatch-btn" title="Twilight"  style="background:linear-gradient(135deg,#a855f7,#f43f5e)" onclick="setGradientTheme('twilight')"></button>
-          <button class="swatch-btn" title="Forest"    style="background:linear-gradient(135deg,#065f46,#34d399)" onclick="setGradientTheme('forest')"></button>
-          <button class="swatch-btn" title="Coral"     style="background:linear-gradient(135deg,#f43f5e,#fdba74)" onclick="setGradientTheme('coral')"></button>
-          <button class="swatch-btn" title="Blueberry" style="background:linear-gradient(135deg,#1d4ed8,#818cf8)" onclick="setGradientTheme('blueberry')"></button>
-          <button class="swatch-btn" title="Peach"     style="background:linear-gradient(135deg,#ea580c,#fbbf24)" onclick="setGradientTheme('peach')"></button>
-          <button class="swatch-btn" title="Lavender"  style="background:linear-gradient(135deg,#9333ea,#e879f9)" onclick="setGradientTheme('lavender')"></button>
-          <button class="swatch-btn" title="Ember"     style="background:linear-gradient(135deg,#b91c1c,#f97316)" onclick="setGradientTheme('ember')"></button>
-          <button class="swatch-btn" title="Mint"      style="background:linear-gradient(135deg,#0d9488,#5eead4)" onclick="setGradientTheme('mint')"></button>
-          <button class="swatch-btn" title="Sakura"    style="background:linear-gradient(135deg,#db2777,#fda4af)" onclick="setGradientTheme('sakura')"></button>
-          <button class="swatch-btn" title="Storm"     style="background:linear-gradient(135deg,#4338ca,#818cf8)" onclick="setGradientTheme('storm')"></button>
-          <button class="swatch-btn" title="Desert"    style="background:linear-gradient(135deg,#92400e,#fbbf24)" onclick="setGradientTheme('desert')"></button>
-          <button class="swatch-btn" title="Arctic"    style="background:linear-gradient(135deg,#0891b2,#67e8f9)" onclick="setGradientTheme('arctic2')"></button>
-          <button class="swatch-btn" title="Galaxy"    style="background:linear-gradient(135deg,#6d28d9,#c084fc)" onclick="setGradientTheme('galaxy')"></button>
-          <button class="swatch-btn" title="Flame"     style="background:linear-gradient(135deg,#d97706,#fcd34d)" onclick="setGradientTheme('flame')"></button>
+          <button class="swatch-btn" title="Christmas"  style="background:linear-gradient(135deg,#ef4444,#22c55e)" onclick="setGradientTheme('christmas')"></button>
+          <button class="swatch-btn" title="Ocean"      style="background:linear-gradient(135deg,#22c55e,#3b82f6)" onclick="setGradientTheme('ocean')"></button>
+          <button class="swatch-btn" title="Cotton"     style="background:linear-gradient(135deg,#ec4899,#3b82f6)" onclick="setGradientTheme('cotton')"></button>
+          <button class="swatch-btn" title="Grape"      style="background:linear-gradient(135deg,#ec4899,#a855f7)" onclick="setGradientTheme('grape')"></button>
+          <button class="swatch-btn" title="Tropical"   style="background:linear-gradient(135deg,#f97316,#22c55e)" onclick="setGradientTheme('tropical')"></button>
+          <button class="swatch-btn" title="Aurora"     style="background:linear-gradient(135deg,#06b6d4,#a855f7)" onclick="setGradientTheme('aurora')"></button>
+          <button class="swatch-btn" title="Sunset"     style="background:linear-gradient(135deg,#f97316,#ec4899)" onclick="setGradientTheme('sunset')"></button>
+          <button class="swatch-btn" title="Lemon"      style="background:linear-gradient(135deg,#eab308,#22c55e)" onclick="setGradientTheme('lemon')"></button>
+          <button class="swatch-btn" title="Bubblegum"  style="background:linear-gradient(135deg,#f472b6,#fbbf24)" onclick="setGradientTheme('bubblegum')"></button>
+          <button class="swatch-btn" title="Neon"       style="background:linear-gradient(135deg,#22c55e,#f43f5e)" onclick="setGradientTheme('neon')"></button>
+          <button class="swatch-btn" title="Ice"        style="background:linear-gradient(135deg,#38bdf8,#c084fc)" onclick="setGradientTheme('ice')"></button>
+          <button class="swatch-btn" title="Fire"       style="background:linear-gradient(135deg,#ef4444,#f97316)" onclick="setGradientTheme('fire')"></button>
+          <button class="swatch-btn" title="Galaxy"     style="background:linear-gradient(135deg,#8b5cf6,#3b82f6)" onclick="setGradientTheme('galaxy')"></button>
+          <button class="swatch-btn" title="Watermelon" style="background:linear-gradient(135deg,#f43f5e,#22c55e)" onclick="setGradientTheme('watermelon')"></button>
+          <button class="swatch-btn" title="Unicorn"    style="background:linear-gradient(135deg,#e879f9,#67e8f9)" onclick="setGradientTheme('unicorn')"></button>
         </span>
       </div>
       <div id="gradientWheelPanel" style="display:none; padding:10px 0;">
@@ -1767,7 +1768,7 @@
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
           <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color1" value="#ff6b6b" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">Start</span></div>
           <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color2" value="#ffd93d" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">End</span></div>
-          <div id="gw-preview" style="width:60px;height:28px;border-radius:8px;border:2px solid var(--border);background:linear-gradient(90deg,#ff6b6b,#ffd93d)"></div>
+          <div id="gw-preview" onclick="applyGradientWheel()" title="Apply this gradient" style="width:60px;height:28px;border-radius:8px;border:2px solid var(--border);background:linear-gradient(90deg,#ff6b6b,#ffd93d);cursor:pointer;transition:transform 0.15s;"></div>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="mode-btn" id="gradLinearBtn" style="font-size:0.75rem;padding:4px 10px;" onclick="setGradDirection('linear')">Linear</button>
@@ -2489,21 +2490,21 @@ const NEON = {
 };
 
 const GRADIENT_THEMES = {
-  sunrise:    { bg:'#0a0500', card:'#1e0f00', primary:'#ff6b6b', primaryLight:'#ffd93d', text:'#fff5e0', muted:'#7a6a50', border:'#3d1a00', input:'#050200', neutral:'#ffd93d', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)' },
-  twilight:   { bg:'#05000a', card:'#100020', primary:'#a855f7', primaryLight:'#ec4899', text:'#f0e0ff', muted:'#6a4a7a', border:'#2a0040', input:'#030005', neutral:'#ec4899', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)' },
-  forest:     { bg:'#000a02', card:'#001405', primary:'#10b981', primaryLight:'#34d399', text:'#d0ffe8', muted:'#4a7a5a', border:'#003318', input:'#000503', neutral:'#34d399', correct:'#10b981', wrong:'#ff3860', grad:'linear-gradient(90deg,#065f46,#10b981,#34d399)' },
-  coral:      { bg:'#0a0200', card:'#1e0800', primary:'#fb7185', primaryLight:'#fdba74', text:'#fff0e8', muted:'#7a5a50', border:'#3d1000', input:'#050100', neutral:'#fdba74', correct:'#4cc9f0', wrong:'#fb7185', grad:'linear-gradient(90deg,#f43f5e,#fb7185,#fdba74)' },
-  blueberry:  { bg:'#000508', card:'#000f18', primary:'#3b82f6', primaryLight:'#818cf8', text:'#e0f0ff', muted:'#4a5a7a', border:'#001040', input:'#000308', neutral:'#818cf8', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#1d4ed8,#3b82f6,#818cf8)' },
-  peach:      { bg:'#0a0502', card:'#1e0f05', primary:'#f97316', primaryLight:'#fb923c', text:'#fff5e0', muted:'#7a6040', border:'#3d1800', input:'#050200', neutral:'#fb923c', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#ea580c,#f97316,#fbbf24)' },
-  lavender:   { bg:'#060008', card:'#100015', primary:'#c084fc', primaryLight:'#e879f9', text:'#f5e0ff', muted:'#6a5070', border:'#200030', input:'#030005', neutral:'#e879f9', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#9333ea,#c084fc,#e879f9)' },
-  ember:      { bg:'#0a0200', card:'#1e0500', primary:'#ef4444', primaryLight:'#f97316', text:'#ffe8d0', muted:'#7a5040', border:'#3d0800', input:'#050100', neutral:'#f97316', correct:'#4cc9f0', wrong:'#ef4444', grad:'linear-gradient(90deg,#b91c1c,#ef4444,#f97316)' },
-  mint:       { bg:'#000a08', card:'#001410', primary:'#2dd4bf', primaryLight:'#5eead4', text:'#d0fff8', muted:'#4a7a70', border:'#00332a', input:'#000505', neutral:'#5eead4', correct:'#2dd4bf', wrong:'#ff3860', grad:'linear-gradient(90deg,#0d9488,#2dd4bf,#5eead4)' },
-  sakura:     { bg:'#0a0005', card:'#1e000f', primary:'#f472b6', primaryLight:'#fda4af', text:'#ffe0f0', muted:'#7a4a60', border:'#3d0018', input:'#050003', neutral:'#fda4af', correct:'#00ff87', wrong:'#f472b6', grad:'linear-gradient(90deg,#db2777,#f472b6,#fda4af)' },
-  storm:      { bg:'#020208', card:'#050510', primary:'#6366f1', primaryLight:'#818cf8', text:'#e0e0ff', muted:'#5050a0', border:'#101040', input:'#010108', neutral:'#818cf8', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#4338ca,#6366f1,#818cf8)' },
-  desert:     { bg:'#0a0600', card:'#1e1200', primary:'#d97706', primaryLight:'#fbbf24', text:'#fff8d0', muted:'#7a6840', border:'#3d2400', input:'#050300', neutral:'#fbbf24', correct:'#10b981', wrong:'#ef4444', grad:'linear-gradient(90deg,#92400e,#d97706,#fbbf24)' },
-  arctic2:    { bg:'#000508', card:'#000f15', primary:'#06b6d4', primaryLight:'#67e8f9', text:'#d0f8ff', muted:'#4a7080', border:'#002530', input:'#000308', neutral:'#67e8f9', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#0891b2,#06b6d4,#67e8f9)' },
-  galaxy:     { bg:'#050008', card:'#0a0015', primary:'#8b5cf6', primaryLight:'#c084fc', text:'#e8d0ff', muted:'#5a4a7a', border:'#150030', input:'#030005', neutral:'#c084fc', correct:'#4cc9f0', wrong:'#f43f5e', grad:'linear-gradient(90deg,#6d28d9,#8b5cf6,#c084fc)' },
-  flame:      { bg:'#0a0200', card:'#1e0500', primary:'#f59e0b', primaryLight:'#fcd34d', text:'#fff8d8', muted:'#7a6a40', border:'#3d1e00', input:'#050200', neutral:'#fcd34d', correct:'#10b981', wrong:'#ef4444', grad:'linear-gradient(90deg,#d97706,#f59e0b,#fcd34d)' },
+  christmas:  { bg:'#050200', card:'rgba(30,10,5,0.85)', primary:'#ef4444', primaryLight:'#22c55e', text:'#ffe8e0', muted:'#7a5a50', border:'#3d1000', input:'#050100', neutral:'#22c55e', correct:'#22c55e', wrong:'#ef4444', grad:'linear-gradient(90deg,#ef4444,#22c55e)' },
+  ocean:      { bg:'#000508', card:'rgba(0,15,25,0.85)', primary:'#22c55e', primaryLight:'#3b82f6', text:'#d0ffe8', muted:'#4a7a6a', border:'#003320', input:'#000305', neutral:'#3b82f6', correct:'#22c55e', wrong:'#ff3860', grad:'linear-gradient(90deg,#22c55e,#3b82f6)' },
+  cotton:     { bg:'#050008', card:'rgba(15,0,25,0.85)', primary:'#ec4899', primaryLight:'#3b82f6', text:'#f0e0ff', muted:'#6a4a7a', border:'#2a0040', input:'#030005', neutral:'#3b82f6', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#ec4899,#3b82f6)' },
+  grape:      { bg:'#08000a', card:'rgba(20,0,25,0.85)', primary:'#ec4899', primaryLight:'#a855f7', text:'#ffe0f5', muted:'#7a4a70', border:'#3d0030', input:'#050003', neutral:'#a855f7', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#ec4899,#a855f7)' },
+  tropical:   { bg:'#0a0500', card:'rgba(30,15,0,0.85)', primary:'#f97316', primaryLight:'#22c55e', text:'#fff5e0', muted:'#7a6a40', border:'#3d1a00', input:'#050200', neutral:'#22c55e', correct:'#22c55e', wrong:'#ef4444', grad:'linear-gradient(90deg,#f97316,#22c55e)' },
+  aurora:     { bg:'#000508', card:'rgba(0,10,20,0.85)', primary:'#06b6d4', primaryLight:'#a855f7', text:'#d0f8ff', muted:'#4a7080', border:'#002530', input:'#000308', neutral:'#a855f7', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#06b6d4,#a855f7)' },
+  sunset:     { bg:'#0a0200', card:'rgba(30,8,0,0.85)', primary:'#f97316', primaryLight:'#ec4899', text:'#fff0e8', muted:'#7a5a40', border:'#3d1000', input:'#050100', neutral:'#ec4899', correct:'#4cc9f0', wrong:'#ef4444', grad:'linear-gradient(90deg,#f97316,#ec4899)' },
+  lemon:      { bg:'#0a0800', card:'rgba(25,20,0,0.85)', primary:'#eab308', primaryLight:'#22c55e', text:'#fff8d0', muted:'#7a7040', border:'#3d2e00', input:'#050400', neutral:'#22c55e', correct:'#22c55e', wrong:'#ef4444', grad:'linear-gradient(90deg,#eab308,#22c55e)' },
+  bubblegum:  { bg:'#0a0005', card:'rgba(25,0,15,0.85)', primary:'#f472b6', primaryLight:'#fbbf24', text:'#ffe0f0', muted:'#7a4a60', border:'#3d0018', input:'#050003', neutral:'#fbbf24', correct:'#00ff87', wrong:'#f472b6', grad:'linear-gradient(90deg,#f472b6,#fbbf24)' },
+  neon:       { bg:'#000a02', card:'rgba(0,20,5,0.85)', primary:'#22c55e', primaryLight:'#f43f5e', text:'#d0ffe8', muted:'#4a7a5a', border:'#003318', input:'#000503', neutral:'#f43f5e', correct:'#22c55e', wrong:'#f43f5e', grad:'linear-gradient(90deg,#22c55e,#f43f5e)' },
+  ice:        { bg:'#000308', card:'rgba(0,8,20,0.85)', primary:'#38bdf8', primaryLight:'#c084fc', text:'#e0f0ff', muted:'#4a5a7a', border:'#001040', input:'#000208', neutral:'#c084fc', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#38bdf8,#c084fc)' },
+  fire:       { bg:'#0a0200', card:'rgba(30,5,0,0.85)', primary:'#ef4444', primaryLight:'#f97316', text:'#ffe8d0', muted:'#7a5040', border:'#3d0800', input:'#050100', neutral:'#f97316', correct:'#4cc9f0', wrong:'#ef4444', grad:'linear-gradient(90deg,#ef4444,#f97316)' },
+  galaxy:     { bg:'#050008', card:'rgba(10,0,20,0.85)', primary:'#8b5cf6', primaryLight:'#3b82f6', text:'#e8d0ff', muted:'#5a4a7a', border:'#150030', input:'#030005', neutral:'#3b82f6', correct:'#4cc9f0', wrong:'#f43f5e', grad:'linear-gradient(90deg,#8b5cf6,#3b82f6)' },
+  watermelon: { bg:'#0a0200', card:'rgba(25,5,5,0.85)', primary:'#f43f5e', primaryLight:'#22c55e', text:'#ffe8e8', muted:'#7a5050', border:'#3d0808', input:'#050100', neutral:'#22c55e', correct:'#22c55e', wrong:'#f43f5e', grad:'linear-gradient(90deg,#f43f5e,#22c55e)' },
+  unicorn:    { bg:'#08000a', card:'rgba(15,0,20,0.85)', primary:'#e879f9', primaryLight:'#67e8f9', text:'#f5e0ff', muted:'#6a5070', border:'#200030', input:'#030005', neutral:'#67e8f9', correct:'#00ff87', wrong:'#ff006e', grad:'linear-gradient(90deg,#e879f9,#67e8f9)' },
 };
 
 function applyThemeVars(t) {
@@ -2562,7 +2563,7 @@ function setNeon(name) {
   persistThemeLocally(currentTheme);
 }
 
-const GRAD_NAMES = ['sunrise','twilight','forest','coral','blueberry','peach','lavender','ember','mint','sakura','storm','desert','arctic2','galaxy','flame'];
+const GRAD_NAMES = ['christmas','ocean','cotton','grape','tropical','aurora','sunset','lemon','bubblegum','neon','ice','fire','galaxy','watermelon','unicorn'];
 
 function setGradientTheme(name) {
   const gradTheme = GRADIENT_THEMES[name];
@@ -4742,7 +4743,7 @@ function renderQuestScreen() {
 
       if (q.secret) {
         // Hidden quests: show ??? until discovered
-        div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🔮'}</div>
+        div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
           <div class="ach-info">
             <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
             <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
