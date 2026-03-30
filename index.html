@@ -1141,7 +1141,7 @@
 
   /* ── LEADERBOARD SCREEN ── */
   #leaderboard-screen {
-    display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 850px; margin: 0 auto; padding-bottom: 40px;
   }
   .lb-header-card {
     background: var(--card); border-radius: 20px; padding: 20px 24px;
@@ -1156,18 +1156,30 @@
   .lb-header-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--primary); margin-bottom: 4px; }
   .lb-header-sub { font-size: 0.85rem; color: var(--muted); font-weight: 700; }
 
+  .lb-layout {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
   .lb-category-tabs {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
-    justify-content: center;
+    display: flex; flex-direction: column; gap: 6px; min-width: 170px;
+    position: sticky; top: 16px; flex-shrink: 0;
   }
   .lb-tab {
-    padding: 6px 12px; border-radius: 20px; border: 2px solid var(--border);
+    padding: 8px 14px; border-radius: 14px; border: 2px solid var(--border);
     background: var(--card); font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 0.75rem; cursor: pointer; transition: all 0.15s;
-    color: var(--muted); white-space: nowrap;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+    color: var(--muted); white-space: nowrap; text-align: left;
   }
   .lb-tab:hover { border-color: var(--primary); color: var(--primary); }
   .lb-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .lb-board-col { flex: 1; min-width: 0; }
+  @media (max-width: 600px) {
+    .lb-layout { flex-direction: column; }
+    .lb-category-tabs {
+      flex-direction: row; flex-wrap: wrap; min-width: 0;
+      position: static; justify-content: center;
+    }
+    .lb-tab { font-size: 0.72rem; padding: 6px 10px; }
+  }
 
   .lb-board {
     background: var(--card); border-radius: 20px; padding: 20px;
@@ -1253,8 +1265,8 @@
     </button>
   </div>
   <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
-  <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
   <div id="signedIn">
+    <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
     <span class="user-name" id="userName" onclick="showSettings()" title="Account Settings"></span>
@@ -1268,49 +1280,20 @@
 </div>
 
 <!-- ── MODALS ── -->
-<div class="modal-overlay" id="modalWheel">
+<div class="modal-overlay" id="modalCustomization">
   <div class="modal">
     <div class="modal-emoji">🎨</div>
-    <div class="modal-title">Color Wheel</div>
-    <div class="modal-desc">Pick any color for every part of the page. One purchase, yours forever across all your devices.</div>
-    <div class="neon-preview">
-      <div class="neon-pill" style="background:#ff6b35"></div>
-      <div class="neon-pill" style="background:#a78bfa"></div>
-      <div class="neon-pill" style="background:#34d399"></div>
-      <div class="neon-pill" style="background:#f59e0b"></div>
-      <div class="neon-pill" style="background:#ec4899"></div>
-    </div>
-    <div id="wheelSigninGate" class="modal-signin-gate" style="display:none">
-      <strong>Sign in first!</strong> We save your purchase to your account so you never lose it.
-      <br><br>
-      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
-        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z"/></svg>
-        Sign in with Google
-      </button>
-    </div>
-    <div class="paypal-container" id="paypal-section-wheel">
-      <div id="paypal-wheel"></div>
-      <div class="paypal-or">— or pay with card —</div>
-      <div id="paypal-wheel-card"></div>
-    </div>
-    <button class="modal-close" onclick="closeModals()">Maybe later</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalNeon">
-  <div class="modal">
-    <div class="modal-emoji">⚡</div>
-    <div class="modal-title">Neon Pack</div>
-    <div class="modal-desc">Six electric gradient themes — Cyber, Synthwave, Sunset, Arctic, Toxic, Candy. One purchase, yours forever.</div>
+    <div class="modal-title">Customization Pass</div>
+    <div class="modal-desc">Unlock all customization features: 15 neon themes, 15 gradient themes, color wheel, and gradient maker. One purchase, yours forever across all your devices.</div>
     <div class="neon-preview">
       <div class="neon-pill" style="background:linear-gradient(90deg,#00ff87,#00cfff)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#f72585,#7209b7)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6d00,#ff006e)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#00b4d8,#90e0ef)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#ccff00,#00ff87)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#ff85a1,#74c69d)"></div>
+      <div class="neon-pill" style="background:#ff6b35"></div>
+      <div class="neon-pill" style="background:#a78bfa"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
     </div>
-    <div id="neonSigninGate" class="modal-signin-gate" style="display:none">
+    <div id="customizationSigninGate" class="modal-signin-gate" style="display:none">
       <strong>Sign in first!</strong> We save your purchase to your account so you never lose it.
       <br><br>
       <button class="google-btn" style="margin:0 auto" onclick="signIn()">
@@ -1318,10 +1301,10 @@
         Sign in with Google
       </button>
     </div>
-    <div class="paypal-container" id="paypal-section-neon">
-      <div id="paypal-neon"></div>
+    <div class="paypal-container" id="paypal-section-customization">
+      <div id="paypal-customization"></div>
       <div class="paypal-or">— or pay with card —</div>
-      <div id="paypal-neon-card"></div>
+      <div id="paypal-customization-card"></div>
     </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
@@ -1358,6 +1341,7 @@
       <!-- ── MODE SELECTOR ── -->
       <div class="mode-selector" style="margin-top:12px">
         <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
+        <button class="mode-btn"        id="modeBtn-longmultiply" onclick="setMode('longmultiply')">✖️📐 Long ×</button>
         <button class="mode-btn"        id="modeBtn-shortdivide" onclick="setMode('shortdivide')">➗ Short ÷</button>
         <button class="mode-btn"        id="modeBtn-longdivide"  onclick="setMode('longdivide')">📐 Long ÷</button>
         <button class="mode-btn"        id="modeBtn-remainderdiv" onclick="setMode('remainderdiv')">📐R Long ÷ R</button>
@@ -1392,6 +1376,12 @@
         </div>
         <p class="section-label">Choose Divisors</p>
         <div class="table-grid" id="divisorGrid"></div>
+      </div>
+
+      <!-- ── LONG MULTIPLY SETUP ── -->
+      <div id="setup-longmultiply" style="display:none">
+        <p class="section-label">Problem Size</p>
+        <div class="digit-grid digit-grid-sm" id="longMulGrid"></div>
       </div>
 
       <!-- ── LONG DIVIDE SETUP ── -->
@@ -1516,8 +1506,10 @@
     </button>
   </div>
 
-  <div class="lb-category-tabs" id="lbTabs"></div>
-  <div id="lbBoardContainer"></div>
+  <div class="lb-layout">
+    <div class="lb-category-tabs" id="lbTabs"></div>
+    <div class="lb-board-col" id="lbBoardContainer"></div>
+  </div>
 </div>
 
 <!-- ── GAMEPASSES ── -->
@@ -1529,47 +1521,26 @@
     <div class="lb-header-sub">Power up your Mathpop experience!</div>
   </div>
 
-  <!-- Neon Pack -->
-  <div class="gp-card" id="gpNeon">
+  <!-- Customization Pass -->
+  <div class="gp-card" id="gpCustomization">
     <div class="gp-card-header">
-      <span class="gp-emoji">⚡</span>
+      <span class="gp-emoji">🎨</span>
       <div>
-        <div class="gp-name">Neon Pack</div>
-        <div class="gp-price">$0.99 — one-time purchase</div>
+        <div class="gp-name">Customization Pass</div>
+        <div class="gp-price">$2.99 — one-time purchase</div>
       </div>
     </div>
-    <div class="gp-desc">Six electric gradient themes — Cyber, Synthwave, Sunset, Arctic, Toxic, Candy. Yours forever across all devices.</div>
+    <div class="gp-desc">Unlock all customization: 15 neon gradient themes (Cyber, Synthwave, Aurora, Ocean, Matrix, and more), 15 gradient themes, color wheel for custom colors, and gradient maker for custom gradients. Yours forever across all devices.</div>
     <div class="neon-preview" style="margin:12px 0 14px">
       <div class="neon-pill" style="background:linear-gradient(90deg,#00ff87,#00cfff)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#f72585,#7209b7)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6d00,#ff006e)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#00b4d8,#90e0ef)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#ccff00,#00ff87)"></div>
-      <div class="neon-pill" style="background:linear-gradient(90deg,#ff85a1,#74c69d)"></div>
-    </div>
-    <button class="gp-buy-btn" id="gpNeonBtn" onclick="openNeon()">🔓 Unlock Neon Pack</button>
-    <div class="gp-owned" id="gpNeonOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
-  </div>
-
-  <!-- Color Wheel -->
-  <div class="gp-card" id="gpWheel">
-    <div class="gp-card-header">
-      <span class="gp-emoji">🎨</span>
-      <div>
-        <div class="gp-name">Color Wheel</div>
-        <div class="gp-price">$0.99 — one-time purchase</div>
-      </div>
-    </div>
-    <div class="gp-desc">Pick any color for every part of the page — primary, background, cards, correct, and wrong colors. Full creative control.</div>
-    <div class="neon-preview" style="margin:12px 0 14px">
       <div class="neon-pill" style="background:#ff6b35"></div>
-      <div class="neon-pill" style="background:#a78bfa"></div>
-      <div class="neon-pill" style="background:#34d399"></div>
-      <div class="neon-pill" style="background:#f59e0b"></div>
-      <div class="neon-pill" style="background:#ec4899"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)"></div>
     </div>
-    <button class="gp-buy-btn" id="gpWheelBtn" onclick="openWheel()">🔓 Unlock Color Wheel</button>
-    <div class="gp-owned" id="gpWheelOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
+    <button class="gp-buy-btn" id="gpCustomizationBtn" onclick="openCustomization()">🔓 Unlock Customization Pass</button>
+    <div class="gp-owned" id="gpCustomizationOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
   </div>
 
   <!-- Premium Pass -->
@@ -1687,11 +1658,8 @@
       </div>
       <div class="theme-row">
         <span class="row-label">✨ Plus</span>
-        <button class="premium-chip" id="chipWheel" onclick="openWheel()">
-          🎨 Color Wheel <span class="chip-price" id="priceWheel">$0.99</span>
-        </button>
-        <button class="premium-chip" id="chipNeon" onclick="openNeon()">
-          ⚡ Neon Pack <span class="chip-price" id="priceNeon">$0.99</span>
+        <button class="premium-chip" id="chipCustomization" onclick="openCustomization()">
+          🎨 Customization Pass <span class="chip-price" id="priceCustomization">$2.99</span>
         </button>
         <span id="neonSwatches" style="display:none; gap:6px; align-items:center;">
           <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
@@ -1700,7 +1668,45 @@
           <button class="swatch-btn" title="Arctic"    style="background:linear-gradient(135deg,#00b4d8,#90e0ef)" onclick="setNeon('arctic')"></button>
           <button class="swatch-btn" title="Toxic"     style="background:linear-gradient(135deg,#ccff00,#00ff87)" onclick="setNeon('toxic')"></button>
           <button class="swatch-btn" title="Candy"     style="background:linear-gradient(135deg,#ff85a1,#74c69d)" onclick="setNeon('candy')"></button>
+          <button class="swatch-btn" title="Aurora"    style="background:linear-gradient(135deg,#7b2ff7,#f107a3)" onclick="setNeon('aurora')"></button>
+          <button class="swatch-btn" title="Ocean"     style="background:linear-gradient(135deg,#0077b6,#48cae4)" onclick="setNeon('ocean')"></button>
+          <button class="swatch-btn" title="Lava"      style="background:linear-gradient(135deg,#ff4800,#ff8c00)" onclick="setNeon('lava')"></button>
+          <button class="swatch-btn" title="Matrix"    style="background:linear-gradient(135deg,#00ff41,#39ff14)" onclick="setNeon('matrix')"></button>
+          <button class="swatch-btn" title="Rose"      style="background:linear-gradient(135deg,#ff006e,#ff5c8a)" onclick="setNeon('rose')"></button>
+          <button class="swatch-btn" title="Golden"    style="background:linear-gradient(135deg,#ffd700,#ffed4a)" onclick="setNeon('golden')"></button>
+          <button class="swatch-btn" title="Midnight"  style="background:linear-gradient(135deg,#4361ee,#7b8ff8)" onclick="setNeon('midnight')"></button>
+          <button class="swatch-btn" title="Blood"     style="background:linear-gradient(135deg,#dc143c,#ff4466)" onclick="setNeon('blood')"></button>
+          <button class="swatch-btn" title="Vapor"     style="background:linear-gradient(135deg,#e040fb,#ea80fc)" onclick="setNeon('vapor')"></button>
         </span>
+      </div>
+      <div class="theme-row" id="gradientRow" style="display:none">
+        <span class="row-label">🌈 Gradients</span>
+        <span id="gradientSwatches" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <button class="swatch-btn" title="Sunrise"   style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)" onclick="setGradientTheme('sunrise')"></button>
+          <button class="swatch-btn" title="Twilight"  style="background:linear-gradient(135deg,#a855f7,#f43f5e)" onclick="setGradientTheme('twilight')"></button>
+          <button class="swatch-btn" title="Forest"    style="background:linear-gradient(135deg,#065f46,#34d399)" onclick="setGradientTheme('forest')"></button>
+          <button class="swatch-btn" title="Coral"     style="background:linear-gradient(135deg,#f43f5e,#fdba74)" onclick="setGradientTheme('coral')"></button>
+          <button class="swatch-btn" title="Blueberry" style="background:linear-gradient(135deg,#1d4ed8,#818cf8)" onclick="setGradientTheme('blueberry')"></button>
+          <button class="swatch-btn" title="Peach"     style="background:linear-gradient(135deg,#ea580c,#fbbf24)" onclick="setGradientTheme('peach')"></button>
+          <button class="swatch-btn" title="Lavender"  style="background:linear-gradient(135deg,#9333ea,#e879f9)" onclick="setGradientTheme('lavender')"></button>
+          <button class="swatch-btn" title="Ember"     style="background:linear-gradient(135deg,#b91c1c,#f97316)" onclick="setGradientTheme('ember')"></button>
+          <button class="swatch-btn" title="Mint"      style="background:linear-gradient(135deg,#0d9488,#5eead4)" onclick="setGradientTheme('mint')"></button>
+          <button class="swatch-btn" title="Sakura"    style="background:linear-gradient(135deg,#db2777,#fda4af)" onclick="setGradientTheme('sakura')"></button>
+          <button class="swatch-btn" title="Storm"     style="background:linear-gradient(135deg,#4338ca,#818cf8)" onclick="setGradientTheme('storm')"></button>
+          <button class="swatch-btn" title="Desert"    style="background:linear-gradient(135deg,#92400e,#fbbf24)" onclick="setGradientTheme('desert')"></button>
+          <button class="swatch-btn" title="Arctic"    style="background:linear-gradient(135deg,#0891b2,#67e8f9)" onclick="setGradientTheme('arctic2')"></button>
+          <button class="swatch-btn" title="Galaxy"    style="background:linear-gradient(135deg,#6d28d9,#c084fc)" onclick="setGradientTheme('galaxy')"></button>
+          <button class="swatch-btn" title="Flame"     style="background:linear-gradient(135deg,#d97706,#fcd34d)" onclick="setGradientTheme('flame')"></button>
+        </span>
+      </div>
+      <div id="gradientWheelPanel" style="display:none; padding:10px 0;">
+        <div style="font-size:0.85rem; color:var(--muted); margin-bottom:8px; font-weight:600;">🎨 Custom Gradient</div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color1" value="#ff6b6b" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">Start</span></div>
+          <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color2" value="#ffd93d" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">End</span></div>
+          <div id="gw-preview" style="width:60px;height:28px;border-radius:8px;border:2px solid var(--border);background:linear-gradient(90deg,#ff6b6b,#ffd93d)"></div>
+          <button class="reset-btn" onclick="applyGradientWheel()" style="font-size:0.75rem;padding:4px 10px;">Apply</button>
+        </div>
       </div>
       <div id="colorPanel">
         <div class="color-panel-grid">
@@ -2278,6 +2284,7 @@
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
+          if (data.customizationPass) window.unlockCustomization(true);
           if (data.colorWheel)  window.unlockWheel(true);
           if (data.neonPack)    window.unlockNeon(true);
           if (data.premiumPass) window.unlockPremium(true);
@@ -2373,6 +2380,33 @@ const NEON = {
   arctic:    { bg:'#00080f', card:'#001520', primary:'#00b4d8', primaryLight:'#90e0ef', text:'#e0f8ff', muted:'#4a7080', border:'#003550', input:'#00050a', neutral:'#90e0ef', correct:'#00ff87', wrong:'#f72585', grad:'linear-gradient(90deg,#00b4d8,#90e0ef)' },
   toxic:     { bg:'#050f00', card:'#0a1e00', primary:'#ccff00', primaryLight:'#00ff87', text:'#f0ffe0', muted:'#5a7a40', border:'#1e3d00', input:'#030a00', neutral:'#00ff87', correct:'#ccff00', wrong:'#ff3860', grad:'linear-gradient(90deg,#ccff00,#00ff87)' },
   candy:     { bg:'#0f0010', card:'#1e0020', primary:'#ff85a1', primaryLight:'#74c69d', text:'#ffe0f5', muted:'#7a4a6a', border:'#3d0030', input:'#0a000c', neutral:'#74c69d', correct:'#74c69d', wrong:'#ff85a1', grad:'linear-gradient(90deg,#ff85a1,#74c69d)' },
+  aurora:    { bg:'#020012', card:'#0a0028', primary:'#7b2ff7', primaryLight:'#f107a3', text:'#e8d0ff', muted:'#5a4a7a', border:'#1a0040', input:'#010008', neutral:'#f107a3', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#7b2ff7,#f107a3)' },
+  ocean:     { bg:'#00050c', card:'#000f1e', primary:'#0077b6', primaryLight:'#48cae4', text:'#caf0f8', muted:'#4a6a7a', border:'#002a4a', input:'#000308', neutral:'#48cae4', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#0077b6,#48cae4)' },
+  lava:      { bg:'#0f0200', card:'#1e0500', primary:'#ff4800', primaryLight:'#ff8c00', text:'#ffe8d0', muted:'#7a5a40', border:'#3d0f00', input:'#0a0100', neutral:'#ff8c00', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#ff4800,#ff8c00)' },
+  matrix:    { bg:'#000a00', card:'#001400', primary:'#00ff41', primaryLight:'#39ff14', text:'#d0ffd0', muted:'#4a7a4a', border:'#003300', input:'#000500', neutral:'#39ff14', correct:'#00ff41', wrong:'#ff3860', grad:'linear-gradient(90deg,#00ff41,#39ff14)' },
+  rose:      { bg:'#0f0008', card:'#1e0012', primary:'#ff006e', primaryLight:'#ff5c8a', text:'#ffe0f0', muted:'#7a4a5a', border:'#3d0020', input:'#0a0005', neutral:'#ff5c8a', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#ff006e,#ff5c8a)' },
+  golden:    { bg:'#0a0800', card:'#1e1400', primary:'#ffd700', primaryLight:'#ffed4a', text:'#fff8d0', muted:'#7a7040', border:'#3d2e00', input:'#050400', neutral:'#ffed4a', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#ffd700,#ffed4a)' },
+  midnight:  { bg:'#000010', card:'#00001e', primary:'#4361ee', primaryLight:'#7b8ff8', text:'#d0d8ff', muted:'#4a5080', border:'#001050', input:'#000008', neutral:'#7b8ff8', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#4361ee,#7b8ff8)' },
+  blood:     { bg:'#0a0000', card:'#1e0000', primary:'#dc143c', primaryLight:'#ff4466', text:'#ffd0d0', muted:'#7a4040', border:'#3d0000', input:'#050000', neutral:'#ff4466', correct:'#4cc9f0', wrong:'#dc143c', grad:'linear-gradient(90deg,#dc143c,#ff4466)' },
+  vapor:     { bg:'#0a0010', card:'#140020', primary:'#e040fb', primaryLight:'#ea80fc', text:'#f0d0ff', muted:'#6a4a7a', border:'#2a0040', input:'#050008', neutral:'#ea80fc', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#e040fb,#ea80fc)' },
+};
+
+const GRADIENT_THEMES = {
+  sunrise:    { bg:'#0a0500', card:'#1e0f00', primary:'#ff6b6b', primaryLight:'#ffd93d', text:'#fff5e0', muted:'#7a6a50', border:'#3d1a00', input:'#050200', neutral:'#ffd93d', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)' },
+  twilight:   { bg:'#05000a', card:'#100020', primary:'#a855f7', primaryLight:'#ec4899', text:'#f0e0ff', muted:'#6a4a7a', border:'#2a0040', input:'#030005', neutral:'#ec4899', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)' },
+  forest:     { bg:'#000a02', card:'#001405', primary:'#10b981', primaryLight:'#34d399', text:'#d0ffe8', muted:'#4a7a5a', border:'#003318', input:'#000503', neutral:'#34d399', correct:'#10b981', wrong:'#ff3860', grad:'linear-gradient(90deg,#065f46,#10b981,#34d399)' },
+  coral:      { bg:'#0a0200', card:'#1e0800', primary:'#fb7185', primaryLight:'#fdba74', text:'#fff0e8', muted:'#7a5a50', border:'#3d1000', input:'#050100', neutral:'#fdba74', correct:'#4cc9f0', wrong:'#fb7185', grad:'linear-gradient(90deg,#f43f5e,#fb7185,#fdba74)' },
+  blueberry:  { bg:'#000508', card:'#000f18', primary:'#3b82f6', primaryLight:'#818cf8', text:'#e0f0ff', muted:'#4a5a7a', border:'#001040', input:'#000308', neutral:'#818cf8', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#1d4ed8,#3b82f6,#818cf8)' },
+  peach:      { bg:'#0a0502', card:'#1e0f05', primary:'#f97316', primaryLight:'#fb923c', text:'#fff5e0', muted:'#7a6040', border:'#3d1800', input:'#050200', neutral:'#fb923c', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#ea580c,#f97316,#fbbf24)' },
+  lavender:   { bg:'#060008', card:'#100015', primary:'#c084fc', primaryLight:'#e879f9', text:'#f5e0ff', muted:'#6a5070', border:'#200030', input:'#030005', neutral:'#e879f9', correct:'#4cc9f0', wrong:'#ff006e', grad:'linear-gradient(90deg,#9333ea,#c084fc,#e879f9)' },
+  ember:      { bg:'#0a0200', card:'#1e0500', primary:'#ef4444', primaryLight:'#f97316', text:'#ffe8d0', muted:'#7a5040', border:'#3d0800', input:'#050100', neutral:'#f97316', correct:'#4cc9f0', wrong:'#ef4444', grad:'linear-gradient(90deg,#b91c1c,#ef4444,#f97316)' },
+  mint:       { bg:'#000a08', card:'#001410', primary:'#2dd4bf', primaryLight:'#5eead4', text:'#d0fff8', muted:'#4a7a70', border:'#00332a', input:'#000505', neutral:'#5eead4', correct:'#2dd4bf', wrong:'#ff3860', grad:'linear-gradient(90deg,#0d9488,#2dd4bf,#5eead4)' },
+  sakura:     { bg:'#0a0005', card:'#1e000f', primary:'#f472b6', primaryLight:'#fda4af', text:'#ffe0f0', muted:'#7a4a60', border:'#3d0018', input:'#050003', neutral:'#fda4af', correct:'#00ff87', wrong:'#f472b6', grad:'linear-gradient(90deg,#db2777,#f472b6,#fda4af)' },
+  storm:      { bg:'#020208', card:'#050510', primary:'#6366f1', primaryLight:'#818cf8', text:'#e0e0ff', muted:'#5050a0', border:'#101040', input:'#010108', neutral:'#818cf8', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#4338ca,#6366f1,#818cf8)' },
+  desert:     { bg:'#0a0600', card:'#1e1200', primary:'#d97706', primaryLight:'#fbbf24', text:'#fff8d0', muted:'#7a6840', border:'#3d2400', input:'#050300', neutral:'#fbbf24', correct:'#10b981', wrong:'#ef4444', grad:'linear-gradient(90deg,#92400e,#d97706,#fbbf24)' },
+  arctic2:    { bg:'#000508', card:'#000f15', primary:'#06b6d4', primaryLight:'#67e8f9', text:'#d0f8ff', muted:'#4a7080', border:'#002530', input:'#000308', neutral:'#67e8f9', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#0891b2,#06b6d4,#67e8f9)' },
+  galaxy:     { bg:'#050008', card:'#0a0015', primary:'#8b5cf6', primaryLight:'#c084fc', text:'#e8d0ff', muted:'#5a4a7a', border:'#150030', input:'#030005', neutral:'#c084fc', correct:'#4cc9f0', wrong:'#f43f5e', grad:'linear-gradient(90deg,#6d28d9,#8b5cf6,#c084fc)' },
+  flame:      { bg:'#0a0200', card:'#1e0500', primary:'#f59e0b', primaryLight:'#fcd34d', text:'#fff8d8', muted:'#7a6a40', border:'#3d1e00', input:'#050200', neutral:'#fcd34d', correct:'#10b981', wrong:'#ef4444', grad:'linear-gradient(90deg,#d97706,#f59e0b,#fcd34d)' },
 };
 
 function applyThemeVars(t) {
@@ -2425,8 +2459,45 @@ function setTheme(mode, color) {
 function setNeon(name) {
   applyThemeVars(NEON[name]);
   clearActive();
-  document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(name)]?.classList.add('active');
+  document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(name)]?.classList.add('active');
   currentTheme = { mode: 'neon', color: name };
+  persistThemeLocally(currentTheme);
+}
+
+const GRAD_NAMES = ['sunrise','twilight','forest','coral','blueberry','peach','lavender','ember','mint','sakura','storm','desert','arctic2','galaxy','flame'];
+
+function setGradientTheme(name) {
+  applyThemeVars(GRADIENT_THEMES[name]);
+  clearActive();
+  document.querySelectorAll('#gradientSwatches .swatch-btn')[GRAD_NAMES.indexOf(name)]?.classList.add('active');
+  currentTheme = { mode: 'gradient', color: name };
+  persistThemeLocally(currentTheme);
+}
+
+function applyGradientWheel() {
+  const c1 = document.getElementById('gw-color1').value;
+  const c2 = document.getElementById('gw-color2').value;
+  document.getElementById('gw-preview').style.background = `linear-gradient(90deg,${c1},${c2})`;
+  // Build a custom gradient theme from the two colors
+  function darken(hex, amt) {
+    let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    r = Math.max(0, r - amt); g = Math.max(0, g - amt); b = Math.max(0, b - amt);
+    return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+  }
+  function lighten(hex, amt) {
+    let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    r = Math.min(255, r + amt); g = Math.min(255, g + amt); b = Math.min(255, b + amt);
+    return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+  }
+  const t = {
+    bg: darken(c1, 200), card: darken(c1, 180), primary: c1, primaryLight: c2,
+    text: lighten(c2, 140), muted: darken(c2, 60), border: darken(c1, 150),
+    input: darken(c1, 210), neutral: c2, correct: '#00ff87', wrong: '#ff3860',
+    grad: `linear-gradient(90deg,${c1},${c2})`
+  };
+  applyThemeVars(t);
+  clearActive();
+  currentTheme = { mode: 'gradientWheel', customColors: { c1, c2 } };
   persistThemeLocally(currentTheme);
 }
 
@@ -2438,7 +2509,19 @@ window.applyThemeFromFirestore = function(t) {
   if (t.mode === 'neon' && t.color) {
     applyThemeVars(NEON[t.color]);
     clearActive();
-    document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy'].indexOf(t.color)]?.classList.add('active');
+    document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(t.color)]?.classList.add('active');
+    currentTheme = t;
+  } else if (t.mode === 'gradient' && t.color && GRADIENT_THEMES[t.color]) {
+    applyThemeVars(GRADIENT_THEMES[t.color]);
+    clearActive();
+    document.querySelectorAll('#gradientSwatches .swatch-btn')[GRAD_NAMES.indexOf(t.color)]?.classList.add('active');
+    currentTheme = t;
+  } else if (t.mode === 'gradientWheel' && t.customColors) {
+    const c1 = t.customColors.c1, c2 = t.customColors.c2;
+    document.getElementById('gw-color1').value = c1;
+    document.getElementById('gw-color2').value = c2;
+    document.getElementById('gw-preview').style.background = `linear-gradient(90deg,${c1},${c2})`;
+    applyGradientWheel();
     currentTheme = t;
   } else if (t.mode === 'custom' && t.customColors) {
     Object.entries(t.customColors).forEach(([k, v]) => {
@@ -2465,27 +2548,33 @@ function toggleThemePanel() {
 }
 
 // ── UNLOCK ──
-let wheelUnlocked = false, neonUnlocked = false;
-let paypalWheelRendered = false, paypalNeonRendered = false;
+let wheelUnlocked = false, neonUnlocked = false, customizationUnlocked = false;
+let paypalWheelRendered = false, paypalNeonRendered = false, paypalCustomizationRendered = false;
 let paypalPremiumRendered = false;
 window.isPremium = false;
 
 window.lockWheel = function() {
   wheelUnlocked = false;
   paypalWheelRendered = false;
-  const b = document.getElementById('priceWheel');
-  b.textContent = '$0.99'; b.style.background = '';
-  document.getElementById('chipWheel').classList.remove('unlocked');
-  document.getElementById('colorPanel').style.display = 'none';
 };
 
 window.lockNeon = function() {
   neonUnlocked = false;
   paypalNeonRendered = false;
-  const b = document.getElementById('priceNeon');
-  b.textContent = '$0.99'; b.style.background = '';
-  document.getElementById('chipNeon').classList.remove('unlocked');
+};
+
+window.lockCustomization = function() {
+  customizationUnlocked = false;
+  paypalCustomizationRendered = false;
+  wheelUnlocked = false;
+  neonUnlocked = false;
+  const b = document.getElementById('priceCustomization');
+  b.textContent = '$2.99'; b.style.background = '';
+  document.getElementById('chipCustomization').classList.remove('unlocked');
   document.getElementById('neonSwatches').style.display = 'none';
+  document.getElementById('gradientRow').style.display = 'none';
+  document.getElementById('gradientWheelPanel').style.display = 'none';
+  document.getElementById('colorPanel').style.display = 'none';
 };
 
 window.unlockPremium = function(silent = false) {
@@ -2562,6 +2651,24 @@ window.unlockNeon = function(silent = false) {
   }
 };
 
+window.unlockCustomization = function(silent = false) {
+  customizationUnlocked = true;
+  wheelUnlocked = true;
+  neonUnlocked = true;
+  const b = document.getElementById('priceCustomization');
+  b.textContent = '✓'; b.style.background = '#2ec27e';
+  document.getElementById('chipCustomization').classList.add('unlocked');
+  document.getElementById('neonSwatches').style.display = 'flex';
+  document.getElementById('gradientRow').style.display = 'flex';
+  document.getElementById('gradientWheelPanel').style.display = 'block';
+  document.getElementById('colorPanel').style.display = 'block';
+  if (!silent) {
+    closeModals();
+    document.getElementById('themePanelWrap').classList.add('open');
+    document.getElementById('themeToggleBtn').classList.add('open');
+  }
+};
+
 function openWheel() {
   if (wheelUnlocked) {
     const p = document.getElementById('colorPanel');
@@ -2585,6 +2692,15 @@ function openNeon() {
   document.getElementById('paypal-section-neon').style.display = isSignedIn ? 'block' : 'none';
   document.getElementById('modalNeon').classList.add('open');
   if (isSignedIn && !paypalNeonRendered) { renderPayPalNeon(); paypalNeonRendered = true; }
+}
+
+function openCustomization() {
+  if (customizationUnlocked) return;
+  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
+  document.getElementById('customizationSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
+  document.getElementById('paypal-section-customization').style.display = isSignedIn ? 'block' : 'none';
+  document.getElementById('modalCustomization').classList.add('open');
+  if (isSignedIn && !paypalCustomizationRendered) { renderPayPalCustomization(); paypalCustomizationRendered = true; }
 }
 
 function openPremiumModal() {
@@ -2639,6 +2755,29 @@ function renderPayPalNeon() {
     catch (err) { console.error('Failed to save neonPack purchase:', err); }
     window.unlockNeon();
   });
+}
+
+function renderPayPalCustomization() {
+  document.getElementById('paypal-customization').innerHTML = '';
+  document.getElementById('paypal-customization-card').innerHTML = '';
+  const orderCfg = {
+    createOrder: (data, actions) => actions.order.create({
+      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Customization Pass' }]
+    }),
+    onApprove: async (data, actions) => {
+      await actions.order.capture();
+      try { if (window.savePurchase) await window.savePurchase('customizationPass'); }
+      catch (err) { console.error('Failed to save customizationPass purchase:', err); }
+      window.unlockCustomization();
+    },
+    onError: () => alert('Payment failed. Please try again.')
+  };
+  const btn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
+  if (btn.isEligible()) btn.render('#paypal-customization');
+  else document.getElementById('paypal-customization').style.display = 'none';
+  const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
+  if (cardBtn.isEligible()) cardBtn.render('#paypal-customization-card');
+  else { document.getElementById('paypal-customization-card').style.display = 'none'; document.querySelector('#paypal-section-customization ~ .paypal-or')?.remove(); }
 }
 
 let premiumPlan = 'month'; // 'month' or 'year'
@@ -2737,6 +2876,7 @@ let currentMode = 'multiply';
 const selectedDivisors   = new Set();
 const selectedDigits     = new Set();
 const selectedLongDiv    = new Set();
+const selectedLongMul    = new Set();
 const selectedRemainderDiv = new Set();
 let currentRemainder = 0;
 
@@ -2775,6 +2915,22 @@ for (let dDigs = 2; dDigs <= 10; dDigs++) {
   }
 }
 
+// Generate every combo: multiplicand digits 2–10, multiplier digits 1–multiplicandDigs
+const LONG_MUL_CONFIGS = [];
+for (let aDigs = 2; aDigs <= 10; aDigs++) {
+  for (let bDigs = 1; bDigs <= aDigs; bDigs++) {
+    const aMin = Math.pow(10, aDigs - 1);
+    const aMax = Math.pow(10, aDigs) - 1;
+    const bMin = bDigs === 1 ? 2 : Math.pow(10, bDigs - 1);
+    const bMax = Math.pow(10, bDigs) - 1;
+    LONG_MUL_CONFIGS.push({
+      id: `lm${aDigs}x${bDigs}`,
+      label: `${aDigs}-digit × ${bDigs}-digit`,
+      aMin, aMax, bMin, bMax,
+    });
+  }
+}
+
 function genLongDiv(cfg) {
   const divisor = rnd(cfg.divisorMin, cfg.divisorMax);
   const minQ = Math.max(2, Math.ceil(cfg.dividendMin / divisor));
@@ -2798,12 +2954,13 @@ function genRemainderDiv(cfg) {
 
 function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-const ALL_MODES = ['multiply','shortdivide','longdivide','remainderdiv','add','subtract','wordproblems'];
+const ALL_MODES = ['multiply','longmultiply','shortdivide','longdivide','remainderdiv','add','subtract','wordproblems'];
 
 function setMode(mode) {
   currentMode = mode;
   selectedDigits.clear();
   selectedLongDiv.clear();
+  selectedLongMul.clear();
   selectedRemainderDiv.clear();
   if (mode !== 'wordproblems') { selectedWordOps.clear(); document.querySelectorAll('#wordOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
   ALL_MODES.forEach(m => {
@@ -2816,6 +2973,7 @@ function setMode(mode) {
   document.getElementById('remainderWrap').style.display = isRemainder ? 'flex' : 'none';
   const info = {
     multiply:     { emoji:'✖️',  sub:'Pick your tables and start practicing!' },
+    longmultiply: { emoji:'✖️📐', sub:'Pick number sizes for long multiplication!' },
     shortdivide:  { emoji:'➗',  sub:'Pick your divisors and practice short division!' },
     longdivide:   { emoji:'📐',  sub:'Pick a problem size — use the scratch pad to work it out!' },
     remainderdiv: { emoji:'📐R', sub:'Pick a problem size — find the quotient AND remainder!' },
@@ -2872,6 +3030,21 @@ function buildRemainderDivGrid() {
     btn.onclick = () => {
       if (selectedRemainderDiv.has(cfg.id)) { selectedRemainderDiv.delete(cfg.id); btn.classList.remove('selected'); }
       else { selectedRemainderDiv.add(cfg.id); btn.classList.add('selected'); }
+      updateStartBtn();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function buildLongMulGrid() {
+  const grid = document.getElementById('longMulGrid');
+  LONG_MUL_CONFIGS.forEach(cfg => {
+    const btn = document.createElement('button');
+    btn.className = 'digit-btn'; btn.dataset.config = cfg.id;
+    btn.textContent = cfg.label;
+    btn.onclick = () => {
+      if (selectedLongMul.has(cfg.id)) { selectedLongMul.delete(cfg.id); btn.classList.remove('selected'); }
+      else { selectedLongMul.add(cfg.id); btn.classList.add('selected'); }
       updateStartBtn();
     };
     grid.appendChild(btn);
@@ -3096,6 +3269,7 @@ function clearAll()      { selected.clear(); document.querySelectorAll('.table-b
 function updateStartBtn() {
   const btn = document.getElementById('startBtn');
   const ready = currentMode === 'multiply'      ? selected.size > 0
+              : currentMode === 'longmultiply'  ? selectedLongMul.size > 0
               : currentMode === 'shortdivide'  ? selectedDivisors.size > 0
               : currentMode === 'longdivide'   ? selectedLongDiv.size > 0
               : currentMode === 'remainderdiv' ? selectedRemainderDiv.size > 0
@@ -3105,6 +3279,7 @@ function updateStartBtn() {
   if (!ready) {
     const hints = {
       multiply:     'Choose at least one table to start!',
+      longmultiply: 'Choose at least one problem size!',
       shortdivide:  'Choose at least one divisor!',
       longdivide:   'Choose at least one problem size!',
       remainderdiv: 'Choose at least one problem size!',
@@ -3116,6 +3291,7 @@ function updateStartBtn() {
   } else {
     const labels = {
       multiply:     `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
+      longmultiply: `Start Long Multiplication! (${selectedLongMul.size} size${selectedLongMul.size>1?'s':''} selected)`,
       shortdivide:  `Start Dividing! (${selectedDivisors.size} divisor${selectedDivisors.size>1?'s':''} selected)`,
       longdivide:   `Start Long Division! (${selectedLongDiv.size} size${selectedLongDiv.size>1?'s':''} selected)`,
       remainderdiv: `Start Long ÷ with Remainders! (${selectedRemainderDiv.size} size${selectedRemainderDiv.size>1?'s':''} selected)`,
@@ -3175,6 +3351,14 @@ function nextQuestion() {
     clearWhiteboard();
     document.getElementById('remainderInput').value = '';
     document.getElementById('remainderInput').focus();
+  } else if (currentMode === 'longmultiply') {
+    const ids = Array.from(selectedLongMul);
+    const cfgId = ids[Math.floor(Math.random() * ids.length)];
+    const cfg = LONG_MUL_CONFIGS.find(c => c.id === cfgId);
+    const a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
+    currentAnswer = a * b;
+    setQuestion(`${fmtN(a)} × ${fmtN(b)} = ?`);
+    clearWhiteboard();
   } else if (currentMode === 'wordproblems') {
     const wp = generateWordProblem();
     currentAnswer = wp.answer;
@@ -3243,7 +3427,7 @@ function checkAnswer() {
   // Check perfect session
   if (total >= 20 && wrong === 0) userData.perfectSession = true;
   updateScore();
-  const delay = (currentMode === 'longdivide' || currentMode === 'remainderdiv' || currentMode === 'wordproblems') ? 2800 : 1400;
+  const delay = (currentMode === 'longdivide' || currentMode === 'longmultiply' || currentMode === 'remainderdiv' || currentMode === 'wordproblems') ? 2800 : 1400;
   setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
 }
 
@@ -3833,7 +4017,7 @@ const QUESTS = [
 // ── USER DATA (quests + selected title, synced to Firestore) ──
 function freshUserData() {
   return {
-    stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0, wordproblems:0 },
+    stats: { multiply:0, longmultiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0, wordproblems:0 },
     totalCorrect: 0, maxStreak: 0,
     perfectSession: false, comebackKid: false, sessionTotal: 0,
     _solved67: false,
@@ -4084,19 +4268,12 @@ function showGamepasses() {
   document.getElementById('leaderboard-screen').style.display = 'none';
   document.getElementById('settings-screen').style.display = 'none';
   // Update owned states
-  if (neonUnlocked) {
-    document.getElementById('gpNeonBtn').style.display = 'none';
-    document.getElementById('gpNeonOwned').style.display = 'block';
+  if (customizationUnlocked) {
+    document.getElementById('gpCustomizationBtn').style.display = 'none';
+    document.getElementById('gpCustomizationOwned').style.display = 'block';
   } else {
-    document.getElementById('gpNeonBtn').style.display = '';
-    document.getElementById('gpNeonOwned').style.display = 'none';
-  }
-  if (wheelUnlocked) {
-    document.getElementById('gpWheelBtn').style.display = 'none';
-    document.getElementById('gpWheelOwned').style.display = 'block';
-  } else {
-    document.getElementById('gpWheelBtn').style.display = '';
-    document.getElementById('gpWheelOwned').style.display = 'none';
+    document.getElementById('gpCustomizationBtn').style.display = '';
+    document.getElementById('gpCustomizationOwned').style.display = 'none';
   }
   if (window.isPremium) {
     document.getElementById('gpPremiumBtn').style.display = 'none';
@@ -4456,6 +4633,7 @@ const LB_CATEGORIES = [
   { id: 'total',        emoji: '🏆', name: 'Most Questions Answered',        desc: 'Total questions answered correctly across all modes',    field: 'totalCorrect' },
   { id: 'achievements', emoji: '🌸', name: 'Most Achievements Unlocked',     desc: 'Players who\'ve unlocked the most quests',               field: 'earnedQuests' },
   { id: 'multiply',     emoji: '✖️', name: 'Multiplication',                 desc: 'Most multiplication problems solved',                    field: 'stats.multiply' },
+  { id: 'longmultiply', emoji: '✖️', name: 'Long Multiplication',            desc: 'Most long multiplication problems solved',               field: 'stats.longmultiply' },
   { id: 'shortdivide',  emoji: '➗', name: 'Short Division',                 desc: 'Most short division problems solved',                    field: 'stats.shortdivide' },
   { id: 'longdivide',   emoji: '📐', name: 'Long Division',                  desc: 'Most long division problems solved',                     field: 'stats.longdivide' },
   { id: 'remainderdiv', emoji: '📐', name: 'Long Division w/ Remainder',     desc: 'Most long division with remainder problems solved',      field: 'stats.remainderdiv' },
@@ -4630,6 +4808,7 @@ function renderLbBoard() {
 buildDigitGrids();
 buildDivisorGrid();
 buildLongDivGrid();
+buildLongMulGrid();
 buildRemainderDivGrid();
 </script>
 
