@@ -283,6 +283,44 @@
   .delete-confirm-btns { display: flex; gap: 10px; }
   .delete-confirm-btns button { flex: 1; }
 
+  /* ── PREMIUM CONGRATS OVERLAY ── */
+  .premium-congrats-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7); z-index: 400;
+    justify-content: center; align-items: center;
+  }
+  .premium-congrats-overlay.visible { display: flex; }
+  .premium-congrats-box {
+    background: var(--card); border-radius: 24px; padding: 36px 28px;
+    max-width: 400px; width: 90%; text-align: center;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.35);
+    position: relative; overflow: hidden;
+  }
+  .premium-congrats-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #f59e0b, #f97316, #f59e0b);
+  }
+  .premium-congrats-crown { font-size: 3rem; margin-bottom: 12px; }
+  .premium-congrats-box h2 {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin: 0 0 8px;
+  }
+  .premium-congrats-box p {
+    font-size: 0.9rem; color: var(--muted); font-weight: 600;
+    line-height: 1.6; margin: 0 0 24px;
+  }
+  .premium-congrats-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 32px; border-radius: 16px; border: none;
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+    color: white; font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.95rem; cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .premium-congrats-btn:hover { opacity: 0.9; transform: scale(1.03); }
+
   /* ── AVATAR CROP MODAL ── */
   .crop-overlay {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -1799,6 +1837,16 @@
   </div>
 </div>
 
+<!-- ── PREMIUM CONGRATS ── -->
+<div class="premium-congrats-overlay" id="premiumCongratsOverlay">
+  <div class="premium-congrats-box">
+    <div class="premium-congrats-crown">👑</div>
+    <h2>Congratulations!</h2>
+    <p id="premiumCongratsMsg">Thank you for supporting Math Pop — you are now Premium!</p>
+    <button class="premium-congrats-btn" onclick="hidePremiumCongrats()">Return to Homepage</button>
+  </div>
+</div>
+
 <!-- ── TUTORIAL ── -->
 <div id="tutorial-screen">
   <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Practice</button>
@@ -2670,11 +2718,11 @@ window.unlockPremium = function(silent = false) {
   const crownEl = document.getElementById('crownBadge');
   if (crownEl) crownEl.style.display = 'inline';
   // Update subscription section if visible
-  const subStatus = document.getElementById('subscriptionStatus');
+  const subStatus = document.getElementById('subStatus');
   if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Active</span><div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">Your subscription renews automatically. Manage it via PayPal.</div>';
   if (!silent) {
     closeModals();
-    alert('🎉 Welcome to Premium! You now have a crown badge and can equip up to 3 titles.');
+    showPremiumCongrats();
   }
 };
 
@@ -2696,6 +2744,21 @@ window.lockPremium = function() {
     updateTitleBanner();
   }
 };
+
+function showPremiumCongrats() {
+  const nameEl = document.getElementById('userName');
+  const name = nameEl ? nameEl.textContent : '';
+  const msg = document.getElementById('premiumCongratsMsg');
+  if (msg) msg.textContent = name
+    ? `Thank you for supporting Math Pop, ${name}! You are now Premium!`
+    : 'Thank you for supporting Math Pop — you are now Premium!';
+  document.getElementById('premiumCongratsOverlay').classList.add('visible');
+}
+
+function hidePremiumCongrats() {
+  document.getElementById('premiumCongratsOverlay').classList.remove('visible');
+  goHome();
+}
 
 window.lockPremiumOnSignOut = function() {
   window.lockWheel();
@@ -4685,12 +4748,17 @@ function renderQuestScreen() {
       } else {
         // Normal quests: always show name, desc, and progress
         let progressHtml = '';
-        if (q.repeatable) {
-          const statKey = QUEST_MODE_MAP[q.id];
-          if (statKey) {
-            const current = Math.min(userData.stats?.[statKey] || 0, 100);
-            progressHtml = `<div style="margin-top:4px;"><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;background:var(--primary);border-radius:3px;width:${(current/100)*100}%;transition:width 0.3s;"></div></div><div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-weight:700;">${current}/100</div></div>`;
-          }
+        const statKey = QUEST_MODE_MAP[q.id];
+        if (statKey) {
+          const current = Math.min(userData.stats?.[statKey] || 0, 100);
+          const pct = (current / 100) * 100;
+          const barColor = earned ? 'var(--correct)' : 'var(--primary)';
+          progressHtml = `<div style="margin-top:6px;">
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;background:${barColor};border-radius:4px;width:${pct}%;transition:width 0.3s;"></div>
+            </div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;font-weight:700;">${current} / 100${earned ? ' ✅' : ''}</div>
+          </div>`;
         }
         div.innerHTML = `<div class="ach-icon">${q.emoji}</div>
           <div class="ach-info">
