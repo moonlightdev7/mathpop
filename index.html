@@ -70,6 +70,9 @@
     top: 12px;
     right: 14px;
     z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   #signedOut { display: flex; align-items: center; gap: 6px; }
@@ -258,6 +261,9 @@
 
   /* ── PAGE CONTENT ── */
   .page { padding: 24px 16px 0; }
+  @media (max-width: 600px) {
+    .page { padding-top: 54px; }
+  }
 
   h1 {
     font-family: 'Fredoka One', cursive;
@@ -1108,9 +1114,9 @@
       Sign Up / Log In
     </button>
   </div>
+  <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
   <div id="signedIn">
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
-    <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
     <span class="user-name" id="userName" onclick="showSettings()" title="Account Settings"></span>
   </div>
@@ -1203,62 +1209,6 @@
     <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
   </div>
 
-  <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemePanel()">
-    🎨 Customize Theme <span class="arrow">▼</span>
-  </button>
-
-  <div class="theme-panel-wrap" id="themePanelWrap">
-    <div class="theme-panel">
-      <div class="theme-row">
-        <span class="row-label">☀️ Light</span>
-        <button class="swatch-btn" title="Red"    style="background:#ffe0e0" onclick="setTheme('light','red')"></button>
-        <button class="swatch-btn" title="Orange" style="background:#fff0dd" onclick="setTheme('light','orange')"></button>
-        <button class="swatch-btn" title="Yellow" style="background:#fffde0" onclick="setTheme('light','yellow')"></button>
-        <button class="swatch-btn" title="Green"  style="background:#e0f7e0" onclick="setTheme('light','green')"></button>
-        <button class="swatch-btn" title="Blue"   style="background:#ddeeff" onclick="setTheme('light','blue')"></button>
-        <button class="swatch-btn" title="Indigo" style="background:#e8e0ff" onclick="setTheme('light','indigo')"></button>
-        <button class="swatch-btn" title="Violet" style="background:#f5e0ff" onclick="setTheme('light','violet')"></button>
-      </div>
-      <div class="theme-row">
-        <span class="row-label">🌙 Dark</span>
-        <button class="swatch-btn" title="Red"    style="background:#3d0a0a" onclick="setTheme('dark','red')"></button>
-        <button class="swatch-btn" title="Orange" style="background:#2e1500" onclick="setTheme('dark','orange')"></button>
-        <button class="swatch-btn" title="Yellow" style="background:#2a2300" onclick="setTheme('dark','yellow')"></button>
-        <button class="swatch-btn" title="Green"  style="background:#002e0a" onclick="setTheme('dark','green')"></button>
-        <button class="swatch-btn" title="Blue"   style="background:#001a3d" onclick="setTheme('dark','blue')"></button>
-        <button class="swatch-btn" title="Indigo" style="background:#0e0a2e" onclick="setTheme('dark','indigo')"></button>
-        <button class="swatch-btn" title="Violet" style="background:#1a0028" onclick="setTheme('dark','violet')"></button>
-      </div>
-      <div class="theme-row">
-        <span class="row-label">✨ Plus</span>
-        <button class="premium-chip" id="chipWheel" onclick="openWheel()">
-          🎨 Color Wheel <span class="chip-price" id="priceWheel">$0.99</span>
-        </button>
-        <button class="premium-chip" id="chipNeon" onclick="openNeon()">
-          ⚡ Neon Pack <span class="chip-price" id="priceNeon">$0.99</span>
-        </button>
-        <span id="neonSwatches" style="display:none; gap:6px; align-items:center;">
-          <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
-          <button class="swatch-btn" title="Synthwave" style="background:linear-gradient(135deg,#f72585,#7209b7)" onclick="setNeon('synthwave')"></button>
-          <button class="swatch-btn" title="Sunset"    style="background:linear-gradient(135deg,#ff6d00,#ff006e)" onclick="setNeon('sunset')"></button>
-          <button class="swatch-btn" title="Arctic"    style="background:linear-gradient(135deg,#00b4d8,#90e0ef)" onclick="setNeon('arctic')"></button>
-          <button class="swatch-btn" title="Toxic"     style="background:linear-gradient(135deg,#ccff00,#00ff87)" onclick="setNeon('toxic')"></button>
-          <button class="swatch-btn" title="Candy"     style="background:linear-gradient(135deg,#ff85a1,#74c69d)" onclick="setNeon('candy')"></button>
-        </span>
-      </div>
-      <div id="colorPanel">
-        <div class="color-panel-grid">
-          <div class="color-picker-item"><input type="color" id="cp-primary" value="#ff6b35" oninput="applyColor('primary',this.value)">Primary</div>
-          <div class="color-picker-item"><input type="color" id="cp-correct" value="#2ec27e" oninput="applyColor('correct',this.value)">Correct</div>
-          <div class="color-picker-item"><input type="color" id="cp-wrong"   value="#e5334b" oninput="applyColor('wrong',this.value)">Wrong</div>
-          <div class="color-picker-item"><input type="color" id="cp-bg"      value="#fdf6ec" oninput="applyColor('bg',this.value)">Background</div>
-          <div class="color-picker-item"><input type="color" id="cp-card"    value="#ffffff" oninput="applyColor('card',this.value)">Cards</div>
-          <button class="reset-btn" onclick="resetColors()">↺ Reset</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ── MODE SELECTOR ── -->
   <div class="mode-selector">
     <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
@@ -1330,7 +1280,7 @@
   <button class="ach-back-btn" onclick="hideQuests()">← Back</button>
 
   <div class="quest-header-card">
-    <div class="quest-header-title">🔮 Ranks, Quests &amp; Titles</div>
+    <div class="quest-header-title">🌸 Ranks, Quests &amp; Titles</div>
     <div class="quest-header-sub">Answer questions to rank up, complete quests, and equip titles for your homepage</div>
   </div>
 
@@ -1358,6 +1308,15 @@
   <div class="lb-header-card">
     <div class="lb-header-title">🥇 Leaderboards</div>
     <div class="lb-header-sub">See how you stack up against other Mathpop players!</div>
+  </div>
+
+  <div id="lbSigninPrompt" style="display:none; background:var(--card); border:2px dashed var(--primary); border-radius:16px; padding:16px 20px; text-align:center; margin-bottom:16px;">
+    <div style="font-weight:800; font-size:0.95rem; color:var(--text); margin-bottom:6px;">Want to appear on the leaderboards?</div>
+    <div style="font-size:0.82rem; color:var(--muted); margin-bottom:12px; font-weight:600;">Sign up to track your progress and compete with other players!</div>
+    <button class="google-btn" style="margin:0 auto" onclick="signIn()">
+      <svg class="google-logo" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign Up / Log In
+    </button>
   </div>
 
   <div class="lb-category-tabs" id="lbTabs"></div>
@@ -1393,6 +1352,65 @@
     <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;font-weight:600">Tap the camera icon on your photo above, or use the button below.</p>
     <button class="settings-btn" onclick="document.getElementById('avatarUpload').click()">📷 Choose New Photo</button>
     <div class="settings-status" id="avatarStatus"></div>
+  </div>
+
+  <div class="settings-section">
+    <h3>🎨 Theme</h3>
+    <div class="theme-panel" style="border:none; padding:0; margin:0; background:transparent; box-shadow:none;">
+      <div class="theme-row">
+        <span class="row-label">☀️ Light</span>
+        <button class="swatch-btn" title="Red"    style="background:#ffe0e0" onclick="setTheme('light','red')"></button>
+        <button class="swatch-btn" title="Orange" style="background:#fff0dd" onclick="setTheme('light','orange')"></button>
+        <button class="swatch-btn" title="Yellow" style="background:#fffde0" onclick="setTheme('light','yellow')"></button>
+        <button class="swatch-btn" title="Green"  style="background:#e0f7e0" onclick="setTheme('light','green')"></button>
+        <button class="swatch-btn" title="Blue"   style="background:#ddeeff" onclick="setTheme('light','blue')"></button>
+        <button class="swatch-btn" title="Indigo" style="background:#e8e0ff" onclick="setTheme('light','indigo')"></button>
+        <button class="swatch-btn" title="Violet" style="background:#f5e0ff" onclick="setTheme('light','violet')"></button>
+        <button class="swatch-btn" title="Pink"   style="background:#ffe0ea" onclick="setTheme('light','pink')"></button>
+        <button class="swatch-btn" title="Grey"   style="background:#e8eaed" onclick="setTheme('light','grey')"></button>
+        <button class="swatch-btn" title="Brown"  style="background:#f0e4d0" onclick="setTheme('light','brown')"></button>
+      </div>
+      <div class="theme-row">
+        <span class="row-label">🌙 Dark</span>
+        <button class="swatch-btn" title="Red"    style="background:#3d0a0a" onclick="setTheme('dark','red')"></button>
+        <button class="swatch-btn" title="Orange" style="background:#2e1500" onclick="setTheme('dark','orange')"></button>
+        <button class="swatch-btn" title="Yellow" style="background:#2a2300" onclick="setTheme('dark','yellow')"></button>
+        <button class="swatch-btn" title="Green"  style="background:#002e0a" onclick="setTheme('dark','green')"></button>
+        <button class="swatch-btn" title="Blue"   style="background:#001a3d" onclick="setTheme('dark','blue')"></button>
+        <button class="swatch-btn" title="Indigo" style="background:#0e0a2e" onclick="setTheme('dark','indigo')"></button>
+        <button class="swatch-btn" title="Violet" style="background:#1a0028" onclick="setTheme('dark','violet')"></button>
+        <button class="swatch-btn" title="Pink"   style="background:#2d0a18" onclick="setTheme('dark','pink')"></button>
+        <button class="swatch-btn" title="Grey"   style="background:#1e2028" onclick="setTheme('dark','grey')"></button>
+        <button class="swatch-btn" title="Brown"  style="background:#261c08" onclick="setTheme('dark','brown')"></button>
+      </div>
+      <div class="theme-row">
+        <span class="row-label">✨ Plus</span>
+        <button class="premium-chip" id="chipWheel" onclick="openWheel()">
+          🎨 Color Wheel <span class="chip-price" id="priceWheel">$0.99</span>
+        </button>
+        <button class="premium-chip" id="chipNeon" onclick="openNeon()">
+          ⚡ Neon Pack <span class="chip-price" id="priceNeon">$0.99</span>
+        </button>
+        <span id="neonSwatches" style="display:none; gap:6px; align-items:center;">
+          <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
+          <button class="swatch-btn" title="Synthwave" style="background:linear-gradient(135deg,#f72585,#7209b7)" onclick="setNeon('synthwave')"></button>
+          <button class="swatch-btn" title="Sunset"    style="background:linear-gradient(135deg,#ff6d00,#ff006e)" onclick="setNeon('sunset')"></button>
+          <button class="swatch-btn" title="Arctic"    style="background:linear-gradient(135deg,#00b4d8,#90e0ef)" onclick="setNeon('arctic')"></button>
+          <button class="swatch-btn" title="Toxic"     style="background:linear-gradient(135deg,#ccff00,#00ff87)" onclick="setNeon('toxic')"></button>
+          <button class="swatch-btn" title="Candy"     style="background:linear-gradient(135deg,#ff85a1,#74c69d)" onclick="setNeon('candy')"></button>
+        </span>
+      </div>
+      <div id="colorPanel">
+        <div class="color-panel-grid">
+          <div class="color-picker-item"><input type="color" id="cp-primary" value="#ff6b35" oninput="applyColor('primary',this.value)">Primary</div>
+          <div class="color-picker-item"><input type="color" id="cp-correct" value="#2ec27e" oninput="applyColor('correct',this.value)">Correct</div>
+          <div class="color-picker-item"><input type="color" id="cp-wrong"   value="#e5334b" oninput="applyColor('wrong',this.value)">Wrong</div>
+          <div class="color-picker-item"><input type="color" id="cp-bg"      value="#fdf6ec" oninput="applyColor('bg',this.value)">Background</div>
+          <div class="color-picker-item"><input type="color" id="cp-card"    value="#ffffff" oninput="applyColor('card',this.value)">Cards</div>
+          <button class="reset-btn" onclick="resetColors()">↺ Reset</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="settings-section">
@@ -2003,6 +2021,7 @@
 <!-- ── MAIN SCRIPT ── -->
 <script>
 // ── THEME DATA ──
+const COLOR_NAMES = ['red','orange','yellow','green','blue','indigo','violet','pink','grey','brown'];
 const LIGHT = {
   red:    { bg:'#fff5f5', card:'#fff', primary:'#e53e3e', text:'#2d2d2d', muted:'#a0aec0', border:'#fed7d7', input:'#fff5f5', neutral:'#718096', correct:'#38a169', wrong:'#e53e3e' },
   orange: { bg:'#fdf6ec', card:'#fff', primary:'#ff6b35', text:'#2d2d2d', muted:'#9e9e9e', border:'#ede0d0', input:'#fdf6ec', neutral:'#5c6bc0', correct:'#2ec27e', wrong:'#e5334b' },
@@ -2011,6 +2030,9 @@ const LIGHT = {
   blue:   { bg:'#ebf8ff', card:'#fff', primary:'#2b6cb0', text:'#2d2d2d', muted:'#a0aec0', border:'#bee3f8', input:'#ebf8ff', neutral:'#5c6bc0', correct:'#2ec27e', wrong:'#e53e3e' },
   indigo: { bg:'#ebf4ff', card:'#fff', primary:'#4c51bf', text:'#2d2d2d', muted:'#a0aec0', border:'#c3dafe', input:'#ebf4ff', neutral:'#5c6bc0', correct:'#2ec27e', wrong:'#e53e3e' },
   violet: { bg:'#faf5ff', card:'#fff', primary:'#6b46c1', text:'#2d2d2d', muted:'#a0aec0', border:'#e9d8fd', input:'#faf5ff', neutral:'#5c6bc0', correct:'#2ec27e', wrong:'#e53e3e' },
+  pink:   { bg:'#fff5f7', card:'#fff', primary:'#d53f8c', text:'#2d2d2d', muted:'#a0aec0', border:'#fed7e2', input:'#fff5f7', neutral:'#718096', correct:'#38a169', wrong:'#e53e3e' },
+  grey:   { bg:'#f7f7f8', card:'#fff', primary:'#596577', text:'#2d2d2d', muted:'#a0aec0', border:'#e2e8f0', input:'#f7f7f8', neutral:'#5c6bc0', correct:'#2ec27e', wrong:'#e53e3e' },
+  brown:  { bg:'#faf6f1', card:'#fff', primary:'#8b6914', text:'#2d2d2d', muted:'#a0aec0', border:'#e8dcc8', input:'#faf6f1', neutral:'#718096', correct:'#38a169', wrong:'#c53030' },
 };
 const DARK = {
   red:    { bg:'#1a0505', card:'#2d0a0a', primary:'#fc8181', text:'#fff0f0', muted:'#718096', border:'#4a1010', input:'#120303', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
@@ -2020,6 +2042,9 @@ const DARK = {
   blue:   { bg:'#00101a', card:'#001c2d', primary:'#63b3ed', text:'#f0f9ff', muted:'#718096', border:'#003050', input:'#000d12', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
   indigo: { bg:'#0e0a2e', card:'#1e1e30', primary:'#7f9cf5', text:'#f1f0ff', muted:'#6b7280', border:'#2e2e45', input:'#14141f', neutral:'#60a5fa', correct:'#34d399', wrong:'#f87171' },
   violet: { bg:'#150010', card:'#220020', primary:'#b794f4', text:'#fdf4ff', muted:'#718096', border:'#3d0050', input:'#0e0012', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
+  pink:   { bg:'#1a050d', card:'#2d0a18', primary:'#f687b3', text:'#fff0f5', muted:'#718096', border:'#4a1028', input:'#120308', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
+  grey:   { bg:'#131518', card:'#1e2028', primary:'#a0aec0', text:'#edf2f7', muted:'#718096', border:'#2d3748', input:'#0d0f12', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
+  brown:  { bg:'#140e00', card:'#261c08', primary:'#d4a24e', text:'#fdf6ec', muted:'#718096', border:'#3d2a0a', input:'#0e0900', neutral:'#76e4f7', correct:'#68d391', wrong:'#fc8181' },
 };
 const NEON = {
   cyber:     { bg:'#050f14', card:'#0a1e28', primary:'#00ff87', primaryLight:'#00cfff', text:'#e0ffff', muted:'#4a7a7a', border:'#0a3040', input:'#030c10', neutral:'#00cfff', correct:'#00ff87', wrong:'#ff3860', grad:'linear-gradient(90deg,#00ff87,#00cfff)' },
@@ -2053,7 +2078,7 @@ function applyThemeVars(t) {
 }
 
 // ── THEME STATE TRACKING ──
-let currentTheme = { mode: 'light', color: 'orange' };
+let currentTheme = { mode: 'dark', color: 'blue' };
 
 function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
@@ -2071,7 +2096,7 @@ function setTheme(mode, color) {
   applyThemeVars(mode === 'dark' ? DARK[color] : LIGHT[color]);
   clearActive();
   const rows = document.querySelectorAll('.theme-row');
-  const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(color);
+  const idx = COLOR_NAMES.indexOf(color);
   rows[mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
   currentTheme = { mode, color };
   persistThemeLocally(currentTheme);
@@ -2106,7 +2131,7 @@ window.applyThemeFromFirestore = function(t) {
     applyThemeVars(t.mode === 'dark' ? DARK[t.color] : LIGHT[t.color]);
     clearActive();
     const rows = document.querySelectorAll('.theme-row');
-    const idx = ['red','orange','yellow','green','blue','indigo','violet'].indexOf(t.color);
+    const idx = COLOR_NAMES.indexOf(t.color);
     rows[t.mode === 'dark' ? 1 : 0].querySelectorAll('.swatch-btn')[idx]?.classList.add('active');
     currentTheme = t;
   }
@@ -2273,9 +2298,9 @@ function applyColor(prop, val) {
 }
 
 function resetColors() {
-  setTheme('light','orange');
-  ({primary:'#ff6b35', correct:'#2ec27e', wrong:'#e5334b', bg:'#fdf6ec', card:'#ffffff'});
-  Object.entries({primary:'#ff6b35', correct:'#2ec27e', wrong:'#e5334b', bg:'#fdf6ec', card:'#ffffff'})
+  setTheme('dark','blue');
+  const defaults = {primary:'#63b3ed', correct:'#68d391', wrong:'#fc8181', bg:'#00101a', card:'#001c2d'};
+  Object.entries(defaults)
     .forEach(([k,v]) => { const el=document.getElementById('cp-'+k); if(el) el.value=v; });
 }
 
@@ -2470,6 +2495,7 @@ function setQuestion(text) {
 // ── TABLE GRID ──
 const selected = new Set();
 let correct=0, wrong=0, total=0, currentAnswer=0;
+let _lastQA = 0, _lastQB = 0; // track operands for secret quest detection
 
 const grid = document.getElementById('tableGrid');
 for (let i=1; i<=30; i++) {
@@ -2567,9 +2593,11 @@ function nextQuestion() {
     const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
     const cfg = DIGIT_CONFIGS.find(c => c.id === cfgId);
     let a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
+    _lastQA = a; _lastQB = b;
     if (currentMode === 'subtract') {
       if (a < b) [a, b] = [b, a];
       if (a === b) b = Math.max(cfg.bMin, b - rnd(1, Math.max(1, Math.floor(b * 0.3)))); // avoid answer = 0
+      _lastQA = a; _lastQB = b;
       currentAnswer = a - b;
       setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
@@ -3069,6 +3097,15 @@ const QUESTS = [
   { id:'pi_day',            emoji:'π',  name:'Pi Day Pilgrim',        desc:'Practice math on March 14th.',                           check: () => { const n=new Date(); return n.getMonth()===2&&n.getDate()===14; } },
   { id:'all_modes_ace',     emoji:'🌈', name:'Rainbow Mathematician', desc:'Get at least 10 correct in every single mode.',          check: d => Object.values(d.stats||{}).every(v=>v>=10) },
   { id:'mega_grinder',      emoji:'💎', name:'Diamond Grinder',       desc:'Solve 10,000 total questions. A true legend.',           check: d => d.totalCorrect >= 10000 },
+  // ── SECRET QUESTS ──
+  { id:'founders_bday',    emoji:'🎂', name:'Founder\'s Birthday',   desc:'Practice math on February 16th at 2:16 AM. A secret tribute to the founder!', secret:true,
+    check: () => { const n=new Date(); return n.getMonth()===1 && n.getDate()===16 && n.getHours()===2 && n.getMinutes()===16; } },
+  { id:'new_years',        emoji:'🎆', name:'New Year\'s Resolve',   desc:'Solve a math problem at exactly midnight on January 1st. Happy New Year!', secret:true,
+    check: d => { const n=new Date(); return d._justAnswered && n.getMonth()===0 && n.getDate()===1 && n.getHours()===0 && n.getMinutes()===0; } },
+  { id:'the_67',           emoji:'6️⃣',  name:'The 67 Quest',          desc:'Solve the legendary problem: 6 + 7. You found the easter egg!', secret:true,
+    check: d => d._solved67 },
+  { id:'founders_romance', emoji:'💕', name:'Founder\'s Romance',    desc:'Solve a math problem at exactly 10:13 AM on October 13th. A secret date!', secret:true,
+    check: d => { const n=new Date(); return d._justAnswered && n.getMonth()===9 && n.getDate()===13 && n.getHours()===10 && n.getMinutes()===13; } },
 ];
 
 // ── USER DATA (quests + selected title, synced to Firestore) ──
@@ -3077,6 +3114,7 @@ function freshUserData() {
     stats: { multiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0 },
     totalCorrect: 0, maxStreak: 0,
     perfectSession: false, comebackKid: false, sessionTotal: 0,
+    _solved67: false,
     earnedQuests: [],    // quest IDs the user has completed
     selectedTitle: null, // quest ID of the title shown on homepage
   };
@@ -3158,8 +3196,14 @@ function onCorrectAnswer() {
   if (newRank.req > prevRank.req) {
     showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
   }
+  // Secret quest flags
+  userData._justAnswered = true;
+  if (currentMode === 'add' && ((_lastQA===6 && _lastQB===7) || (_lastQA===7 && _lastQB===6))) {
+    userData._solved67 = true;
+  }
   updateXpBanner();
   checkQuests();
+  userData._justAnswered = false; // reset transient flag
   saveUserData();
 }
 
@@ -3201,6 +3245,7 @@ window.loadUserData = (data) => {
   });
   userData.perfectSession = userData.perfectSession || !!data.perfectSession;
   userData.comebackKid    = userData.comebackKid    || !!data.comebackKid;
+  userData._solved67      = userData._solved67      || !!data._solved67;
   // Union of earned quests
   const combined = new Set([...userData.earnedQuests, ...(data.earnedQuests || [])]);
   userData.earnedQuests = Array.from(combined);
@@ -3494,16 +3539,37 @@ function renderQuestScreen() {
   // Quest list
   const qList = document.getElementById('questList');
   qList.innerHTML = '';
-  for (const q of QUESTS) {
+  // Regular quests first, then secret quests
+  const regularQuests = QUESTS.filter(q => !q.secret);
+  const secretQuests  = QUESTS.filter(q => q.secret);
+  for (const q of regularQuests) {
     const earned = userData.earnedQuests.includes(q.id);
     const div = document.createElement('div');
     div.className = 'ach-item' + (earned ? ' earned' : '');
-    div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🔮'}</div>
+    div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
       <div class="ach-info">
         <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
         <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
       </div>`;
     qList.appendChild(div);
+  }
+  // Secret quests section
+  if (secretQuests.length) {
+    const secretHeader = document.createElement('div');
+    secretHeader.style.cssText = 'font-family:Fredoka One,cursive;font-size:1rem;color:var(--primary);margin:18px 0 10px;';
+    secretHeader.textContent = '🤫 Secret Quests';
+    qList.appendChild(secretHeader);
+    for (const q of secretQuests) {
+      const earned = userData.earnedQuests.includes(q.id);
+      const div = document.createElement('div');
+      div.className = 'ach-item secret' + (earned ? ' earned' : '');
+      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '❓'}</div>
+        <div class="ach-info">
+          <div class="ach-name">${earned ? q.name : '??? Secret Quest'}</div>
+          <div class="ach-desc">${earned ? '✅ ' + q.desc : 'This one\'s a mystery... keep exploring!'}</div>
+        </div>`;
+      qList.appendChild(div);
+    }
   }
 
   // Title chooser — only earned quests
@@ -3535,7 +3601,7 @@ function renderQuestScreen() {
 // ── LEADERBOARDS ──
 const LB_CATEGORIES = [
   { id: 'total',        emoji: '🏆', name: 'Most Questions Answered',        desc: 'Total questions answered correctly across all modes',    field: 'totalCorrect' },
-  { id: 'achievements', emoji: '🔮', name: 'Most Achievements Unlocked',     desc: 'Players who\'ve unlocked the most quests',               field: 'earnedQuests' },
+  { id: 'achievements', emoji: '🌸', name: 'Most Achievements Unlocked',     desc: 'Players who\'ve unlocked the most quests',               field: 'earnedQuests' },
   { id: 'multiply',     emoji: '✖️', name: 'Multiplication',                 desc: 'Most multiplication problems solved',                    field: 'stats.multiply' },
   { id: 'shortdivide',  emoji: '➗', name: 'Short Division',                 desc: 'Most short division problems solved',                    field: 'stats.shortdivide' },
   { id: 'longdivide',   emoji: '📐', name: 'Long Division',                  desc: 'Most long division problems solved',                     field: 'stats.longdivide' },
@@ -3554,6 +3620,9 @@ function showLeaderboard() {
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('settings-screen').style.display = 'none';
+  // Show sign-in prompt for guests
+  const prompt = document.getElementById('lbSigninPrompt');
+  if (prompt) prompt.style.display = window.currentUserId ? 'none' : 'block';
   renderLbTabs();
   loadLeaderboardData();
 }
@@ -3693,7 +3762,7 @@ function renderLbBoard() {
     const saved = localStorage.getItem('mathpop_theme');
     if (saved) { window.applyThemeFromFirestore(JSON.parse(saved)); return; }
   } catch(e) {}
-  setTheme('light','orange'); // fallback default
+  setTheme('dark','blue'); // fallback default
 })();
 buildDigitGrids();
 buildDivisorGrid();
