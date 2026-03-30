@@ -4657,12 +4657,35 @@ function renderQuestScreen() {
       const completions = userData._questCompletions && userData._questCompletions[q.id] ? userData._questCompletions[q.id] : 0;
       const div = document.createElement('div');
       div.className = 'ach-item' + (earned ? ' earned' : '') + (q.secret ? ' secret' : '');
-      const completionStr = q.repeatable && earned ? ` (×${completions})` : '';
-      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
-        <div class="ach-info">
-          <div class="ach-name">${earned ? q.name + completionStr : '??? Hidden Quest'}</div>
-          <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
-        </div>`;
+
+      if (q.secret) {
+        // Hidden quests: show ??? until discovered
+        div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🔮'}</div>
+          <div class="ach-info">
+            <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
+            <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
+          </div>`;
+      } else {
+        // Normal quests: always show name, desc, and progress
+        const completionStr = q.repeatable && completions > 0 ? ` (×${completions})` : '';
+        // Calculate progress for repeatable quests
+        let progressHtml = '';
+        if (q.repeatable) {
+          const statKey = { mul_10:'multiply', longmul_10:'longmultiply', shortdiv_10:'shortdivide', longdiv_10:'longdivide', remdiv_10:'remainderdiv', add_10:'add', sub_10:'subtract', wp_10:'wordproblems' }[q.id];
+          if (statKey) {
+            const current = userData.stats?.[statKey] || 0;
+            const nextMilestone = 10 * (completions + 1);
+            const progress = current % 10;
+            progressHtml = `<div style="margin-top:4px;"><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;background:var(--primary);border-radius:3px;width:${Math.min((progress/10)*100,100)}%;transition:width 0.3s;"></div></div><div style="font-size:0.7rem;color:var(--muted);margin-top:2px;font-weight:700;">${progress}/10 to next completion</div></div>`;
+          }
+        }
+        div.innerHTML = `<div class="ach-icon">${q.emoji}</div>
+          <div class="ach-info">
+            <div class="ach-name">${q.name}${completionStr}</div>
+            <div class="ach-desc">${earned ? '✅ ' : ''}${q.desc}</div>
+            ${progressHtml}
+          </div>`;
+      }
       qList.appendChild(div);
     }
   };
