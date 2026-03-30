@@ -125,10 +125,20 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: calc(100vw - 28px);
   }
 
   #signedOut { display: flex; align-items: center; gap: 6px; }
   #signedIn  { display: none; align-items: center; gap: 8px; }
+  .settings-tap-area {
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer; padding: 4px 6px; border-radius: 12px;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 38px;
+  }
+  .settings-tap-area:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); }
 
   .google-btn {
     display: flex;
@@ -1268,9 +1278,11 @@
   <div id="signedIn">
     <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
-    <span id="crownBadge" style="display:none;font-size:0.9rem;cursor:pointer;" onclick="showSettings()" title="Account Settings">👑</span>
-    <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
-    <span class="user-name" id="userName" onclick="showSettings()" title="Account Settings"></span>
+    <div class="settings-tap-area" onclick="showSettings()" title="Account Settings">
+      <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
+      <img class="user-avatar" id="userAvatar" src="" alt="avatar">
+      <span class="user-name" id="userName"></span>
+    </div>
   </div>
 </div>
 
@@ -2298,6 +2310,12 @@
         }
       } catch(e) { console.error('[MathPop] theme restore error:', e); }
 
+      // Step 1c: Restore premium/customization from localStorage instantly
+      try {
+        if (localStorage.getItem('mathpop_premium') === '1') window.unlockPremium(true);
+        if (localStorage.getItem('mathpop_customization') === '1') window.unlockCustomization(true);
+      } catch(e) {}
+
       // Step 2: Fetch Firestore — source of truth
       try {
         const snap = await getDoc(doc(db, 'users', user.uid));
@@ -2620,6 +2638,7 @@ window.lockCustomization = function() {
   paypalCustomizationRendered = false;
   wheelUnlocked = false;
   neonUnlocked = false;
+  try { localStorage.removeItem('mathpop_customization'); } catch(e) {}
   const b = document.getElementById('priceCustomization');
   b.textContent = '$2.99'; b.style.background = '';
   document.getElementById('chipCustomization').classList.remove('unlocked');
@@ -2632,6 +2651,7 @@ window.lockCustomization = function() {
 window.unlockPremium = function(silent = false) {
   window.isPremium = true;
   paypalPremiumRendered = false;
+  try { localStorage.setItem('mathpop_premium', '1'); } catch(e) {}
   const btn = document.getElementById('gpPremiumBtn');
   const owned = document.getElementById('gpPremiumOwned');
   if (btn) btn.style.display = 'none';
@@ -2639,6 +2659,9 @@ window.unlockPremium = function(silent = false) {
   // Show crown badge
   const crownEl = document.getElementById('crownBadge');
   if (crownEl) crownEl.style.display = 'inline';
+  // Update subscription section if visible
+  const subStatus = document.getElementById('subscriptionStatus');
+  if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Active</span><div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">Your subscription renews automatically. Manage it via PayPal.</div>';
   if (!silent) {
     closeModals();
     alert('🎉 Welcome to Premium! You now have a crown badge and can equip up to 3 titles.');
@@ -2648,6 +2671,7 @@ window.unlockPremium = function(silent = false) {
 window.lockPremium = function() {
   window.isPremium = false;
   paypalPremiumRendered = false;
+  try { localStorage.removeItem('mathpop_premium'); } catch(e) {}
   const btn = document.getElementById('gpPremiumBtn');
   const owned = document.getElementById('gpPremiumOwned');
   if (btn) btn.style.display = '';
@@ -2703,6 +2727,7 @@ window.unlockCustomization = function(silent = false) {
   customizationUnlocked = true;
   wheelUnlocked = true;
   neonUnlocked = true;
+  try { localStorage.setItem('mathpop_customization', '1'); } catch(e) {}
   const b = document.getElementById('priceCustomization');
   b.textContent = '✓'; b.style.background = '#2ec27e';
   document.getElementById('chipCustomization').classList.add('unlocked');
