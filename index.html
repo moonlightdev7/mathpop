@@ -51,7 +51,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <!-- PayPal SDK (live) -->
-<script src="https://www.paypal.com/sdk/js?client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux&currency=USD"></script>
+<!-- PayPal SDK — SANDBOX MODE for testing (switch client-id for production) -->
+<script src="https://www.sandbox.paypal.com/sdk/js?client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -739,13 +740,33 @@
   .digit-grid-sm { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
   .digit-grid-sm .digit-btn { padding: 9px 6px; font-size: 0.8rem; }
   .whiteboard-canvas {
-    width: 100%; height: 400px; border-radius: 12px;
+    width: 100%; height: 550px; border-radius: 12px;
     border: 2px solid var(--border); background: #fff;
     cursor: crosshair; display: block; touch-action: none;
   }
+  .wb-canvas-viewport {
+    position: relative; overflow: hidden; border-radius: 12px;
+    border: 2px solid var(--border); width: 100%; height: 550px;
+  }
+  .wb-canvas-viewport .whiteboard-canvas,
+  .wb-canvas-viewport #textCanvas {
+    border: none; height: auto; position: absolute; top: 0; left: 0;
+    transform-origin: 0 0;
+  }
+  .wb-zoom-controls {
+    display: flex; align-items: center; gap: 6px; margin-left: auto;
+  }
+  .wb-zoom-btn {
+    width: 30px; height: 30px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-weight: 900; font-size: 16px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: 'Nunito', sans-serif; transition: border-color 0.15s;
+  }
+  .wb-zoom-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .wb-zoom-label { font-size: 0.75rem; color: var(--muted); min-width: 36px; text-align: center; font-weight: 700; }
   /* Break whiteboard out of the 480px game-screen constraint */
   .whiteboard-wrap {
-    width: min(720px, calc(100vw - 32px));
+    width: min(900px, calc(100vw - 24px));
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -1337,6 +1358,28 @@
     <div class="digit-grid digit-grid-sm" id="subtractDigitGrid"></div>
   </div>
 
+  <!-- ── MORE MATH (Premium Coming Soon) ── -->
+  <div style="margin-top:18px">
+    <button class="mode-btn" onclick="toggleMoreMath()" id="moreMathToggle" style="width:100%;padding:12px;font-size:0.95rem;border-radius:12px;display:flex;align-items:center;justify-content:space-between">
+      <span>🧮 More Math Categories</span>
+      <span id="moreMathArrow" style="transition:transform 0.3s">▼</span>
+    </button>
+    <div id="moreMathPanel" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease">
+      <div style="padding:14px 0 4px;display:flex;flex-wrap:wrap;gap:8px">
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📐 Geometry <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📊 Fractions <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">🔺 Trigonometry <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">🔢 Decimals <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📈 Algebra <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">∫ Calculus <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+      </div>
+      <div style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center">
+        👑 These categories are coming soon with the <strong>Premium Pass</strong>!
+        <button class="gp-buy-btn gp-premium-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem">🛒 View Premium Pass</button>
+      </div>
+    </div>
+  </div>
+
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
   <button class="tutorial-link-btn" onclick="showTutorials()">🎬 Watch Tutorials</button>
 </div>
@@ -1457,7 +1500,7 @@
       <span class="gp-emoji">👑</span>
       <div>
         <div class="gp-name">Premium Pass</div>
-        <div class="gp-price">$4.99 / month</div>
+        <div class="gp-price">$4.99/month or $49.99/year (save 17%!)</div>
       </div>
     </div>
     <div class="gp-desc">The ultimate Mathpop membership. Stand out and unlock the future of math practice.</div>
@@ -1478,7 +1521,7 @@
   <div class="modal">
     <div class="modal-emoji">👑</div>
     <div class="modal-title">Premium Pass</div>
-    <div class="modal-desc">$4.99/month — Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
+    <div class="modal-desc">Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
     <div id="premiumSigninGate" class="modal-signin-gate" style="display:none">
       <strong>Sign in first!</strong> We save your subscription to your account.
       <br><br>
@@ -1487,10 +1530,17 @@
         Sign in with Google
       </button>
     </div>
-    <div class="paypal-container" id="paypal-section-premium">
-      <div id="paypal-premium"></div>
-      <div class="paypal-or">— or pay with card —</div>
-      <div id="paypal-premium-card"></div>
+    <div id="paypal-section-premium">
+      <!-- Plan toggle -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">
+        <button class="mode-btn active" id="premPlanMonth" onclick="setPremiumPlan('month')" style="font-size:0.85rem;padding:8px 16px">$4.99 / month</button>
+        <button class="mode-btn" id="premPlanYear" onclick="setPremiumPlan('year')" style="font-size:0.85rem;padding:8px 16px">$49.99 / year <span style="color:#2ec27e;font-weight:900;font-size:0.7rem">SAVE 17%</span></button>
+      </div>
+      <div class="paypal-container">
+        <div id="paypal-premium"></div>
+        <div class="paypal-or">— or pay with card —</div>
+        <div id="paypal-premium-card"></div>
+      </div>
     </div>
     <button class="modal-close" onclick="closeModals()">Maybe later</button>
   </div>
@@ -1743,7 +1793,14 @@
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
       <button class="wb-btn" id="wbMoveBtn" onclick="toggleWbMove()">✋ Move</button>
+      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Pan</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
+      <div class="wb-zoom-controls">
+        <button class="wb-zoom-btn" onclick="wbZoom(-0.1)" title="Zoom out">−</button>
+        <span class="wb-zoom-label" id="wbZoomLabel">100%</span>
+        <button class="wb-zoom-btn" onclick="wbZoom(0.1)" title="Zoom in">+</button>
+        <button class="wb-zoom-btn" onclick="wbResetView()" title="Reset view" style="font-size:12px">⟲</button>
+      </div>
     </div>
     <!-- Text / Formula input mode -->
     <div class="wb-text-area" id="wbTextArea">
@@ -2003,7 +2060,7 @@
         <button class="mk-key wide" onclick="mkInsert('ln(')">ln(</button>
       </div>
     </div>
-    <div style="position:relative">
+    <div class="wb-canvas-viewport" id="wbViewport">
       <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
       <canvas id="textCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;touch-action:none;cursor:crosshair;pointer-events:none"></canvas>
     </div>
@@ -2018,6 +2075,15 @@
     <div class="end-title" id="endTitle">Well done!</div>
     <div class="end-stats" id="endStats"></div>
     <button class="play-again-btn" onclick="playAgain()">Play Again</button>
+    <div id="endSignupPrompt" style="display:none;margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--bg);border:2px solid var(--primary);text-align:center;font-size:0.88rem;color:var(--text)">
+      <strong>Your progress won't be saved!</strong><br>
+      Sign up to keep your XP, ranks, and leaderboard spot.
+      <br><br>
+      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
+        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign up with Google
+      </button>
+    </div>
   </div>
 </div>
 </div><!-- end .page -->
@@ -2496,14 +2562,26 @@ function renderPayPalNeon() {
   });
 }
 
+let premiumPlan = 'month'; // 'month' or 'year'
+
+function setPremiumPlan(plan) {
+  premiumPlan = plan;
+  document.getElementById('premPlanMonth').classList.toggle('active', plan === 'month');
+  document.getElementById('premPlanYear').classList.toggle('active', plan === 'year');
+  paypalPremiumRendered = false;
+  renderPayPalPremium();
+}
+
 function renderPayPalPremium() {
   const ppContainer = document.getElementById('paypal-premium');
   const cardContainer = document.getElementById('paypal-premium-card');
   ppContainer.innerHTML = '';
   cardContainer.innerHTML = '';
+  const amount = premiumPlan === 'year' ? '49.99' : '4.99';
+  const label  = premiumPlan === 'year' ? 'Mathpop Premium Pass (Yearly)' : 'Mathpop Premium Pass (Monthly)';
   const orderCfg = {
     createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '4.99' }, description: 'Mathpop Premium Pass (Monthly)' }]
+      purchase_units: [{ amount: { value: amount }, description: label }]
     }),
     onApprove: async (data, actions) => {
       await actions.order.capture();
@@ -2521,6 +2599,7 @@ function renderPayPalPremium() {
     if (cardBtn.isEligible()) cardBtn.render('#paypal-premium-card');
     else { cardContainer.style.display = 'none'; document.querySelector('#paypal-premium ~ .paypal-or')?.remove(); }
   }
+  paypalPremiumRendered = true;
 }
 
 // ── CUSTOM COLORS ──
@@ -2918,7 +2997,11 @@ function stopGame() {
   if(pct<50){emoji='💪';title='Keep Practicing!';}else if(pct<75){emoji='😊';title='Good Effort!';}else if(pct<90){emoji='🎉';title='Great Work!';}else{emoji='🏆';title='Superstar!';}
   document.getElementById('endEmoji').textContent=emoji;
   document.getElementById('endTitle').textContent=title;
-  document.getElementById('endStats').innerHTML=`You answered <span>${total}</span> questions<br><span>${correct}</span> correct · <span>${wrong}</span> wrong · <span>${pct}%</span> accuracy`;
+  const signedIn = !!window.currentUserId;
+  const xpNote = signedIn ? '' : '<br><br><span style="color:var(--primary);font-size:0.85rem">⚠️ Sign up to save your XP progress!</span>';
+  document.getElementById('endStats').innerHTML=`You answered <span>${total}</span> questions<br><span>${correct}</span> correct · <span>${wrong}</span> wrong · <span>${pct}%</span> accuracy${xpNote}`;
+  const endPrompt = document.getElementById('endSignupPrompt');
+  if (endPrompt) endPrompt.style.display = signedIn ? 'none' : 'block';
 }
 
 function playAgain() {
@@ -2947,35 +3030,122 @@ let dragObj      = null, dragOffX = 0, dragOffY = 0;
 let nextObjId    = 0;
 let selectedObj  = null; // currently selected for highlight
 
+// ── Zoom & Pan ──
+let wbScale = 1, wbOffsetX = 0, wbOffsetY = 0;
+let wbPanMode = false, wbPanning = false, wbPanStartX = 0, wbPanStartY = 0;
+const WB_CANVAS_W = 1400; // large virtual canvas
+const WB_CANVAS_H = 1100;
+
+function wbZoom(delta) {
+  wbScale = Math.max(0.3, Math.min(3, wbScale + delta));
+  applyWbTransform();
+  document.getElementById('wbZoomLabel').textContent = Math.round(wbScale * 100) + '%';
+}
+function wbResetView() {
+  wbScale = 1; wbOffsetX = 0; wbOffsetY = 0;
+  applyWbTransform();
+  document.getElementById('wbZoomLabel').textContent = '100%';
+}
+function applyWbTransform() {
+  const t = `translate(${wbOffsetX}px, ${wbOffsetY}px) scale(${wbScale})`;
+  document.getElementById('whiteboardCanvas').style.transform = t;
+  document.getElementById('textCanvas').style.transform = t;
+}
+function toggleWbPan() {
+  wbPanMode = !wbPanMode;
+  document.getElementById('wbPanBtn').classList.toggle('eraser-on', wbPanMode);
+  const vp = document.getElementById('wbViewport');
+  vp.style.cursor = wbPanMode ? 'grab' : '';
+  // Disable other modes when panning
+  if (wbPanMode) {
+    wbMoveMode = false;
+    document.getElementById('wbMoveBtn').classList.remove('eraser-on');
+    document.getElementById('textCanvas').style.pointerEvents = 'none';
+  }
+}
+
 function initWhiteboard() {
   const canvas = document.getElementById('whiteboardCanvas');
-  canvas.width  = canvas.offsetWidth  || 700;
-  canvas.height = canvas.offsetHeight || 400;
+  canvas.width  = WB_CANVAS_W;
+  canvas.height = WB_CANVAS_H;
+  canvas.style.width  = WB_CANVAS_W + 'px';
+  canvas.style.height = WB_CANVAS_H + 'px';
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const tc = document.getElementById('textCanvas');
-  tc.width  = canvas.width;
-  tc.height = canvas.height;
+  tc.width  = WB_CANVAS_W;
+  tc.height = WB_CANVAS_H;
+  tc.style.width  = WB_CANVAS_W + 'px';
+  tc.style.height = WB_CANVAS_H + 'px';
+
+  // Reset zoom/pan each init
+  wbScale = 1; wbOffsetX = 0; wbOffsetY = 0;
+  applyWbTransform();
+  document.getElementById('wbZoomLabel').textContent = '100%';
 
   if (wbInitialized) return;
   wbInitialized = true;
 
+  // ── Pan with mouse on viewport ──
+  const vp = document.getElementById('wbViewport');
+  vp.addEventListener('mousedown', (e) => {
+    if (!wbPanMode) return;
+    e.preventDefault();
+    wbPanning = true;
+    wbPanStartX = e.clientX - wbOffsetX;
+    wbPanStartY = e.clientY - wbOffsetY;
+    vp.style.cursor = 'grabbing';
+  });
+  vp.addEventListener('mousemove', (e) => {
+    if (!wbPanning) return;
+    e.preventDefault();
+    wbOffsetX = e.clientX - wbPanStartX;
+    wbOffsetY = e.clientY - wbPanStartY;
+    applyWbTransform();
+  });
+  vp.addEventListener('mouseup', () => { wbPanning = false; if (wbPanMode) vp.style.cursor = 'grab'; });
+  vp.addEventListener('mouseleave', () => { wbPanning = false; if (wbPanMode) vp.style.cursor = 'grab'; });
+  // Touch pan
+  vp.addEventListener('touchstart', (e) => {
+    if (!wbPanMode || e.touches.length < 2) return;
+    e.preventDefault();
+    wbPanning = true;
+    wbPanStartX = e.touches[0].clientX - wbOffsetX;
+    wbPanStartY = e.touches[0].clientY - wbOffsetY;
+  }, { passive: false });
+  vp.addEventListener('touchmove', (e) => {
+    if (!wbPanning || e.touches.length < 2) return;
+    e.preventDefault();
+    wbOffsetX = e.touches[0].clientX - wbPanStartX;
+    wbOffsetY = e.touches[0].clientY - wbPanStartY;
+    applyWbTransform();
+  }, { passive: false });
+  vp.addEventListener('touchend', () => { wbPanning = false; });
+  // Scroll-to-zoom on viewport
+  vp.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.08 : 0.08;
+    wbZoom(delta);
+  }, { passive: false });
+
   // ── Drawing on the bottom canvas ──
   function getDrawPos(e) {
-    const rect = canvas.getBoundingClientRect();
+    const vpRect = document.getElementById('wbViewport').getBoundingClientRect();
     const src  = e.touches ? e.touches[0] : e;
-    return { x: (src.clientX - rect.left) * (canvas.width / rect.width),
-             y: (src.clientY - rect.top)  * (canvas.height / rect.height) };
+    // Convert screen coords → canvas coords accounting for pan + zoom
+    const x = (src.clientX - vpRect.left - wbOffsetX) / wbScale;
+    const y = (src.clientY - vpRect.top  - wbOffsetY) / wbScale;
+    return { x, y };
   }
   function startDraw(e) {
-    if (wbMoveMode) return;
+    if (wbMoveMode || wbPanMode) return;
     e.preventDefault(); wbDrawing = true;
     const p = getDrawPos(e); wbLastX = p.x; wbLastY = p.y;
   }
   function draw(e) {
-    if (!wbDrawing || wbMoveMode) return; e.preventDefault();
+    if (!wbDrawing || wbMoveMode || wbPanMode) return; e.preventDefault();
     const p = getDrawPos(e);
     const ctx2 = canvas.getContext('2d');
     ctx2.beginPath(); ctx2.moveTo(wbLastX, wbLastY); ctx2.lineTo(p.x, p.y);
@@ -2996,10 +3166,11 @@ function initWhiteboard() {
 
   // ── Move/select on the top (text) canvas ──
   function getTcPos(e) {
-    const rect = tc.getBoundingClientRect();
+    const vpRect = document.getElementById('wbViewport').getBoundingClientRect();
     const src  = e.touches ? e.touches[0] : e;
-    return { x: (src.clientX - rect.left) * (tc.width / rect.width),
-             y: (src.clientY - rect.top)  * (tc.height / rect.height) };
+    const x = (src.clientX - vpRect.left - wbOffsetX) / wbScale;
+    const y = (src.clientY - vpRect.top  - wbOffsetY) / wbScale;
+    return { x, y };
   }
   function objBounds(obj, ctx2) {
     ctx2.font = `bold ${obj.sz}px Nunito, sans-serif`;
@@ -3880,6 +4051,19 @@ function toggleSection(id) {
   if (arrow) arrow.classList.toggle('collapsed', !body.classList.contains('open'));
 }
 
+function toggleMoreMath() {
+  const panel = document.getElementById('moreMathPanel');
+  const arrow = document.getElementById('moreMathArrow');
+  const isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+  if (isOpen) {
+    panel.style.maxHeight = '0px';
+    arrow.style.transform = 'rotate(0deg)';
+  } else {
+    panel.style.maxHeight = '500px';
+    arrow.style.transform = 'rotate(180deg)';
+  }
+}
+
 function hideQuests() {
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
@@ -4319,7 +4503,7 @@ buildRemainderDivGrid();
 </style>
 
 <!-- Floating button -->
-<button id="support-btn" aria-label="Contact support" title="Contact support">❓</button>
+<button id="support-btn" aria-label="Contact support" title="Contact support"><span style="color:#fff;font-weight:900;font-size:26px;font-family:'Fredoka One',sans-serif">?</span></button>
 
 <!-- Popup -->
 <div id="support-overlay"></div>
