@@ -1268,6 +1268,7 @@
   <div id="signedIn">
     <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
+    <span id="crownBadge" style="display:none;font-size:0.9rem;cursor:pointer;" onclick="showSettings()" title="Account Settings">👑</span>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
     <span class="user-name" id="userName" onclick="showSettings()" title="Account Settings"></span>
   </div>
@@ -2636,11 +2637,9 @@ window.unlockPremium = function(silent = false) {
   const owned = document.getElementById('gpPremiumOwned');
   if (btn) btn.style.display = 'none';
   if (owned) owned.style.display = 'block';
-  // Add crown to nav username
-  const nameEl = document.getElementById('userName');
-  if (nameEl && !nameEl.textContent.startsWith('👑')) {
-    nameEl.textContent = '👑 ' + nameEl.textContent;
-  }
+  // Show crown badge
+  const crownEl = document.getElementById('crownBadge');
+  if (crownEl) crownEl.style.display = 'inline';
   if (!silent) {
     closeModals();
     alert('🎉 Welcome to Premium! You now have a crown badge and can equip up to 3 titles.');
@@ -2654,11 +2653,9 @@ window.lockPremium = function() {
   const owned = document.getElementById('gpPremiumOwned');
   if (btn) btn.style.display = '';
   if (owned) owned.style.display = 'none';
-  // Remove crown from nav username
-  const nameEl = document.getElementById('userName');
-  if (nameEl && nameEl.textContent.startsWith('👑 ')) {
-    nameEl.textContent = nameEl.textContent.replace('👑 ', '');
-  }
+  // Hide crown badge
+  const crownEl = document.getElementById('crownBadge');
+  if (crownEl) crownEl.style.display = 'none';
   // If user had multiple titles, trim to 1
   if (userData && Array.isArray(userData.selectedTitles) && userData.selectedTitles.length > 1) {
     userData.selectedTitles = [userData.selectedTitles[0]];
