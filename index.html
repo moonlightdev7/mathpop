@@ -119,24 +119,27 @@
   /* ── AUTH FLOAT ── */
   .auth-float {
     position: fixed;
-    top: 12px;
-    right: 14px;
+    top: 0; left: 0; right: 0;
     z-index: 10000;
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
     justify-content: flex-end;
-    max-width: calc(100vw - 28px);
+    gap: 6px;
+    padding: 8px 14px;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
   }
 
   #signedOut { display: flex; align-items: center; gap: 6px; }
   #signedIn  { display: none; align-items: center; gap: 8px; }
   .settings-tap-area {
     display: flex; align-items: center; gap: 6px;
-    cursor: pointer; padding: 4px 6px; border-radius: 12px;
+    cursor: pointer; padding: 6px 10px; border-radius: 12px;
     -webkit-tap-highlight-color: transparent;
     min-height: 38px;
+    margin-right: auto;
   }
   .settings-tap-area:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); }
 
@@ -178,7 +181,7 @@
 
   /* ── SETTINGS SCREEN ── */
   #settings-screen {
-    display: none; max-width: 500px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 500px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px;
   }
   .settings-header {
     background: var(--card); border-radius: 20px; padding: 24px;
@@ -555,7 +558,7 @@
   .modal-close:hover { color: var(--text); }
 
   /* ── SETUP ── */
-  #setup-screen { max-width: 700px; margin: 0 auto; padding-top: 48px; }
+  #setup-screen { max-width: 700px; margin: 0 auto; padding-top: 56px; }
   .section-label {
     font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
     letter-spacing: 1px; color: var(--primary); margin-bottom: 10px; transition: color 0.3s;
@@ -971,7 +974,7 @@
   }
 
   #achievement-screen {
-    display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 700px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px;
   }
   .ach-back-btn {
     background: transparent; border: none; color: var(--primary);
@@ -1098,7 +1101,7 @@
   .equip-btn.equipped { background: var(--primary); color: white; }
 
   /* ── GAMEPASSES SCREEN ── */
-  #gamepass-screen { display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px; }
+  #gamepass-screen { display: none; max-width: 700px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px; }
   .gp-card {
     background: var(--card); border-radius: 20px; padding: 20px 24px;
     margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -1151,7 +1154,7 @@
 
   /* ── LEADERBOARD SCREEN ── */
   #leaderboard-screen {
-    display: none; max-width: 850px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 850px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px;
   }
   .lb-header-card {
     background: var(--card); border-radius: 20px; padding: 20px 24px;
@@ -1267,23 +1270,25 @@
 <body>
 
 <!-- ── AUTH BUTTON ── -->
-<div class="auth-float">
+<div class="auth-float" id="authFloat">
+  <!-- Signed-out: just show login button -->
   <div id="signedOut">
     <button class="google-btn" onclick="signIn()">
       <svg class="google-logo" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Sign Up / Log In
     </button>
   </div>
-  <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
+  <!-- Signed-in: account on left, nav buttons on right -->
   <div id="signedIn">
-    <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
-    <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
-    <div class="settings-tap-area" onclick="showSettings()" title="Account Settings">
+    <div class="settings-tap-area" id="settingsTapArea">
       <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
       <img class="user-avatar" id="userAvatar" src="" alt="avatar">
       <span class="user-name" id="userName"></span>
     </div>
+    <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
+    <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
   </div>
+  <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
 </div>
 
 <!-- ── ACHIEVEMENT TOAST ── -->
@@ -4329,6 +4334,9 @@ function showSettings() {
   document.getElementById('gamepass-screen').style.display = 'none';
 }
 window.showSettings = showSettings;
+
+// Attach click listener directly (more reliable than inline onclick)
+document.getElementById('settingsTapArea')?.addEventListener('click', showSettings);
 
 function hideSettings() {
   document.getElementById('settings-screen').style.display = 'none';
