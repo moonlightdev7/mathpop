@@ -1470,11 +1470,16 @@
     </div>
   </div>
 
-  <!-- Quest list (collapsible) -->
+  <!-- Quest list (collapsible) with tabs -->
   <div class="ach-section">
     <h3 class="ach-toggle" onclick="toggleSection('questSection')">🗺️ Quests <span class="ach-toggle-arrow" id="questSection-arrow">▼</span></h3>
     <div class="ach-toggle-body open" id="questSection">
-      <div class="ach-list" id="questList"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="mode-btn active" id="questTabNormal" onclick="switchQuestTab('normal')">📋 Normal Quests</button>
+        <button class="mode-btn" id="questTabHidden" onclick="switchQuestTab('hidden')">🔮 Hidden Quests</button>
+      </div>
+      <div class="ach-list" id="questListNormal"></div>
+      <div class="ach-list" id="questListHidden" style="display:none"></div>
     </div>
   </div>
 
@@ -1556,10 +1561,12 @@
     <div class="gp-desc">The ultimate Mathpop membership. Stand out and unlock the future of math practice.</div>
     <div class="gp-perks">
       <div class="gp-perk">👑 <strong>Crown badge</strong> next to your name on the homepage and leaderboards</div>
-      <div class="gp-perk">🏷️ <strong>Equip up to 3 titles</strong> on your homepage at the same time</div>
-      <div class="gp-perk">🔢 <strong>Complex math categories</strong> — geometry, trigonometry, fractions, decimals, and more
+      <div class="gp-perk">🏷️ <strong>Equip up to 3 titles</strong> at once</div>
+      <div class="gp-perk">⚡ <strong>2x XP boost</strong> on all problems</div>
+      <div class="gp-perk">🔢 <strong>Complex math categories</strong> — geometry, trig, fractions, decimals, algebra, calculus
         <span class="gp-coming-soon">COMING SOON</span>
       </div>
+      <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
     <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="openPremiumModal()">👑 Subscribe to Premium</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
@@ -1571,7 +1578,7 @@
   <div class="modal">
     <div class="modal-emoji">👑</div>
     <div class="modal-title">Premium Pass</div>
-    <div class="modal-desc">Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
+    <div class="modal-desc">Crown badge, 2x XP boost, up to 3 equipped titles, and upcoming complex math categories.</div>
     <div id="premiumSigninGate" class="modal-signin-gate" style="display:none">
       <strong>Sign in first!</strong> We save your subscription to your account.
       <br><br>
@@ -1611,24 +1618,20 @@
   </div>
 
   <div class="settings-section">
-    <h3>✏️ Profile</h3>
-    <div class="settings-field">
-      <label class="settings-label">Display Name / Nickname</label>
-      <input class="settings-input" id="settingsNameInput" type="text" placeholder="Enter a name or nickname" maxlength="30">
+    <h3 class="ach-toggle" onclick="toggleSection('settingsProfile')">✏️ Profile <span class="ach-toggle-arrow" id="settingsProfile-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="settingsProfile">
+      <div class="settings-field">
+        <label class="settings-label">Display Name / Nickname</label>
+        <input class="settings-input" id="settingsNameInput" type="text" placeholder="Enter a name or nickname" maxlength="30">
+      </div>
+      <button class="settings-btn save-btn" onclick="saveDisplayName()">💾 Save Name</button>
+      <div class="settings-status" id="nameStatus"></div>
     </div>
-    <button class="settings-btn save-btn" onclick="saveDisplayName()">💾 Save Name</button>
-    <div class="settings-status" id="nameStatus"></div>
   </div>
 
   <div class="settings-section">
-    <h3>📸 Profile Picture</h3>
-    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;font-weight:600">Tap the camera icon on your photo above, or use the button below.</p>
-    <button class="settings-btn" onclick="document.getElementById('avatarUpload').click()">📷 Choose New Photo</button>
-    <div class="settings-status" id="avatarStatus"></div>
-  </div>
-
-  <div class="settings-section">
-    <h3>🎨 Theme</h3>
+    <h3 class="ach-toggle" onclick="toggleSection('settingsTheme')">🎨 Theme <span class="ach-toggle-arrow" id="settingsTheme-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="settingsTheme">
     <div class="theme-panel" style="border:none; padding:0; margin:0; background:transparent; box-shadow:none;">
       <div class="theme-row">
         <span class="row-label">☀️ Light</span>
@@ -1661,7 +1664,7 @@
         <button class="premium-chip" id="chipCustomization" onclick="openCustomization()">
           🎨 Customization Pass <span class="chip-price" id="priceCustomization">$2.99</span>
         </button>
-        <span id="neonSwatches" style="display:none; gap:6px; align-items:center;">
+        <span id="neonSwatches" style="display:none; gap:6px; align-items:center; flex-wrap:wrap;">
           <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
           <button class="swatch-btn" title="Synthwave" style="background:linear-gradient(135deg,#f72585,#7209b7)" onclick="setNeon('synthwave')"></button>
           <button class="swatch-btn" title="Sunset"    style="background:linear-gradient(135deg,#ff6d00,#ff006e)" onclick="setNeon('sunset')"></button>
@@ -1701,11 +1704,15 @@
       </div>
       <div id="gradientWheelPanel" style="display:none; padding:10px 0;">
         <div style="font-size:0.85rem; color:var(--muted); margin-bottom:8px; font-weight:600;">🎨 Custom Gradient</div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
           <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color1" value="#ff6b6b" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">Start</span></div>
           <div style="display:flex;align-items:center;gap:4px;"><input type="color" id="gw-color2" value="#ffd93d" oninput="applyGradientWheel()"><span style="font-size:0.75rem;color:var(--muted)">End</span></div>
           <div id="gw-preview" style="width:60px;height:28px;border-radius:8px;border:2px solid var(--border);background:linear-gradient(90deg,#ff6b6b,#ffd93d)"></div>
-          <button class="reset-btn" onclick="applyGradientWheel()" style="font-size:0.75rem;padding:4px 10px;">Apply</button>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="mode-btn" id="gradLinearBtn" style="font-size:0.75rem;padding:4px 10px;" onclick="setGradDirection('linear')">Linear</button>
+          <button class="mode-btn" id="gradRadialBtn" style="font-size:0.75rem;padding:4px 10px;" onclick="setGradDirection('radial')">Radial</button>
+          <button class="reset-btn" onclick="clearGradient()" style="font-size:0.75rem;padding:4px 10px;">Clear Gradient</button>
         </div>
       </div>
       <div id="colorPanel">
@@ -1719,13 +1726,25 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 
   <div class="settings-section">
-    <h3>🚪 Account</h3>
-    <button class="settings-btn" onclick="signOut()">👋 Sign Out</button>
-    <div style="height:10px"></div>
-    <button class="settings-btn danger" onclick="showDeleteConfirm()">🗑️ Delete Account</button>
+    <h3 class="ach-toggle" onclick="toggleSection('settingsSubscription')">💳 Subscription <span class="ach-toggle-arrow" id="settingsSubscription-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="settingsSubscription">
+      <div style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;font-weight:600" id="subStatus">Not subscribed</div>
+      <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;line-height:1.5">Your subscription renews automatically. You can cancel anytime via PayPal.</p>
+      <a href="https://www.paypal.com/myaccount/autopay" target="_blank" class="settings-btn" style="display:inline-block;text-decoration:none;text-align:center;cursor:pointer;">🔗 Manage on PayPal</a>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3 class="ach-toggle" onclick="toggleSection('settingsAccount')">🚪 Account <span class="ach-toggle-arrow" id="settingsAccount-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="settingsAccount">
+      <button class="settings-btn" onclick="signOut()">👋 Sign Out</button>
+      <div style="height:10px"></div>
+      <button class="settings-btn danger" onclick="showDeleteConfirm()">🗑️ Delete Account</button>
+    </div>
   </div>
 </div>
 
@@ -2433,6 +2452,7 @@ function applyThemeVars(t) {
 
 // ── THEME STATE TRACKING ──
 let currentTheme = { mode: 'dark', color: 'blue' };
+let gradientDirection = 'linear';  // 'linear' or 'radial' for gradient themes
 
 function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
@@ -2467,38 +2487,59 @@ function setNeon(name) {
 const GRAD_NAMES = ['sunrise','twilight','forest','coral','blueberry','peach','lavender','ember','mint','sakura','storm','desert','arctic2','galaxy','flame'];
 
 function setGradientTheme(name) {
-  applyThemeVars(GRADIENT_THEMES[name]);
+  // Only set the background gradient, not all theme colors
+  const gradTheme = GRADIENT_THEMES[name];
+  const grad = gradDirection === 'radial'
+    ? `radial-gradient(circle, ${gradTheme.grad.match(/#[0-9a-f]{6}/gi).join(', ')})`
+    : gradTheme.grad;
+  document.body.style.background = grad;
   clearActive();
   document.querySelectorAll('#gradientSwatches .swatch-btn')[GRAD_NAMES.indexOf(name)]?.classList.add('active');
-  currentTheme = { mode: 'gradient', color: name };
+  currentTheme = { mode: 'gradient', color: name, gradDirection: gradDirection };
   persistThemeLocally(currentTheme);
 }
 
 function applyGradientWheel() {
   const c1 = document.getElementById('gw-color1').value;
   const c2 = document.getElementById('gw-color2').value;
-  document.getElementById('gw-preview').style.background = `linear-gradient(90deg,${c1},${c2})`;
-  // Build a custom gradient theme from the two colors
-  function darken(hex, amt) {
-    let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    r = Math.max(0, r - amt); g = Math.max(0, g - amt); b = Math.max(0, b - amt);
-    return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
-  }
-  function lighten(hex, amt) {
-    let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    r = Math.min(255, r + amt); g = Math.min(255, g + amt); b = Math.min(255, b + amt);
-    return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
-  }
-  const t = {
-    bg: darken(c1, 200), card: darken(c1, 180), primary: c1, primaryLight: c2,
-    text: lighten(c2, 140), muted: darken(c2, 60), border: darken(c1, 150),
-    input: darken(c1, 210), neutral: c2, correct: '#00ff87', wrong: '#ff3860',
-    grad: `linear-gradient(90deg,${c1},${c2})`
-  };
-  applyThemeVars(t);
+  const previewType = gradDirection === 'radial'
+    ? `radial-gradient(circle, ${c1}, ${c2})`
+    : `linear-gradient(90deg,${c1},${c2})`;
+  document.getElementById('gw-preview').style.background = previewType;
+  // Apply the gradient as body background overlay
+  document.body.style.background = previewType;
   clearActive();
-  currentTheme = { mode: 'gradientWheel', customColors: { c1, c2 } };
+  currentTheme = { mode: 'gradientWheel', customColors: { c1, c2 }, gradDirection: gradDirection };
   persistThemeLocally(currentTheme);
+}
+
+function setGradDirection(direction) {
+  gradDirection = direction;
+  // Update button active states
+  const linearBtn = document.getElementById('gradLinearBtn');
+  const radialBtn = document.getElementById('gradRadialBtn');
+  if (direction === 'linear') {
+    linearBtn?.classList.add('active');
+    radialBtn?.classList.remove('active');
+  } else {
+    radialBtn?.classList.add('active');
+    linearBtn?.classList.remove('active');
+  }
+  // Reapply current gradient with new direction
+  if (currentTheme.mode === 'gradientWheel' || currentTheme.mode === 'gradient') {
+    applyGradientWheel();
+  }
+}
+
+function clearGradient() {
+  document.body.style.background = '';
+  // Reset to the base theme
+  if (currentTheme.mode === 'dark' || currentTheme.mode === 'light') {
+    applyThemeVars(currentTheme.mode === 'dark' ? DARK[currentTheme.color] : LIGHT[currentTheme.color]);
+  }
+  currentTheme = { mode: currentTheme.mode, color: currentTheme.color };
+  persistThemeLocally(currentTheme);
+  clearActive();
 }
 
 function clearActive() { document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active')); }
@@ -2512,16 +2553,27 @@ window.applyThemeFromFirestore = function(t) {
     document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(t.color)]?.classList.add('active');
     currentTheme = t;
   } else if (t.mode === 'gradient' && t.color && GRADIENT_THEMES[t.color]) {
-    applyThemeVars(GRADIENT_THEMES[t.color]);
+    // For preset gradients, only set body background and keep base theme
+    const gradTheme = GRADIENT_THEMES[t.color];
+    gradDirection = t.gradDirection || 'linear';
+    const grad = gradDirection === 'radial'
+      ? `radial-gradient(circle, ${gradTheme.grad.match(/#[0-9a-f]{6}/gi).join(', ')})`
+      : gradTheme.grad;
+    document.body.style.background = grad;
     clearActive();
     document.querySelectorAll('#gradientSwatches .swatch-btn')[GRAD_NAMES.indexOf(t.color)]?.classList.add('active');
     currentTheme = t;
   } else if (t.mode === 'gradientWheel' && t.customColors) {
     const c1 = t.customColors.c1, c2 = t.customColors.c2;
+    gradDirection = t.gradDirection || 'linear';
     document.getElementById('gw-color1').value = c1;
     document.getElementById('gw-color2').value = c2;
-    document.getElementById('gw-preview').style.background = `linear-gradient(90deg,${c1},${c2})`;
-    applyGradientWheel();
+    const previewType = gradDirection === 'radial'
+      ? `radial-gradient(circle, ${c1}, ${c2})`
+      : `linear-gradient(90deg,${c1},${c2})`;
+    document.getElementById('gw-preview').style.background = previewType;
+    document.body.style.background = previewType;
+    clearActive();
     currentTheme = t;
   } else if (t.mode === 'custom' && t.customColors) {
     Object.entries(t.customColors).forEach(([k, v]) => {
@@ -3325,12 +3377,14 @@ function nextQuestion() {
     const table = tables[Math.floor(Math.random() * tables.length)];
     const mult = rnd(2, 12);
     currentAnswer = table * mult;
+    currentProblemXP = String(table).length + String(mult).length;
     setQuestion(`${table} × ${mult} = ?`);
   } else if (currentMode === 'shortdivide') {
     const divArr = Array.from(selectedDivisors);
     const d = divArr[Math.floor(Math.random() * divArr.length)];
     const mult = rnd(2, 12);
     currentAnswer = mult;
+    currentProblemXP = String(d * mult).length;
     setQuestion(`${d * mult} ÷ ${d} = ?`);
   } else if (currentMode === 'longdivide') {
     const ids = Array.from(selectedLongDiv);
@@ -3338,6 +3392,7 @@ function nextQuestion() {
     const cfg = LONG_DIV_CONFIGS.find(c => c.id === cfgId);
     const { dividend, divisor, quotient } = genLongDiv(cfg);
     currentAnswer = quotient;
+    currentProblemXP = String(dividend).length;
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'remainderdiv') {
@@ -3347,6 +3402,7 @@ function nextQuestion() {
     const { dividend, divisor, quotient, remainder } = genRemainderDiv(cfg);
     currentAnswer   = quotient;
     currentRemainder = remainder;
+    currentProblemXP = String(dividend).length;
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
     document.getElementById('remainderInput').value = '';
@@ -3357,12 +3413,16 @@ function nextQuestion() {
     const cfg = LONG_MUL_CONFIGS.find(c => c.id === cfgId);
     const a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
     currentAnswer = a * b;
+    currentProblemXP = String(a).length + String(b).length;
     setQuestion(`${fmtN(a)} × ${fmtN(b)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'wordproblems') {
     const wp = generateWordProblem();
     currentAnswer = wp.answer;
     currentWordProblemRemainder = wp.remainder;
+    // Base XP on operation type: add/sub = 2, mult = 3, div = 4
+    const opXpMap = { wp_add: 2, wp_sub: 2, wp_mult: 3, wp_remdiv: 4, wp_longdiv: 4 };
+    currentProblemXP = opXpMap[wp.op] || 2;
     // Show remainder input only for remainder word problems
     const isRemWP = wp.op === 'wp_remdiv';
     document.getElementById('remainderWrap').style.display = isRemWP ? 'flex' : 'none';
@@ -3382,9 +3442,11 @@ function nextQuestion() {
       if (a === b) b = Math.max(cfg.bMin, b - rnd(1, Math.max(1, Math.floor(b * 0.3)))); // avoid answer = 0
       _lastQA = a; _lastQB = b;
       currentAnswer = a - b;
+      currentProblemXP = String(a).length + String(b).length;
       setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
       currentAnswer = a + b;
+      currentProblemXP = String(a).length + String(b).length;
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
   }
@@ -3966,31 +4028,29 @@ const RANKS = [
   { emoji:'🔥', name:'Phoenix',           req:975 },
   { emoji:'♾️', name:'Transcendent',      req:1000 },
 ];
-const FINAL_RANK_REQ = 1000; // after this, infinite prestige kicks in
-const INFINITY_INTERVAL = 100; // questions per infinity level
-const INFINITY_XP = 50; // XP awarded per level
 
 function getRank(total) {
   let rank = RANKS[0];
   for (const r of RANKS) { if (total >= r.req) rank = r; else break; }
-  // If past all fixed ranks, return infinity rank info
-  if (total >= FINAL_RANK_REQ) {
-    const lvl = Math.floor((total - FINAL_RANK_REQ) / INFINITY_INTERVAL);
-    if (lvl > 0) return { emoji:'♾️', name:`Infinity Lv. ${lvl}`, req: FINAL_RANK_REQ + (lvl * INFINITY_INTERVAL), isInfinite: true, level: lvl };
-  }
   return rank;
 }
 function getNextRank(total) {
   for (const r of RANKS) { if (total < r.req) return r; }
-  // Past all fixed ranks → next infinity milestone
-  const excess = total - FINAL_RANK_REQ;
-  const nextLvl = Math.floor(excess / INFINITY_INTERVAL) + 1;
-  const nextReq = FINAL_RANK_REQ + (nextLvl * INFINITY_INTERVAL);
-  return { emoji:'♾️', name:`Infinity Lv. ${nextLvl}`, req: nextReq, isInfinite: true, level: nextLvl };
+  return null;
 }
 
 // ── QUESTS ──
 const QUESTS = [
+  // ── Per-category quests (repeatable) ──
+  { id:'mul_10',    emoji:'✖️', name:'Multiplication Whiz',     desc:'Solve 10 multiplication problems.',     repeatable:true, check: d => (d.stats?.multiply||0) >= 10 * ((d._questCompletions?.mul_10||0) + 1) },
+  { id:'longmul_10', emoji:'✖️', name:'Long Multiply Master',   desc:'Solve 10 long multiplication problems.', repeatable:true, check: d => (d.stats?.longmultiply||0) >= 10 * ((d._questCompletions?.longmul_10||0) + 1) },
+  { id:'shortdiv_10', emoji:'➗', name:'Short Division Pro',    desc:'Solve 10 short division problems.',      repeatable:true, check: d => (d.stats?.shortdivide||0) >= 10 * ((d._questCompletions?.shortdiv_10||0) + 1) },
+  { id:'longdiv_10',  emoji:'📐', name:'Long Division Expert',  desc:'Solve 10 long division problems.',       repeatable:true, check: d => (d.stats?.longdivide||0) >= 10 * ((d._questCompletions?.longdiv_10||0) + 1) },
+  { id:'remdiv_10',   emoji:'📐', name:'Remainder Specialist',  desc:'Solve 10 remainder division problems.',  repeatable:true, check: d => (d.stats?.remainderdiv||0) >= 10 * ((d._questCompletions?.remdiv_10||0) + 1) },
+  { id:'add_10',      emoji:'➕', name:'Addition Ace',          desc:'Solve 10 addition problems.',             repeatable:true, check: d => (d.stats?.add||0) >= 10 * ((d._questCompletions?.add_10||0) + 1) },
+  { id:'sub_10',      emoji:'➖', name:'Subtraction Star',      desc:'Solve 10 subtraction problems.',          repeatable:true, check: d => (d.stats?.subtract||0) >= 10 * ((d._questCompletions?.sub_10||0) + 1) },
+  { id:'wp_10',       emoji:'📝', name:'Word Problem Warrior',  desc:'Solve 10 word problems.',                repeatable:true, check: d => (d.stats?.wordproblems||0) >= 10 * ((d._questCompletions?.wp_10||0) + 1) },
+  // ── Regular quests ──
   { id:'grinder',           emoji:'🔥', name:'The Grinder',          desc:'Solve 1,000 total questions across any mode.',          check: d => d.totalCorrect >= 1000 },
   { id:'speed_demon',       emoji:'⚡', name:'Speed Demon',           desc:'Get 15 correct in a row without a single mistake.',      check: d => d.maxStreak >= 15 },
   { id:'perfectionist',     emoji:'🎯', name:'The Perfectionist',     desc:'Finish a session with 20+ questions at 100% accuracy.',  check: d => d.perfectSession },
@@ -4022,6 +4082,7 @@ function freshUserData() {
     perfectSession: false, comebackKid: false, sessionTotal: 0,
     _solved67: false,
     earnedQuests: [],    // quest IDs the user has completed
+    _questCompletions: {},  // track repeatable quest completion counts
     selectedTitle: null, // quest ID of the title shown on homepage (legacy single)
     selectedTitles: [],  // array of quest IDs for multi-title (premium: up to 3)
   };
@@ -4031,6 +4092,7 @@ let currentStreak = 0;
 let wrongStreak   = 0;
 let comingBack    = false;
 let comebackCount = 0;
+let currentProblemXP = 1;  // XP for current problem based on digit count
 
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
@@ -4070,12 +4132,7 @@ function updateXpBanner() {
   if (next) {
     const progress = ((userData.totalCorrect - rank.req) / (next.req - rank.req)) * 100;
     document.getElementById('xpBarFill').style.width = Math.min(progress, 100) + '%';
-    if (next.isInfinite) {
-      const xpEarned = (rank.level || 0) * INFINITY_XP;
-      document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req + '  ·  ' + xpEarned + ' XP';
-    } else {
-      document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req;
-    }
+    document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req;
   } else {
     document.getElementById('xpCount').textContent = userData.totalCorrect + ' — MAX RANK!';
     document.getElementById('xpBarFill').style.width = '100%';
@@ -4117,18 +4174,33 @@ function selectTitle(questId) {
 }
 
 function checkQuests() {
+  if (!userData._questCompletions) userData._questCompletions = {};
   for (const q of QUESTS) {
-    if (!userData.earnedQuests.includes(q.id) && q.check(userData)) {
-      userData.earnedQuests.push(q.id);
-      saveUserData();
-      showQuestToast(q.emoji, `Quest Unlocked: ${q.name}!`, q.desc);
+    if (q.repeatable) {
+      // Repeatable: check if they've hit the next milestone
+      const completions = userData._questCompletions[q.id] || 0;
+      if (q.check(userData)) {
+        userData._questCompletions[q.id] = completions + 1;
+        if (!userData.earnedQuests.includes(q.id)) userData.earnedQuests.push(q.id);
+        saveUserData();
+        showQuestToast(q.emoji, `Quest Complete: ${q.name}!`, q.desc + ` (×${completions + 1})`);
+      }
+    } else {
+      if (!userData.earnedQuests.includes(q.id) && q.check(userData)) {
+        userData.earnedQuests.push(q.id);
+        saveUserData();
+        showQuestToast(q.emoji, `Quest Unlocked: ${q.name}!`, q.desc);
+      }
     }
   }
 }
 
 function onCorrectAnswer() {
   const prevRank = getRank(userData.totalCorrect);
-  userData.totalCorrect++;
+  // Award XP based on digit count; premium users get 2x
+  let xpGain = currentProblemXP;
+  if (window.isPremium) xpGain *= 2;
+  userData.totalCorrect += xpGain;
   userData.sessionTotal++;
   userData.stats[currentMode] = (userData.stats[currentMode] || 0) + 1;
   currentStreak++;
@@ -4141,11 +4213,7 @@ function onCorrectAnswer() {
   // Check for rank up
   const newRank = getRank(userData.totalCorrect);
   if (newRank.req > prevRank.req) {
-    if (newRank.isInfinite) {
-      showQuestToast('♾️', `Infinity Lv. ${newRank.level}!`, `+${INFINITY_XP} XP — ${userData.totalCorrect} questions solved!`);
-    } else {
-      showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
-    }
+    showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} total XP!`);
   }
   // Secret quest flags
   userData._justAnswered = true;
@@ -4501,6 +4569,25 @@ function toggleSection(id) {
   if (arrow) arrow.classList.toggle('collapsed', !body.classList.contains('open'));
 }
 
+function switchQuestTab(tab) {
+  const normalList = document.getElementById('questListNormal');
+  const hiddenList = document.getElementById('questListHidden');
+  const normalBtn = document.getElementById('questTabNormal');
+  const hiddenBtn = document.getElementById('questTabHidden');
+
+  if (tab === 'normal') {
+    normalList.style.display = 'block';
+    hiddenList.style.display = 'none';
+    normalBtn.classList.add('active');
+    hiddenBtn.classList.remove('active');
+  } else {
+    normalList.style.display = 'none';
+    hiddenList.style.display = 'block';
+    normalBtn.classList.remove('active');
+    hiddenBtn.classList.add('active');
+  }
+}
+
 function toggleMathCategories() {
   const panel = document.getElementById('mathCatPanel');
   const arrow = document.getElementById('mathCatArrow');
@@ -4558,41 +4645,33 @@ function renderQuestScreen() {
       </div>`;
     }
     html += '</div>';
-    // Infinity rank info
-    if (userData.totalCorrect >= FINAL_RANK_REQ) {
-      const infLvl = Math.floor((userData.totalCorrect - FINAL_RANK_REQ) / INFINITY_INTERVAL);
-      const xpTotal = infLvl * INFINITY_XP;
-      const excess = (userData.totalCorrect - FINAL_RANK_REQ) % INFINITY_INTERVAL;
-      const infPct = Math.round((excess / INFINITY_INTERVAL) * 100);
-      html += `<div style="margin-top:14px;padding:14px 16px;border-radius:14px;border:2px solid var(--primary);background:color-mix(in srgb,var(--primary) 8%,var(--bg));text-align:center;">
-        <div style="font-family:Fredoka One,cursive;font-size:1.1rem;color:var(--primary);">♾️ Infinity Rank — Level ${infLvl}</div>
-        <div style="font-size:0.8rem;color:var(--muted);font-weight:700;margin:4px 0 8px">${xpTotal} XP earned · +${INFINITY_XP} XP every ${INFINITY_INTERVAL} questions</div>
-        <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${infPct}%"></div></div>
-        <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-top:4px">${excess} / ${INFINITY_INTERVAL} to next level</div>
-      </div>`;
-    } else {
-      html += `<div style="margin-top:14px;padding:12px 16px;border-radius:14px;border:2px dashed var(--border);text-align:center;">
-        <div style="font-size:0.85rem;color:var(--muted);font-weight:700;">♾️ Infinity Rank unlocks at ${FINAL_RANK_REQ} questions solved</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">An endless journey — earn ${INFINITY_XP} XP every ${INFINITY_INTERVAL} questions forever!</div>
-      </div>`;
-    }
     rankCard.innerHTML = html;
   }
 
-  // Quest list — all quests in one list
-  const qList = document.getElementById('questList');
-  qList.innerHTML = '';
-  for (const q of QUESTS) {
-    const earned = userData.earnedQuests.includes(q.id);
-    const div = document.createElement('div');
-    div.className = 'ach-item' + (earned ? ' earned' : '') + (q.secret ? ' secret' : '');
-    div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
-      <div class="ach-info">
-        <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
-        <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
-      </div>`;
-    qList.appendChild(div);
-  }
+  // Quest list — split into normal and hidden quests with tabs
+  const normalQuests = QUESTS.filter(q => !q.secret);
+  const hiddenQuests = QUESTS.filter(q => q.secret);
+
+  const renderQuestList = (quests, elementId) => {
+    const qList = document.getElementById(elementId);
+    qList.innerHTML = '';
+    for (const q of quests) {
+      const earned = userData.earnedQuests.includes(q.id);
+      const completions = userData._questCompletions && userData._questCompletions[q.id] ? userData._questCompletions[q.id] : 0;
+      const div = document.createElement('div');
+      div.className = 'ach-item' + (earned ? ' earned' : '') + (q.secret ? ' secret' : '');
+      const completionStr = q.repeatable && earned ? ` (×${completions})` : '';
+      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
+        <div class="ach-info">
+          <div class="ach-name">${earned ? q.name + completionStr : '??? Hidden Quest'}</div>
+          <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
+        </div>`;
+      qList.appendChild(div);
+    }
+  };
+
+  renderQuestList(normalQuests, 'questListNormal');
+  renderQuestList(hiddenQuests, 'questListHidden');
 
   // Title chooser — only earned quests
   const tList = document.getElementById('titlesList');
