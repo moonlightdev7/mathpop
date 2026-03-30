@@ -494,7 +494,7 @@
   .modal-close:hover { color: var(--text); }
 
   /* ── SETUP ── */
-  #setup-screen { max-width: 700px; margin: 0 auto; }
+  #setup-screen { max-width: 700px; margin: 0 auto; padding-top: 48px; }
   .section-label {
     font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
     letter-spacing: 1px; color: var(--primary); margin-bottom: 10px; transition: color 0.3s;
@@ -1296,66 +1296,75 @@
     <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
   </div>
 
-  <!-- ── MODE SELECTOR ── -->
-  <div class="mode-selector">
-    <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
-    <button class="mode-btn"        id="modeBtn-shortdivide" onclick="setMode('shortdivide')">➗ Short ÷</button>
-    <button class="mode-btn"        id="modeBtn-longdivide"  onclick="setMode('longdivide')">📐 Long ÷</button>
-    <button class="mode-btn"        id="modeBtn-remainderdiv" onclick="setMode('remainderdiv')">📐R Long ÷ R</button>
-    <button class="mode-btn"        id="modeBtn-add"         onclick="setMode('add')">➕ Add</button>
-    <button class="mode-btn"        id="modeBtn-subtract"    onclick="setMode('subtract')">➖ Subtract</button>
-  </div>
+  <!-- ── MATH CATEGORIES (collapsible) ── -->
+  <div style="margin-top:6px">
+    <button class="mode-btn" onclick="toggleMathCategories()" id="mathCatToggle" style="width:100%;padding:12px;font-size:0.95rem;border-radius:12px;display:flex;align-items:center;justify-content:space-between;border-color:var(--primary);color:var(--primary)">
+      <span><span id="modeEmoji2">✖️</span> Math Categories</span>
+      <span id="mathCatArrow" style="transition:transform 0.3s">▼</span>
+    </button>
+    <div id="mathCatPanel" style="max-height:2000px;overflow:hidden;transition:max-height 0.4s ease">
+      <!-- ── MODE SELECTOR ── -->
+      <div class="mode-selector" style="margin-top:12px">
+        <button class="mode-btn active" id="modeBtn-multiply"   onclick="setMode('multiply')">✖️ Multiply</button>
+        <button class="mode-btn"        id="modeBtn-shortdivide" onclick="setMode('shortdivide')">➗ Short ÷</button>
+        <button class="mode-btn"        id="modeBtn-longdivide"  onclick="setMode('longdivide')">📐 Long ÷</button>
+        <button class="mode-btn"        id="modeBtn-remainderdiv" onclick="setMode('remainderdiv')">📐R Long ÷ R</button>
+        <button class="mode-btn"        id="modeBtn-add"         onclick="setMode('add')">➕ Add</button>
+        <button class="mode-btn"        id="modeBtn-subtract"    onclick="setMode('subtract')">➖ Subtract</button>
+      </div>
 
-  <!-- ── MULTIPLY SETUP ── -->
-  <div id="setup-multiply">
-    <p class="section-label">Quick Select</p>
-    <div class="quick-btns">
-      <button class="quick-btn" onclick="selectAll()">All (1–30)</button>
-      <button class="quick-btn" onclick="selectRange(1,10)">1–10</button>
-      <button class="quick-btn" onclick="selectRange(11,20)">11–20</button>
-      <button class="quick-btn" onclick="selectRange(21,30)">21–30</button>
-      <button class="quick-btn" onclick="clearAll()">Clear</button>
+      <!-- ── MULTIPLY SETUP ── -->
+      <div id="setup-multiply">
+        <p class="section-label">Quick Select</p>
+        <div class="quick-btns">
+          <button class="quick-btn" onclick="selectAll()">All (1–30)</button>
+          <button class="quick-btn" onclick="selectRange(1,10)">1–10</button>
+          <button class="quick-btn" onclick="selectRange(11,20)">11–20</button>
+          <button class="quick-btn" onclick="selectRange(21,30)">21–30</button>
+          <button class="quick-btn" onclick="clearAll()">Clear</button>
+        </div>
+        <p class="section-label">Choose Tables</p>
+        <div class="table-grid" id="tableGrid"></div>
+      </div>
+
+      <!-- ── SHORT DIVIDE SETUP ── -->
+      <div id="setup-shortdivide" style="display:none">
+        <p class="section-label">Quick Select</p>
+        <div class="quick-btns">
+          <button class="quick-btn" onclick="selectAllDivisors()">All (1–30)</button>
+          <button class="quick-btn" onclick="selectDivisorRange(1,10)">1–10</button>
+          <button class="quick-btn" onclick="selectDivisorRange(11,20)">11–20</button>
+          <button class="quick-btn" onclick="selectDivisorRange(21,30)">21–30</button>
+          <button class="quick-btn" onclick="clearAllDivisors()">Clear</button>
+        </div>
+        <p class="section-label">Choose Divisors</p>
+        <div class="table-grid" id="divisorGrid"></div>
+      </div>
+
+      <!-- ── LONG DIVIDE SETUP ── -->
+      <div id="setup-longdivide" style="display:none">
+        <p class="section-label">Problem Size</p>
+        <div class="digit-grid digit-grid-sm" id="longDivGrid"></div>
+      </div>
+
+      <!-- ── LONG DIVIDE WITH REMAINDERS SETUP ── -->
+      <div id="setup-remainderdiv" style="display:none">
+        <p class="section-label">Problem Size</p>
+        <div class="digit-grid digit-grid-sm" id="remainderDivGrid"></div>
+      </div>
+
+      <!-- ── ADD SETUP ── -->
+      <div id="setup-add" style="display:none">
+        <p class="section-label">Number Sizes</p>
+        <div class="digit-grid digit-grid-sm" id="addDigitGrid"></div>
+      </div>
+
+      <!-- ── SUBTRACT SETUP ── -->
+      <div id="setup-subtract" style="display:none">
+        <p class="section-label">Number Sizes</p>
+        <div class="digit-grid digit-grid-sm" id="subtractDigitGrid"></div>
+      </div>
     </div>
-    <p class="section-label">Choose Tables</p>
-    <div class="table-grid" id="tableGrid"></div>
-  </div>
-
-  <!-- ── SHORT DIVIDE SETUP ── -->
-  <div id="setup-shortdivide" style="display:none">
-    <p class="section-label">Quick Select</p>
-    <div class="quick-btns">
-      <button class="quick-btn" onclick="selectAllDivisors()">All (1–30)</button>
-      <button class="quick-btn" onclick="selectDivisorRange(1,10)">1–10</button>
-      <button class="quick-btn" onclick="selectDivisorRange(11,20)">11–20</button>
-      <button class="quick-btn" onclick="selectDivisorRange(21,30)">21–30</button>
-      <button class="quick-btn" onclick="clearAllDivisors()">Clear</button>
-    </div>
-    <p class="section-label">Choose Divisors</p>
-    <div class="table-grid" id="divisorGrid"></div>
-  </div>
-
-  <!-- ── LONG DIVIDE SETUP ── -->
-  <div id="setup-longdivide" style="display:none">
-    <p class="section-label">Problem Size</p>
-    <div class="digit-grid digit-grid-sm" id="longDivGrid"></div>
-  </div>
-
-  <!-- ── LONG DIVIDE WITH REMAINDERS SETUP ── -->
-  <div id="setup-remainderdiv" style="display:none">
-    <p class="section-label">Problem Size</p>
-    <div class="digit-grid digit-grid-sm" id="remainderDivGrid"></div>
-  </div>
-
-  <!-- ── ADD SETUP ── -->
-  <div id="setup-add" style="display:none">
-    <p class="section-label">Number Sizes</p>
-    <div class="digit-grid digit-grid-sm" id="addDigitGrid"></div>
-  </div>
-
-  <!-- ── SUBTRACT SETUP ── -->
-  <div id="setup-subtract" style="display:none">
-    <p class="section-label">Number Sizes</p>
-    <div class="digit-grid digit-grid-sm" id="subtractDigitGrid"></div>
   </div>
 
   <!-- ── MORE MATH (Premium Coming Soon) ── -->
@@ -2743,6 +2752,7 @@ function setMode(mode) {
     subtract:     { emoji:'➖',  sub:'Pick number sizes and start subtracting!' },
   };
   document.getElementById('modeEmoji').textContent = info[mode].emoji;
+  document.getElementById('modeEmoji2').textContent = info[mode].emoji;
   document.getElementById('modeSubtitle').textContent = info[mode].sub;
   updateStartBtn();
 }
@@ -3805,6 +3815,10 @@ function hideSettings() {
 }
 
 function showGamepasses() {
+  if (!window.currentUserId) {
+    alert('Sign up or log in first to access the Gamepasses shop!');
+    return;
+  }
   document.getElementById('gamepass-screen').style.display = 'block';
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('achievement-screen').style.display = 'none';
@@ -4049,6 +4063,19 @@ function toggleSection(id) {
   if (!body) return;
   body.classList.toggle('open');
   if (arrow) arrow.classList.toggle('collapsed', !body.classList.contains('open'));
+}
+
+function toggleMathCategories() {
+  const panel = document.getElementById('mathCatPanel');
+  const arrow = document.getElementById('mathCatArrow');
+  const isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+  if (isOpen) {
+    panel.style.maxHeight = '0px';
+    arrow.style.transform = 'rotate(0deg)';
+  } else {
+    panel.style.maxHeight = '2000px';
+    arrow.style.transform = 'rotate(180deg)';
+  }
 }
 
 function toggleMoreMath() {
