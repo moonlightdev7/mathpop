@@ -935,8 +935,7 @@
     background: var(--bg); transition: all 0.2s;
   }
   .ach-item.earned { border-color: var(--correct); background: color-mix(in srgb, var(--correct) 10%, var(--bg)); }
-  .ach-item.secret { border-color: var(--primary); border-style: dashed; }
-  .ach-item.secret.earned { border-style: solid; border-color: gold; background: color-mix(in srgb, gold 12%, var(--bg)); }
+  .ach-item.secret.earned { border-color: gold; background: color-mix(in srgb, gold 12%, var(--bg)); }
   .ach-icon { font-size: 1.6rem; flex-shrink: 0; }
   .ach-info { flex: 1; }
   .ach-name { font-weight: 800; font-size: 0.9rem; color: var(--text); }
@@ -1014,6 +1013,58 @@
   .rank-tile-req { font-size: 0.7rem; font-weight: 600; opacity: 0.7; }
   .equip-btn:hover { background: var(--primary); color: white; }
   .equip-btn.equipped { background: var(--primary); color: white; }
+
+  /* ── GAMEPASSES SCREEN ── */
+  #gamepass-screen { display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px; }
+  .gp-card {
+    background: var(--card); border-radius: 20px; padding: 20px 24px;
+    margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: background 0.3s; position: relative; overflow: hidden;
+  }
+  .gp-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .gp-emoji { font-size: 2rem; flex-shrink: 0; }
+  .gp-name { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--primary); }
+  .gp-price { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+  .gp-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; font-weight: 600; }
+  .gp-buy-btn {
+    display: block; width: 100%; padding: 12px; margin-top: 14px;
+    border-radius: 14px; border: none; background: var(--primary);
+    color: white; font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.95rem; cursor: pointer; transition: all 0.15s;
+  }
+  .gp-buy-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+  .gp-owned {
+    text-align: center; padding: 12px; margin-top: 14px;
+    font-weight: 800; font-size: 0.88rem; color: var(--correct);
+    background: color-mix(in srgb, var(--correct) 10%, var(--bg));
+    border-radius: 14px;
+  }
+  .gp-premium { border: 2px solid #f59e0b; }
+  .gp-premium::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #f97316, #ef4444);
+  }
+  .gp-premium-badge {
+    position: absolute; top: 12px; right: 16px;
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+    color: white; font-family: 'Fredoka One', cursive; font-size: 0.65rem;
+    padding: 3px 10px; border-radius: 8px; letter-spacing: 1px;
+  }
+  .gp-premium-btn { background: linear-gradient(90deg, #f59e0b, #f97316) !important; }
+  .gp-perks { margin: 14px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .gp-perk {
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    padding: 10px 14px; border-radius: 12px;
+    background: color-mix(in srgb, var(--primary) 6%, var(--bg));
+    line-height: 1.4;
+  }
+  .gp-perk strong { color: var(--primary); }
+  .gp-coming-soon {
+    display: inline-block; margin-left: 6px; padding: 2px 8px;
+    background: color-mix(in srgb, #f59e0b 20%, var(--bg));
+    color: #f59e0b; font-size: 0.65rem; font-weight: 800;
+    border-radius: 6px; letter-spacing: 0.5px; vertical-align: middle;
+  }
 
   /* ── LEADERBOARD SCREEN ── */
   #leaderboard-screen {
@@ -1129,6 +1180,7 @@
     </button>
   </div>
   <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
+  <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
   <div id="signedIn">
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
     <img class="user-avatar" id="userAvatar" src="" alt="avatar" onclick="showSettings()" title="Account Settings">
@@ -1344,6 +1396,104 @@
 
   <div class="lb-category-tabs" id="lbTabs"></div>
   <div id="lbBoardContainer"></div>
+</div>
+
+<!-- ── GAMEPASSES ── -->
+<div id="gamepass-screen">
+  <button class="ach-back-btn" onclick="hideGamepasses()">← Back</button>
+
+  <div class="lb-header-card">
+    <div class="lb-header-title">🛒 Gamepasses</div>
+    <div class="lb-header-sub">Power up your Mathpop experience!</div>
+  </div>
+
+  <!-- Neon Pack -->
+  <div class="gp-card" id="gpNeon">
+    <div class="gp-card-header">
+      <span class="gp-emoji">⚡</span>
+      <div>
+        <div class="gp-name">Neon Pack</div>
+        <div class="gp-price">$0.99 — one-time purchase</div>
+      </div>
+    </div>
+    <div class="gp-desc">Six electric gradient themes — Cyber, Synthwave, Sunset, Arctic, Toxic, Candy. Yours forever across all devices.</div>
+    <div class="neon-preview" style="margin:12px 0 14px">
+      <div class="neon-pill" style="background:linear-gradient(90deg,#00ff87,#00cfff)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#f72585,#7209b7)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#ff6d00,#ff006e)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#00b4d8,#90e0ef)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#ccff00,#00ff87)"></div>
+      <div class="neon-pill" style="background:linear-gradient(90deg,#ff85a1,#74c69d)"></div>
+    </div>
+    <button class="gp-buy-btn" id="gpNeonBtn" onclick="openNeon()">🔓 Unlock Neon Pack</button>
+    <div class="gp-owned" id="gpNeonOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
+  </div>
+
+  <!-- Color Wheel -->
+  <div class="gp-card" id="gpWheel">
+    <div class="gp-card-header">
+      <span class="gp-emoji">🎨</span>
+      <div>
+        <div class="gp-name">Color Wheel</div>
+        <div class="gp-price">$0.99 — one-time purchase</div>
+      </div>
+    </div>
+    <div class="gp-desc">Pick any color for every part of the page — primary, background, cards, correct, and wrong colors. Full creative control.</div>
+    <div class="neon-preview" style="margin:12px 0 14px">
+      <div class="neon-pill" style="background:#ff6b35"></div>
+      <div class="neon-pill" style="background:#a78bfa"></div>
+      <div class="neon-pill" style="background:#34d399"></div>
+      <div class="neon-pill" style="background:#f59e0b"></div>
+      <div class="neon-pill" style="background:#ec4899"></div>
+    </div>
+    <button class="gp-buy-btn" id="gpWheelBtn" onclick="openWheel()">🔓 Unlock Color Wheel</button>
+    <div class="gp-owned" id="gpWheelOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
+  </div>
+
+  <!-- Premium Pass -->
+  <div class="gp-card gp-premium">
+    <div class="gp-premium-badge">PREMIUM</div>
+    <div class="gp-card-header">
+      <span class="gp-emoji">👑</span>
+      <div>
+        <div class="gp-name">Premium Pass</div>
+        <div class="gp-price">$4.99 / month</div>
+      </div>
+    </div>
+    <div class="gp-desc">The ultimate Mathpop membership. Stand out and unlock the future of math practice.</div>
+    <div class="gp-perks">
+      <div class="gp-perk">👑 <strong>Crown badge</strong> next to your name on the homepage and leaderboards</div>
+      <div class="gp-perk">🏷️ <strong>Equip up to 3 titles</strong> on your homepage at the same time</div>
+      <div class="gp-perk">🔢 <strong>Complex math categories</strong> — geometry, trigonometry, fractions, decimals, and more
+        <span class="gp-coming-soon">COMING SOON</span>
+      </div>
+    </div>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="openPremiumModal()">👑 Subscribe to Premium</button>
+    <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
+  </div>
+</div>
+
+<!-- Premium Pass Modal -->
+<div class="modal-overlay" id="modalPremium">
+  <div class="modal">
+    <div class="modal-emoji">👑</div>
+    <div class="modal-title">Premium Pass</div>
+    <div class="modal-desc">$4.99/month — Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
+    <div id="premiumSigninGate" class="modal-signin-gate" style="display:none">
+      <strong>Sign in first!</strong> We save your subscription to your account.
+      <br><br>
+      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
+        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign in with Google
+      </button>
+    </div>
+    <div class="paypal-container" id="paypal-section-premium">
+      <div id="paypal-premium"></div>
+      <div class="paypal-or">— or pay with card —</div>
+      <div id="paypal-premium-card"></div>
+    </div>
+    <button class="modal-close" onclick="closeModals()">Maybe later</button>
+  </div>
 </div>
 
 <!-- ── SETTINGS ── -->
@@ -1933,6 +2083,7 @@
           totalCorrect: ud.totalCorrect || 0,
           stats: ud.stats || {},
           earnedQuests: ud.earnedQuests || [],
+          premiumPass: !!data.premiumPass,
         });
       });
       return users;
@@ -1982,8 +2133,9 @@
         const snap = await getDoc(doc(db, 'users', user.uid));
         if (snap.exists()) {
           const data = snap.data();
-          if (data.colorWheel) window.unlockWheel(true);
-          if (data.neonPack)   window.unlockNeon(true);
+          if (data.colorWheel)  window.unlockWheel(true);
+          if (data.neonPack)    window.unlockNeon(true);
+          if (data.premiumPass) window.unlockPremium(true);
           if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
           if (data.userData && window.loadUserData) window.loadUserData(data.userData);
           // Restore custom display name / photo if user changed them in settings
@@ -2170,6 +2322,8 @@ function toggleThemePanel() {
 // ── UNLOCK ──
 let wheelUnlocked = false, neonUnlocked = false;
 let paypalWheelRendered = false, paypalNeonRendered = false;
+let paypalPremiumRendered = false;
+window.isPremium = false;
 
 window.lockWheel = function() {
   wheelUnlocked = false;
@@ -2189,15 +2343,51 @@ window.lockNeon = function() {
   document.getElementById('neonSwatches').style.display = 'none';
 };
 
+window.unlockPremium = function(silent = false) {
+  window.isPremium = true;
+  paypalPremiumRendered = false;
+  const btn = document.getElementById('gpPremiumBtn');
+  const owned = document.getElementById('gpPremiumOwned');
+  if (btn) btn.style.display = 'none';
+  if (owned) owned.style.display = 'block';
+  // Add crown to nav username
+  const nameEl = document.getElementById('userName');
+  if (nameEl && !nameEl.textContent.startsWith('👑')) {
+    nameEl.textContent = '👑 ' + nameEl.textContent;
+  }
+  if (!silent) {
+    closeModals();
+    alert('🎉 Welcome to Premium! You now have a crown badge and can equip up to 3 titles.');
+  }
+};
+
+window.lockPremium = function() {
+  window.isPremium = false;
+  paypalPremiumRendered = false;
+  const btn = document.getElementById('gpPremiumBtn');
+  const owned = document.getElementById('gpPremiumOwned');
+  if (btn) btn.style.display = '';
+  if (owned) owned.style.display = 'none';
+  // Remove crown from nav username
+  const nameEl = document.getElementById('userName');
+  if (nameEl && nameEl.textContent.startsWith('👑 ')) {
+    nameEl.textContent = nameEl.textContent.replace('👑 ', '');
+  }
+  // If user had multiple titles, trim to 1
+  if (userData && Array.isArray(userData.selectedTitles) && userData.selectedTitles.length > 1) {
+    userData.selectedTitles = [userData.selectedTitles[0]];
+    saveUserData();
+    updateTitleBanner();
+  }
+};
+
 window.lockPremiumOnSignOut = function() {
   window.lockWheel();
   window.lockNeon();
+  window.lockPremium();
   // Always reset to default theme on sign-out (user theme is already saved to user-keyed key)
   try { localStorage.removeItem('mathpop_theme'); } catch(e) {}
-  setTheme('light', 'orange');
-  // Always reset to default theme on sign-out (user theme is already saved to user-keyed key)
-  try { localStorage.removeItem('mathpop_theme'); } catch(e) {}
-  setTheme('light', 'orange');
+  setTheme('dark', 'blue');
 };
 
 window.unlockWheel = function(silent = false) {
@@ -2252,6 +2442,15 @@ function openNeon() {
   if (isSignedIn && !paypalNeonRendered) { renderPayPalNeon(); paypalNeonRendered = true; }
 }
 
+function openPremiumModal() {
+  if (window.isPremium) return;
+  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
+  document.getElementById('premiumSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
+  document.getElementById('paypal-section-premium').style.display = isSignedIn ? 'block' : 'none';
+  document.getElementById('modalPremium').classList.add('open');
+  if (isSignedIn && !paypalPremiumRendered) { renderPayPalPremium(); paypalPremiumRendered = true; }
+}
+
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModals(); }));
 
@@ -2295,6 +2494,33 @@ function renderPayPalNeon() {
     catch (err) { console.error('Failed to save neonPack purchase:', err); }
     window.unlockNeon();
   });
+}
+
+function renderPayPalPremium() {
+  const ppContainer = document.getElementById('paypal-premium');
+  const cardContainer = document.getElementById('paypal-premium-card');
+  ppContainer.innerHTML = '';
+  cardContainer.innerHTML = '';
+  const orderCfg = {
+    createOrder: (data, actions) => actions.order.create({
+      purchase_units: [{ amount: { value: '4.99' }, description: 'Mathpop Premium Pass (Monthly)' }]
+    }),
+    onApprove: async (data, actions) => {
+      await actions.order.capture();
+      try { if (window.savePurchase) await window.savePurchase('premiumPass'); }
+      catch (err) { console.error('Failed to save premiumPass purchase:', err); }
+      window.unlockPremium();
+    },
+    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
+  };
+  if (typeof paypal !== 'undefined') {
+    const ppBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
+    if (ppBtn.isEligible()) ppBtn.render('#paypal-premium');
+    else ppContainer.style.display = 'none';
+    const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
+    if (cardBtn.isEligible()) cardBtn.render('#paypal-premium-card');
+    else { cardContainer.style.display = 'none'; document.querySelector('#paypal-premium ~ .paypal-or')?.remove(); }
+  }
 }
 
 // ── CUSTOM COLORS ──
@@ -3172,7 +3398,8 @@ function freshUserData() {
     perfectSession: false, comebackKid: false, sessionTotal: 0,
     _solved67: false,
     earnedQuests: [],    // quest IDs the user has completed
-    selectedTitle: null, // quest ID of the title shown on homepage
+    selectedTitle: null, // quest ID of the title shown on homepage (legacy single)
+    selectedTitles: [],  // array of quest IDs for multi-title (premium: up to 3)
   };
 }
 let userData = freshUserData();
@@ -3184,11 +3411,13 @@ let comebackCount = 0;
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
   if (banner) {
-    if (userData.selectedTitle) {
-      const q = QUESTS.find(q => q.id === userData.selectedTitle);
-      if (q) {
-        document.getElementById('titleBannerEmoji').textContent = q.emoji;
-        document.getElementById('titleBannerName').textContent  = q.name;
+    // Gather active titles from selectedTitles array (or legacy single)
+    const titles = getActiveTitles();
+    if (titles.length > 0) {
+      const quests = titles.map(id => QUESTS.find(q => q.id === id)).filter(Boolean);
+      if (quests.length > 0) {
+        document.getElementById('titleBannerEmoji').textContent = quests.map(q => q.emoji).join(' ');
+        document.getElementById('titleBannerName').textContent  = quests.map(q => q.name).join(' · ');
         banner.classList.add('visible');
       } else {
         banner.classList.remove('visible');
@@ -3198,6 +3427,13 @@ function updateTitleBanner() {
     }
   }
   updateXpBanner();
+}
+
+function getActiveTitles() {
+  // Prefer selectedTitles array; fall back to legacy selectedTitle
+  if (userData.selectedTitles && userData.selectedTitles.length > 0) return userData.selectedTitles;
+  if (userData.selectedTitle) return [userData.selectedTitle];
+  return [];
 }
 
 function updateXpBanner() {
@@ -3224,7 +3460,33 @@ function updateXpBanner() {
 }
 
 function selectTitle(questId) {
-  userData.selectedTitle = (questId === 'null' || questId === null) ? null : questId;
+  if (questId === 'null' || questId === null) {
+    // Unequip — for non-premium: clear everything; for premium: this is called with specific ID via toggleTitle
+    userData.selectedTitle = null;
+    userData.selectedTitles = [];
+  } else if (window.isPremium) {
+    // Premium: toggle in selectedTitles array (up to 3)
+    if (!userData.selectedTitles) userData.selectedTitles = [];
+    const idx = userData.selectedTitles.indexOf(questId);
+    if (idx !== -1) {
+      userData.selectedTitles.splice(idx, 1);
+    } else if (userData.selectedTitles.length < 3) {
+      userData.selectedTitles.push(questId);
+    } else {
+      alert('You can equip up to 3 titles! Unequip one first.');
+      return;
+    }
+    userData.selectedTitle = userData.selectedTitles[0] || null;
+  } else {
+    // Non-premium: single title toggle
+    if (userData.selectedTitle === questId) {
+      userData.selectedTitle = null;
+      userData.selectedTitles = [];
+    } else {
+      userData.selectedTitle = questId;
+      userData.selectedTitles = [questId];
+    }
+  }
   saveUserData();
   updateTitleBanner();
   renderQuestScreen();
@@ -3316,6 +3578,12 @@ window.loadUserData = (data) => {
   userData.earnedQuests = Array.from(combined);
   // Selected title — trust remote if nothing local
   if (!userData.selectedTitle && data.selectedTitle) userData.selectedTitle = data.selectedTitle;
+  // Migrate selectedTitles array
+  if (data.selectedTitles && data.selectedTitles.length > 0) {
+    userData.selectedTitles = data.selectedTitles;
+  } else if (userData.selectedTitle && (!userData.selectedTitles || !userData.selectedTitles.length)) {
+    userData.selectedTitles = [userData.selectedTitle];
+  }
 
   updateTitleBanner();
   const achScreen = document.getElementById('achievement-screen');
@@ -3357,10 +3625,46 @@ function showSettings() {
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('leaderboard-screen').style.display = 'none';
+  document.getElementById('gamepass-screen').style.display = 'none';
 }
 
 function hideSettings() {
   document.getElementById('settings-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+}
+
+function showGamepasses() {
+  document.getElementById('gamepass-screen').style.display = 'block';
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('achievement-screen').style.display = 'none';
+  document.getElementById('leaderboard-screen').style.display = 'none';
+  document.getElementById('settings-screen').style.display = 'none';
+  // Update owned states
+  if (neonUnlocked) {
+    document.getElementById('gpNeonBtn').style.display = 'none';
+    document.getElementById('gpNeonOwned').style.display = 'block';
+  } else {
+    document.getElementById('gpNeonBtn').style.display = '';
+    document.getElementById('gpNeonOwned').style.display = 'none';
+  }
+  if (wheelUnlocked) {
+    document.getElementById('gpWheelBtn').style.display = 'none';
+    document.getElementById('gpWheelOwned').style.display = 'block';
+  } else {
+    document.getElementById('gpWheelBtn').style.display = '';
+    document.getElementById('gpWheelOwned').style.display = 'none';
+  }
+  if (window.isPremium) {
+    document.getElementById('gpPremiumBtn').style.display = 'none';
+    document.getElementById('gpPremiumOwned').style.display = 'block';
+  } else {
+    document.getElementById('gpPremiumBtn').style.display = '';
+    document.getElementById('gpPremiumOwned').style.display = 'none';
+  }
+}
+
+function hideGamepasses() {
+  document.getElementById('gamepass-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
 }
 
@@ -3563,6 +3867,8 @@ function showQuests() {
   document.getElementById('achievement-screen').style.display = 'block';
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('leaderboard-screen').style.display = 'none';
+  document.getElementById('settings-screen').style.display = 'none';
+  document.getElementById('gamepass-screen').style.display = 'none';
   renderQuestScreen();
 }
 
@@ -3649,8 +3955,16 @@ function renderQuestScreen() {
     tList.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;padding:10px">Complete quests to unlock titles!</div>';
     return;
   }
+  const activeTitles = getActiveTitles();
+  const maxTitles = window.isPremium ? 3 : 1;
+  if (window.isPremium) {
+    const note = document.createElement('div');
+    note.style.cssText = 'color:var(--muted);font-size:0.8rem;padding:4px 10px 8px;';
+    note.textContent = '👑 Premium: equip up to 3 titles! (' + activeTitles.length + '/' + maxTitles + ')';
+    tList.appendChild(note);
+  }
   earned.forEach(q => {
-    const isEquipped = userData.selectedTitle === q.id;
+    const isEquipped = activeTitles.includes(q.id);
     const div = document.createElement('div');
     div.className = 'ach-item title-item' + (isEquipped ? ' title-equipped' : '');
     div.innerHTML = `
@@ -3660,7 +3974,7 @@ function renderQuestScreen() {
         <div class="ach-desc">${q.desc}</div>
       </div>
       <button class="equip-btn ${isEquipped ? 'equipped' : ''}"
-        onclick="selectTitle('${isEquipped ? 'null' : q.id}')">
+        onclick="selectTitle('${isEquipped ? q.id : q.id}')">
         ${isEquipped ? '✓ Equipped' : 'Equip'}
       </button>`;
     tList.appendChild(div);
@@ -3689,6 +4003,7 @@ function showLeaderboard() {
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('settings-screen').style.display = 'none';
+  document.getElementById('gamepass-screen').style.display = 'none';
   // Show sign-in prompt for guests
   const prompt = document.getElementById('lbSigninPrompt');
   if (prompt) prompt.style.display = window.currentUserId ? 'none' : 'block';
@@ -3792,6 +4107,7 @@ function renderLbBoard() {
     const isYou = user.uid === currentUid;
     const youClass = isYou ? ' is-you' : '';
     const youTag = isYou ? ' <span style="color:var(--primary);font-weight:800;font-size:0.7rem">(YOU)</span>' : '';
+    const crownTag = user.premiumPass ? '👑 ' : '';
 
     // Get their game rank
     const gameRank = getRank(user.totalCorrect || 0);
@@ -3803,7 +4119,7 @@ function renderLbBoard() {
       <div class="lb-rank">${medal}</div>
       <img class="lb-avatar" src="${avatarSrc}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23999%22>?</text></svg>'">
       <div class="lb-player-info">
-        <div class="lb-player-name">${user.displayName}${youTag}</div>
+        <div class="lb-player-name">${crownTag}${user.displayName}${youTag}</div>
         <div class="lb-player-rank-tag">${gameRank.emoji} ${gameRank.name}</div>
       </div>
       <div class="lb-score">${user._val.toLocaleString()}${unitLabel}</div>
@@ -4003,14 +4319,14 @@ buildRemainderDivGrid();
 </style>
 
 <!-- Floating button -->
-<button id="support-btn" aria-label="Contact support" title="Contact support">💬</button>
+<button id="support-btn" aria-label="Contact support" title="Contact support">❓</button>
 
 <!-- Popup -->
 <div id="support-overlay"></div>
 <div id="support-popup" role="dialog" aria-modal="true" aria-label="Contact Support">
   <div class="sp-header">
     <div>
-      <h3>💬 Contact Support</h3>
+      <h3>❓ Contact Support</h3>
       <p>We'll get back to you at support@mathpop.io</p>
     </div>
     <button id="support-close" aria-label="Close">✕</button>
