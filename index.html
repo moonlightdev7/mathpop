@@ -1779,6 +1779,7 @@
       <div id="colorPanel">
         <div class="color-panel-grid">
           <div class="color-picker-item"><input type="color" id="cp-primary" value="#ff6b35" oninput="applyColor('primary',this.value)">Primary</div>
+          <div class="color-picker-item"><input type="color" id="cp-text"    value="#ffffff" oninput="applyColor('text',this.value)">Text</div>
           <div class="color-picker-item"><input type="color" id="cp-correct" value="#2ec27e" oninput="applyColor('correct',this.value)">Correct</div>
           <div class="color-picker-item"><input type="color" id="cp-wrong"   value="#e5334b" oninput="applyColor('wrong',this.value)">Wrong</div>
           <div class="color-picker-item"><input type="color" id="cp-bg"      value="#fdf6ec" oninput="applyColor('bg',this.value)">Background</div>
@@ -2980,13 +2981,14 @@ function applyColor(prop, val) {
     s.setProperty('--primary-light', adj(val, 40));
     s.setProperty('--primary-shadow', adj(val, -30));
     s.setProperty('--accent-grad', `linear-gradient(90deg, ${val}, ${adj(val,40)})`);
-  } else if (prop === 'bg')   { s.setProperty('--bg', val); s.setProperty('--input-bg', val); }
+  } else if (prop === 'text')  { s.setProperty('--text', val); }
+  else if (prop === 'bg')     { s.setProperty('--bg', val); s.setProperty('--input-bg', val); }
   else if (prop === 'card')   { s.setProperty('--card', val); }
   else if (prop === 'correct'){ s.setProperty('--correct', val); s.setProperty('--correct-bg', hexToRgba(val,.12)); s.setProperty('--correct-border', hexToRgba(val,.35)); }
   else if (prop === 'wrong')  { s.setProperty('--wrong', val);   s.setProperty('--wrong-bg',   hexToRgba(val,.12)); s.setProperty('--wrong-border',   hexToRgba(val,.35)); }
   // Track custom colors in currentTheme (saved only when user clicks Save Theme)
   const customColors = {};
-  ['primary','correct','wrong','bg','card'].forEach(k => {
+  ['primary','text','correct','wrong','bg','card'].forEach(k => {
     const el = document.getElementById('cp-' + k);
     if (el) customColors[k] = el.value;
   });
@@ -2997,7 +2999,7 @@ function applyColor(prop, val) {
 
 function resetColors() {
   setTheme('dark','blue');
-  const defaults = {primary:'#63b3ed', correct:'#68d391', wrong:'#fc8181', bg:'#00101a', card:'#001c2d'};
+  const defaults = {primary:'#63b3ed', text:'#e0f0ff', correct:'#68d391', wrong:'#fc8181', bg:'#00101a', card:'#001c2d'};
   Object.entries(defaults)
     .forEach(([k,v]) => { const el=document.getElementById('cp-'+k); if(el) el.value=v; });
 }
