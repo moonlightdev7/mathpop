@@ -1563,7 +1563,6 @@
     <div class="gp-perks">
       <div class="gp-perk">👑 <strong>Crown badge</strong> next to your name on the homepage and leaderboards</div>
       <div class="gp-perk">🏷️ <strong>Equip up to 3 titles</strong> at once</div>
-      <div class="gp-perk">⚡ <strong>2x XP boost</strong> on all problems</div>
       <div class="gp-perk">🔢 <strong>Complex math categories</strong> — geometry, trig, fractions, decimals, algebra, calculus
         <span class="gp-coming-soon">COMING SOON</span>
       </div>
@@ -1579,7 +1578,7 @@
   <div class="modal">
     <div class="modal-emoji">👑</div>
     <div class="modal-title">Premium Pass</div>
-    <div class="modal-desc">Crown badge, 2x XP boost, up to 3 equipped titles, and upcoming complex math categories.</div>
+    <div class="modal-desc">Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
     <div id="premiumSigninGate" class="modal-signin-gate" style="display:none">
       <strong>Sign in first!</strong> We save your subscription to your account.
       <br><br>
@@ -3374,14 +3373,14 @@ function nextQuestion() {
     const table = tables[Math.floor(Math.random() * tables.length)];
     const mult = rnd(2, 12);
     currentAnswer = table * mult;
-    currentProblemXP = String(table).length + String(mult).length;
+
     setQuestion(`${table} × ${mult} = ?`);
   } else if (currentMode === 'shortdivide') {
     const divArr = Array.from(selectedDivisors);
     const d = divArr[Math.floor(Math.random() * divArr.length)];
     const mult = rnd(2, 12);
     currentAnswer = mult;
-    currentProblemXP = String(d * mult).length;
+
     setQuestion(`${d * mult} ÷ ${d} = ?`);
   } else if (currentMode === 'longdivide') {
     const ids = Array.from(selectedLongDiv);
@@ -3389,7 +3388,7 @@ function nextQuestion() {
     const cfg = LONG_DIV_CONFIGS.find(c => c.id === cfgId);
     const { dividend, divisor, quotient } = genLongDiv(cfg);
     currentAnswer = quotient;
-    currentProblemXP = String(dividend).length;
+
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'remainderdiv') {
@@ -3399,7 +3398,7 @@ function nextQuestion() {
     const { dividend, divisor, quotient, remainder } = genRemainderDiv(cfg);
     currentAnswer   = quotient;
     currentRemainder = remainder;
-    currentProblemXP = String(dividend).length;
+
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
     document.getElementById('remainderInput').value = '';
@@ -3410,16 +3409,13 @@ function nextQuestion() {
     const cfg = LONG_MUL_CONFIGS.find(c => c.id === cfgId);
     const a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
     currentAnswer = a * b;
-    currentProblemXP = String(a).length + String(b).length;
+
     setQuestion(`${fmtN(a)} × ${fmtN(b)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'wordproblems') {
     const wp = generateWordProblem();
     currentAnswer = wp.answer;
     currentWordProblemRemainder = wp.remainder;
-    // Base XP on operation type: add/sub = 2, mult = 3, div = 4
-    const opXpMap = { wp_add: 2, wp_sub: 2, wp_mult: 3, wp_remdiv: 4, wp_longdiv: 4 };
-    currentProblemXP = opXpMap[wp.op] || 2;
     // Show remainder input only for remainder word problems
     const isRemWP = wp.op === 'wp_remdiv';
     document.getElementById('remainderWrap').style.display = isRemWP ? 'flex' : 'none';
@@ -3439,11 +3435,11 @@ function nextQuestion() {
       if (a === b) b = Math.max(cfg.bMin, b - rnd(1, Math.max(1, Math.floor(b * 0.3)))); // avoid answer = 0
       _lastQA = a; _lastQB = b;
       currentAnswer = a - b;
-      currentProblemXP = String(a).length + String(b).length;
+  
       setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
       currentAnswer = a + b;
-      currentProblemXP = String(a).length + String(b).length;
+  
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
   }
@@ -4089,7 +4085,6 @@ let currentStreak = 0;
 let wrongStreak   = 0;
 let comingBack    = false;
 let comebackCount = 0;
-let currentProblemXP = 1;  // XP for current problem based on digit count
 
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
@@ -4170,11 +4165,16 @@ function selectTitle(questId) {
   renderQuestScreen();
 }
 
+// Map repeatable quest IDs to their mode so we only check the relevant quest
+const QUEST_MODE_MAP = { mul_10:'multiply', longmul_10:'longmultiply', shortdiv_10:'shortdivide', longdiv_10:'longdivide', remdiv_10:'remainderdiv', add_10:'add', sub_10:'subtract', wp_10:'wordproblems' };
+
 function checkQuests() {
   if (!userData._questCompletions) userData._questCompletions = {};
   for (const q of QUESTS) {
     if (q.repeatable) {
-      // Repeatable: check if they've hit the next milestone
+      // Only check repeatable quest if it matches the current mode
+      const questMode = QUEST_MODE_MAP[q.id];
+      if (questMode && questMode !== currentMode) continue;
       const completions = userData._questCompletions[q.id] || 0;
       if (q.check(userData)) {
         userData._questCompletions[q.id] = completions + 1;
@@ -4194,10 +4194,7 @@ function checkQuests() {
 
 function onCorrectAnswer() {
   const prevRank = getRank(userData.totalCorrect);
-  // Award XP based on digit count; premium users get 2x
-  let xpGain = currentProblemXP;
-  if (window.isPremium) xpGain *= 2;
-  userData.totalCorrect += xpGain;
+  userData.totalCorrect++;
   userData.sessionTotal++;
   userData.stats[currentMode] = (userData.stats[currentMode] || 0) + 1;
   currentStreak++;
@@ -4210,7 +4207,7 @@ function onCorrectAnswer() {
   // Check for rank up
   const newRank = getRank(userData.totalCorrect);
   if (newRank.req > prevRank.req) {
-    showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} total XP!`);
+    showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
   }
   // Secret quest flags
   userData._justAnswered = true;
