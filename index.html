@@ -698,16 +698,16 @@
   #game-screen { display: none; max-width: 480px; margin: 0 auto; }
   .score-bar {
     display: flex; justify-content: space-between; align-items: center;
-    background: var(--card); border-radius: 16px; padding: 12px 20px;
+    background: var(--card); border-radius: 12px; padding: 6px 16px;
     margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
     position: sticky; top: 52px; z-index: 100;
   }
   .score-item { text-align: center; }
-  .score-num { font-family: 'Fredoka One', cursive; font-size: 1.8rem; line-height: 1; }
+  .score-num { font-family: 'Fredoka One', cursive; font-size: 1.2rem; line-height: 1; }
   .score-num.correct { color: var(--correct); }
   .score-num.wrong   { color: var(--wrong); }
   .score-num.total   { color: var(--neutral); }
-  .score-label { font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .score-label { font-size: 0.65rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .question-card {
     background: var(--card); border-radius: 24px; padding: 36px 28px 28px;
     text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -1978,12 +1978,11 @@
       <button class="wb-btn" id="wbEraserBtn" onclick="toggleEraser()">🧹 Eraser</button>
       <button class="wb-btn" id="wbTypeBtn" onclick="toggleWbType()">⌨️ Type</button>
       <button class="wb-btn" id="wbMoveBtn" onclick="toggleWbMove()">✋ Move</button>
-      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Pan</button>
+      <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Move</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
       <div class="wb-zoom-controls">
         <button class="wb-zoom-btn" onclick="wbUndo()" title="Undo" id="wbUndoBtn" style="font-size:13px">↩</button>
         <button class="wb-zoom-btn" onclick="wbRedo()" title="Redo" id="wbRedoBtn" style="font-size:13px">↪</button>
-        <button class="wb-zoom-btn" onclick="toggleWbPan()" title="Grab & move canvas" id="wbPanBtn2" style="font-size:13px">🖐️</button>
         <span style="width:6px"></span>
         <button class="wb-zoom-btn" onclick="wbZoom(-0.1)" title="Zoom out">−</button>
         <span class="wb-zoom-label" id="wbZoomLabel">100%</span>
@@ -3716,8 +3715,6 @@ function applyWbTransform() {
 function toggleWbPan() {
   wbPanMode = !wbPanMode;
   document.getElementById('wbPanBtn').classList.toggle('eraser-on', wbPanMode);
-  const pb2 = document.getElementById('wbPanBtn2');
-  if (pb2) pb2.classList.toggle('eraser-on', wbPanMode);
   const vp = document.getElementById('wbViewport');
   vp.style.cursor = wbPanMode ? 'grab' : '';
   // Disable other modes when panning
