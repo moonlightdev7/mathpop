@@ -381,15 +381,20 @@
   /* ── TITLE BANNER ── */
   .title-banner {
     display: none; align-items: center; justify-content: center; gap: 8px;
-    background: var(--card); border-radius: 16px; padding: 8px 20px;
-    margin: 0 auto 16px; width: fit-content; max-width: 100%;
-    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
-    border: 2px solid var(--primary); transition: background 0.3s, border-color 0.3s;
+    flex-wrap: wrap;
+    margin: 0 auto 16px; max-width: 100%;
     cursor: pointer;
   }
   .title-banner.visible { display: flex; }
-  .title-banner-emoji { font-size: 1.3rem; line-height: 1; }
-  .title-banner-name { font-family: 'Fredoka One', cursive; font-size: 1.05rem; color: var(--primary); }
+  .title-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--card); border-radius: 14px; padding: 7px 16px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+    border: 2px solid var(--primary); transition: background 0.3s, border-color 0.3s, transform 0.15s;
+  }
+  .title-chip:hover { transform: scale(1.04); }
+  .title-chip-emoji { font-size: 1.15rem; line-height: 1; }
+  .title-chip-name { font-family: 'Fredoka One', cursive; font-size: 0.95rem; color: var(--primary); }
 
   /* ── XP RANK BANNER ── */
   .xp-banner {
@@ -1375,10 +1380,7 @@
   <p class="subtitle" id="modeSubtitle">Pick your tables and start practicing!</p>
 
   <!-- Title banner — shows equipped quest title, click to open quests -->
-  <div class="title-banner" id="titleBanner" onclick="showQuests()" title="Your Titles">
-    <span class="title-banner-emoji" id="titleBannerEmoji"></span>
-    <span class="title-banner-name" id="titleBannerName"></span>
-  </div>
+  <div class="title-banner" id="titleBanner" onclick="showQuests()" title="Your Titles"></div>
 
   <!-- XP rank banner — minimal progress tracker -->
   <div class="xp-banner" id="xpBanner" onclick="showQuests()" title="View your rank & quests">
@@ -4187,18 +4189,15 @@ let comebackCount = 0;
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
   if (banner) {
-    // Gather active titles from selectedTitles array (or legacy single)
     const titles = getActiveTitles();
-    if (titles.length > 0) {
-      const quests = titles.map(id => QUESTS.find(q => q.id === id)).filter(Boolean);
-      if (quests.length > 0) {
-        document.getElementById('titleBannerEmoji').textContent = quests.map(q => q.emoji).join(' ');
-        document.getElementById('titleBannerName').textContent  = quests.map(q => q.name).join(' · ');
-        banner.classList.add('visible');
-      } else {
-        banner.classList.remove('visible');
-      }
+    const quests = titles.map(id => QUESTS.find(q => q.id === id)).filter(Boolean);
+    if (quests.length > 0) {
+      banner.innerHTML = quests.map(q =>
+        `<span class="title-chip"><span class="title-chip-emoji">${q.emoji}</span><span class="title-chip-name">${q.name}</span></span>`
+      ).join('');
+      banner.classList.add('visible');
     } else {
+      banner.innerHTML = '';
       banner.classList.remove('visible');
     }
   }
