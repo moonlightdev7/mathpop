@@ -3044,7 +3044,7 @@ function stampFormula() {
   }
 }
 
-// ── RANKS (new title every 25 questions, 25 ranks) ──
+// ── RANKS (new title every 25 questions, 41 ranks + infinite prestige) ──
 const RANKS = [
   { emoji:'🌱', name:'Seedling',          req:0 },
   { emoji:'🐣', name:'Hatchling',         req:25 },
@@ -3067,20 +3067,49 @@ const RANKS = [
   { emoji:'👑', name:'Royalty',            req:450 },
   { emoji:'🌟', name:'Supernova',         req:475 },
   { emoji:'🧬', name:'Mastermind',        req:500 },
-  { emoji:'🔮', name:'Oracle',            req:525 },
+  { emoji:'🪄', name:'Wizard',            req:525 },
   { emoji:'🪐', name:'Cosmic Brain',      req:550 },
   { emoji:'🏆', name:'Grand Champion',    req:575 },
   { emoji:'🌌', name:'Mathpop Legend',     req:600 },
+  // ── Extended ranks (625–1000) ──
+  { emoji:'⚗️', name:'Alchemist',         req:625 },
+  { emoji:'🦊', name:'Math Fox',          req:650 },
+  { emoji:'🎭', name:'Cipher',            req:675 },
+  { emoji:'🔱', name:'Trident',           req:700 },
+  { emoji:'☄️', name:'Comet',             req:725 },
+  { emoji:'🦁', name:'Leo',               req:750 },
+  { emoji:'🎪', name:'Ringmaster',        req:775 },
+  { emoji:'🧊', name:'Absolute Zero',     req:800 },
+  { emoji:'🦋', name:'Metamorph',         req:825 },
+  { emoji:'⏳', name:'Timekeeper',        req:850 },
+  { emoji:'🗝️', name:'Keymaster',         req:875 },
+  { emoji:'🌋', name:'Volcanic',          req:900 },
+  { emoji:'🦉', name:'Sage Owl',          req:925 },
+  { emoji:'✨', name:'Starweaver',        req:950 },
+  { emoji:'🔥', name:'Phoenix',           req:975 },
+  { emoji:'♾️', name:'Transcendent',      req:1000 },
 ];
+const FINAL_RANK_REQ = 1000; // after this, infinite prestige kicks in
+const INFINITY_INTERVAL = 100; // questions per infinity level
+const INFINITY_XP = 50; // XP awarded per level
 
 function getRank(total) {
   let rank = RANKS[0];
   for (const r of RANKS) { if (total >= r.req) rank = r; else break; }
+  // If past all fixed ranks, return infinity rank info
+  if (total >= FINAL_RANK_REQ) {
+    const lvl = Math.floor((total - FINAL_RANK_REQ) / INFINITY_INTERVAL);
+    if (lvl > 0) return { emoji:'♾️', name:`Infinity Lv. ${lvl}`, req: FINAL_RANK_REQ + (lvl * INFINITY_INTERVAL), isInfinite: true, level: lvl };
+  }
   return rank;
 }
 function getNextRank(total) {
   for (const r of RANKS) { if (total < r.req) return r; }
-  return null; // maxed out
+  // Past all fixed ranks → next infinity milestone
+  const excess = total - FINAL_RANK_REQ;
+  const nextLvl = Math.floor(excess / INFINITY_INTERVAL) + 1;
+  const nextReq = FINAL_RANK_REQ + (nextLvl * INFINITY_INTERVAL);
+  return { emoji:'♾️', name:`Infinity Lv. ${nextLvl}`, req: nextReq, isInfinite: true, level: nextLvl };
 }
 
 // ── QUESTS ──
@@ -3152,9 +3181,14 @@ function updateXpBanner() {
   document.getElementById('xpRankEmoji').textContent = rank.emoji;
   document.getElementById('xpRankName').textContent  = rank.name;
   if (next) {
-    document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req;
     const progress = ((userData.totalCorrect - rank.req) / (next.req - rank.req)) * 100;
     document.getElementById('xpBarFill').style.width = Math.min(progress, 100) + '%';
+    if (next.isInfinite) {
+      const xpEarned = (rank.level || 0) * INFINITY_XP;
+      document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req + '  ·  ' + xpEarned + ' XP';
+    } else {
+      document.getElementById('xpCount').textContent = userData.totalCorrect + ' / ' + next.req;
+    }
   } else {
     document.getElementById('xpCount').textContent = userData.totalCorrect + ' — MAX RANK!';
     document.getElementById('xpBarFill').style.width = '100%';
@@ -3194,7 +3228,11 @@ function onCorrectAnswer() {
   // Check for rank up
   const newRank = getRank(userData.totalCorrect);
   if (newRank.req > prevRank.req) {
-    showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
+    if (newRank.isInfinite) {
+      showQuestToast('♾️', `Infinity Lv. ${newRank.level}!`, `+${INFINITY_XP} XP — ${userData.totalCorrect} questions solved!`);
+    } else {
+      showQuestToast(newRank.emoji, `Rank Up: ${newRank.name}!`, `Reached ${newRank.req} questions solved!`);
+    }
   }
   // Secret quest flags
   userData._justAnswered = true;
@@ -3533,6 +3571,24 @@ function renderQuestScreen() {
       </div>`;
     }
     html += '</div>';
+    // Infinity rank info
+    if (userData.totalCorrect >= FINAL_RANK_REQ) {
+      const infLvl = Math.floor((userData.totalCorrect - FINAL_RANK_REQ) / INFINITY_INTERVAL);
+      const xpTotal = infLvl * INFINITY_XP;
+      const excess = (userData.totalCorrect - FINAL_RANK_REQ) % INFINITY_INTERVAL;
+      const infPct = Math.round((excess / INFINITY_INTERVAL) * 100);
+      html += `<div style="margin-top:14px;padding:14px 16px;border-radius:14px;border:2px solid var(--primary);background:color-mix(in srgb,var(--primary) 8%,var(--bg));text-align:center;">
+        <div style="font-family:Fredoka One,cursive;font-size:1.1rem;color:var(--primary);">♾️ Infinity Rank — Level ${infLvl}</div>
+        <div style="font-size:0.8rem;color:var(--muted);font-weight:700;margin:4px 0 8px">${xpTotal} XP earned · +${INFINITY_XP} XP every ${INFINITY_INTERVAL} questions</div>
+        <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${infPct}%"></div></div>
+        <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-top:4px">${excess} / ${INFINITY_INTERVAL} to next level</div>
+      </div>`;
+    } else {
+      html += `<div style="margin-top:14px;padding:12px 16px;border-radius:14px;border:2px dashed var(--border);text-align:center;">
+        <div style="font-size:0.85rem;color:var(--muted);font-weight:700;">♾️ Infinity Rank unlocks at ${FINAL_RANK_REQ} questions solved</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">An endless journey — earn ${INFINITY_XP} XP every ${INFINITY_INTERVAL} questions forever!</div>
+      </div>`;
+    }
     rankCard.innerHTML = html;
   }
 
@@ -3557,15 +3613,15 @@ function renderQuestScreen() {
   if (secretQuests.length) {
     const secretHeader = document.createElement('div');
     secretHeader.style.cssText = 'font-family:Fredoka One,cursive;font-size:1rem;color:var(--primary);margin:18px 0 10px;';
-    secretHeader.textContent = '🤫 Secret Quests';
+    secretHeader.textContent = '🌸 Hidden Quests';
     qList.appendChild(secretHeader);
     for (const q of secretQuests) {
       const earned = userData.earnedQuests.includes(q.id);
       const div = document.createElement('div');
       div.className = 'ach-item secret' + (earned ? ' earned' : '');
-      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '❓'}</div>
+      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
         <div class="ach-info">
-          <div class="ach-name">${earned ? q.name : '??? Secret Quest'}</div>
+          <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
           <div class="ach-desc">${earned ? '✅ ' + q.desc : 'This one\'s a mystery... keep exploring!'}</div>
         </div>`;
       qList.appendChild(div);
