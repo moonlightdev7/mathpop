@@ -913,6 +913,20 @@
 
   .ach-section { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s; }
   .ach-section h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); margin: 0 0 14px 0; }
+  .ach-toggle {
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    user-select: none; transition: opacity 0.15s; margin: 0 0 0 0 !important;
+  }
+  .ach-toggle:hover { opacity: 0.8; }
+  .ach-toggle-arrow {
+    font-size: 0.8rem; transition: transform 0.25s; color: var(--muted);
+  }
+  .ach-toggle-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.35s ease, margin 0.35s ease;
+    margin-top: 0;
+  }
+  .ach-toggle-body.open { max-height: 5000px; margin-top: 14px; }
+  .ach-toggle-arrow.collapsed { transform: rotate(-90deg); }
 
   .ach-list { display: flex; flex-direction: column; gap: 10px; }
   .ach-item {
@@ -954,8 +968,8 @@
 
   /* Rank progression in quests page */
   .rank-progress-card {
-    background: var(--card); border-radius: 20px; padding: 20px 24px;
-    margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: transparent; border-radius: 0; padding: 0;
+    margin-bottom: 0;
     transition: background 0.3s;
   }
   .rank-progress-header {
@@ -1284,20 +1298,29 @@
     <div class="quest-header-sub">Answer questions to rank up, complete quests, and equip titles for your homepage</div>
   </div>
 
-  <!-- Rank progression -->
-  <div class="rank-progress-card" id="rankProgressCard"></div>
-
-  <!-- Quest list -->
+  <!-- Rank progression (collapsible) -->
   <div class="ach-section">
-    <h3>🗺️ Quests</h3>
-    <div class="ach-list" id="questList"></div>
+    <h3 class="ach-toggle" onclick="toggleSection('rankSection')">⭐ Rank Progression <span class="ach-toggle-arrow" id="rankSection-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="rankSection">
+      <div class="rank-progress-card" id="rankProgressCard"></div>
+    </div>
   </div>
 
-  <!-- Title chooser (only shows earned titles) -->
+  <!-- Quest list (collapsible) -->
   <div class="ach-section">
-    <h3>👑 Your Titles</h3>
-    <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to display a title on your homepage. Tap again to remove it.</p>
-    <div class="ach-list" id="titlesList"></div>
+    <h3 class="ach-toggle" onclick="toggleSection('questSection')">🗺️ Quests <span class="ach-toggle-arrow" id="questSection-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="questSection">
+      <div class="ach-list" id="questList"></div>
+    </div>
+  </div>
+
+  <!-- Title chooser (collapsible) -->
+  <div class="ach-section">
+    <h3 class="ach-toggle" onclick="toggleSection('titlesSection')">👑 Your Titles <span class="ach-toggle-arrow" id="titlesSection-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="titlesSection">
+      <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px">Tap Equip to display a title on your homepage. Tap again to remove it.</p>
+      <div class="ach-list" id="titlesList"></div>
+    </div>
   </div>
 </div>
 
@@ -2316,8 +2339,12 @@ function hexToRgba(hex, a) {
 // ── RESTORE THEME FROM LOCALSTORAGE (instant, before Firebase loads) ──
 (function() {
   try {
-    const saved = localStorage.getItem('mathpop_theme');
-    if (saved) window.applyThemeFromFirestore(JSON.parse(saved));
+    // Only restore if theme version is current (stale themes cleared in main init)
+    const ver = localStorage.getItem('mathpop_theme_ver');
+    if (ver && parseInt(ver) >= 2) {
+      const saved = localStorage.getItem('mathpop_theme');
+      if (saved) window.applyThemeFromFirestore(JSON.parse(saved));
+    }
   } catch(e) {}
 })();
 
@@ -3539,6 +3566,14 @@ function showQuests() {
   renderQuestScreen();
 }
 
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (!body) return;
+  body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('collapsed', !body.classList.contains('open'));
+}
+
 function hideQuests() {
   document.getElementById('achievement-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
@@ -3552,7 +3587,6 @@ function renderQuestScreen() {
     const next = getNextRank(userData.totalCorrect);
     const pct = next ? Math.min(((userData.totalCorrect - rank.req) / (next.req - rank.req)) * 100, 100) : 100;
     let html = `<div class="rank-progress-header">
-      <h3>⭐ Rank Progression</h3>
       <span class="rank-progress-total">${userData.totalCorrect} questions solved</span>
     </div>
     <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${pct}%"></div></div>
@@ -3592,40 +3626,19 @@ function renderQuestScreen() {
     rankCard.innerHTML = html;
   }
 
-  // Quest list
+  // Quest list — all quests in one list
   const qList = document.getElementById('questList');
   qList.innerHTML = '';
-  // Regular quests first, then secret quests
-  const regularQuests = QUESTS.filter(q => !q.secret);
-  const secretQuests  = QUESTS.filter(q => q.secret);
-  for (const q of regularQuests) {
+  for (const q of QUESTS) {
     const earned = userData.earnedQuests.includes(q.id);
     const div = document.createElement('div');
-    div.className = 'ach-item' + (earned ? ' earned' : '');
+    div.className = 'ach-item' + (earned ? ' earned' : '') + (q.secret ? ' secret' : '');
     div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
       <div class="ach-info">
         <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
         <div class="ach-desc">${earned ? '✅ ' + q.desc : 'Keep practicing to discover this...'}</div>
       </div>`;
     qList.appendChild(div);
-  }
-  // Secret quests section
-  if (secretQuests.length) {
-    const secretHeader = document.createElement('div');
-    secretHeader.style.cssText = 'font-family:Fredoka One,cursive;font-size:1rem;color:var(--primary);margin:18px 0 10px;';
-    secretHeader.textContent = '🌸 Hidden Quests';
-    qList.appendChild(secretHeader);
-    for (const q of secretQuests) {
-      const earned = userData.earnedQuests.includes(q.id);
-      const div = document.createElement('div');
-      div.className = 'ach-item secret' + (earned ? ' earned' : '');
-      div.innerHTML = `<div class="ach-icon">${earned ? q.emoji : '🌸'}</div>
-        <div class="ach-info">
-          <div class="ach-name">${earned ? q.name : '??? Hidden Quest'}</div>
-          <div class="ach-desc">${earned ? '✅ ' + q.desc : 'This one\'s a mystery... keep exploring!'}</div>
-        </div>`;
-      qList.appendChild(div);
-    }
   }
 
   // Title chooser — only earned quests
@@ -3812,9 +3825,16 @@ function renderLbBoard() {
   container.innerHTML = html;
 }
 
-// Init — only apply default theme if nothing is saved
+// Init — apply saved theme or default to dark blue
 (function() {
+  const THEME_VERSION = 2; // bump this to reset all users to the new default
   try {
+    const ver = localStorage.getItem('mathpop_theme_ver');
+    if (!ver || parseInt(ver) < THEME_VERSION) {
+      // Clear stale theme so users get the new dark blue default
+      localStorage.removeItem('mathpop_theme');
+      localStorage.setItem('mathpop_theme_ver', String(THEME_VERSION));
+    }
     const saved = localStorage.getItem('mathpop_theme');
     if (saved) { window.applyThemeFromFirestore(JSON.parse(saved)); return; }
   } catch(e) {}
