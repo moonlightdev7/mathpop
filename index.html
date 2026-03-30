@@ -2530,7 +2530,7 @@ function applyThemeVars(t) {
 
 // ── THEME STATE TRACKING ──
 let currentTheme = { mode: 'dark', color: 'blue' };
-let gradientDirection = 'linear';  // 'linear' or 'radial' for gradient themes
+let gradDirection = 'linear';  // 'linear' or 'radial' for gradient themes
 
 function persistThemeLocally(t) {
   try { localStorage.setItem('mathpop_theme', JSON.stringify(t)); } catch(e) {}
@@ -2565,8 +2565,11 @@ function setNeon(name) {
 const GRAD_NAMES = ['sunrise','twilight','forest','coral','blueberry','peach','lavender','ember','mint','sakura','storm','desert','arctic2','galaxy','flame'];
 
 function setGradientTheme(name) {
-  // Only set the background gradient, not all theme colors
   const gradTheme = GRADIENT_THEMES[name];
+  if (!gradTheme) return;
+  // Apply all theme CSS variables (text, card, border colors, etc.)
+  applyThemeVars(gradTheme);
+  // Then overlay the gradient on the body background
   const grad = gradDirection === 'radial'
     ? `radial-gradient(circle, ${gradTheme.grad.match(/#[0-9a-f]{6}/gi).join(', ')})`
     : gradTheme.grad;
@@ -2631,8 +2634,8 @@ window.applyThemeFromFirestore = function(t) {
     document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(t.color)]?.classList.add('active');
     currentTheme = t;
   } else if (t.mode === 'gradient' && t.color && GRADIENT_THEMES[t.color]) {
-    // For preset gradients, only set body background and keep base theme
     const gradTheme = GRADIENT_THEMES[t.color];
+    applyThemeVars(gradTheme);
     gradDirection = t.gradDirection || 'linear';
     const grad = gradDirection === 'radial'
       ? `radial-gradient(circle, ${gradTheme.grad.match(/#[0-9a-f]{6}/gi).join(', ')})`
