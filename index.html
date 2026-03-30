@@ -3403,5 +3403,258 @@ buildDivisorGrid();
 buildLongDivGrid();
 buildRemainderDivGrid();
 </script>
+
+<!-- ── SUPPORT WIDGET ── -->
+<style>
+  /* Floating button */
+  #support-btn {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 9999;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff7043, #ff9800);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,112,67,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Nunito', sans-serif;
+  }
+  #support-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 22px rgba(255,112,67,0.55);
+  }
+
+  /* Popup overlay */
+  #support-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(2px);
+  }
+  #support-overlay.open { display: block; }
+
+  /* Popup card */
+  #support-popup {
+    display: none;
+    position: fixed;
+    bottom: 88px;
+    right: 22px;
+    z-index: 9999;
+    width: 320px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+    animation: popIn 0.22s ease;
+  }
+  #support-popup.open { display: block; }
+  @keyframes popIn {
+    from { transform: scale(0.88) translateY(16px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* Popup header */
+  #support-popup .sp-header {
+    background: linear-gradient(135deg, #ff7043, #ff9800);
+    padding: 16px 18px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #support-popup .sp-header h3 {
+    color: #fff;
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+  }
+  #support-popup .sp-header p {
+    color: rgba(255,255,255,0.88);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  #support-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 6px;
+    opacity: 0.85;
+  }
+  #support-close:hover { opacity: 1; background: rgba(255,255,255,0.2); }
+
+  /* Form body */
+  #support-popup .sp-body { padding: 16px 18px 18px; }
+  #support-popup .sp-body label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    margin-bottom: 4px;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  #support-popup .sp-body label:first-of-type { margin-top: 0; }
+  #support-popup .sp-body input,
+  #support-popup .sp-body textarea {
+    width: 100%;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.18s;
+    resize: none;
+  }
+  #support-popup .sp-body input:focus,
+  #support-popup .sp-body textarea:focus { border-color: #ff7043; }
+  #support-popup .sp-body textarea { height: 88px; }
+
+  #support-submit {
+    margin-top: 14px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff7043, #ff9800);
+    color: #fff;
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.18s, transform 0.15s;
+    box-shadow: 0 3px 10px rgba(255,112,67,0.35);
+  }
+  #support-submit:hover { opacity: 0.92; transform: translateY(-1px); }
+  #support-submit:disabled { opacity: 0.55; cursor: default; transform: none; }
+
+  /* Success message */
+  #support-success {
+    display: none;
+    text-align: center;
+    padding: 32px 20px;
+  }
+  #support-success .ss-emoji { font-size: 40px; }
+  #support-success h4 {
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 20px;
+    color: #ff7043;
+    margin: 10px 0 6px;
+  }
+  #support-success p { font-size: 14px; color: #888; }
+</style>
+
+<!-- Floating button -->
+<button id="support-btn" aria-label="Contact support" title="Contact support">💬</button>
+
+<!-- Popup -->
+<div id="support-overlay"></div>
+<div id="support-popup" role="dialog" aria-modal="true" aria-label="Contact Support">
+  <div class="sp-header">
+    <div>
+      <h3>💬 Contact Support</h3>
+      <p>We'll get back to you at support@mathpop.io</p>
+    </div>
+    <button id="support-close" aria-label="Close">✕</button>
+  </div>
+  <div class="sp-body" id="support-form-wrap">
+    <form id="support-form" action="https://formspree.io/f/mqegqzzj" method="POST">
+      <label for="sp-name">Your name</label>
+      <input id="sp-name" type="text" name="name" placeholder="e.g. Emma" required>
+
+      <label for="sp-email">Your email</label>
+      <input id="sp-email" type="email" name="email" placeholder="you@example.com" required>
+
+      <label for="sp-msg">Your message</label>
+      <textarea id="sp-msg" name="message" placeholder="What can we help you with?" required></textarea>
+
+      <button type="submit" id="support-submit">Send message ✉️</button>
+    </form>
+    <div id="support-success">
+      <div class="ss-emoji">🎉</div>
+      <h4>Message sent!</h4>
+      <p>Thanks! We'll reply to your email soon.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var btn     = document.getElementById('support-btn');
+  var popup   = document.getElementById('support-popup');
+  var overlay = document.getElementById('support-overlay');
+  var closeBtn= document.getElementById('support-close');
+  var form    = document.getElementById('support-form');
+  var submit  = document.getElementById('support-submit');
+  var success = document.getElementById('support-success');
+
+  function openPopup() {
+    popup.classList.add('open');
+    overlay.classList.add('open');
+  }
+  function closePopup() {
+    popup.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  btn.addEventListener('click', openPopup);
+  closeBtn.addEventListener('click', closePopup);
+  overlay.addEventListener('click', closePopup);
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+
+    var data = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+        setTimeout(function() {
+          closePopup();
+          setTimeout(function() {
+            form.style.display = '';
+            success.style.display = 'none';
+            form.reset();
+            submit.disabled = false;
+            submit.textContent = 'Send message ✉️';
+          }, 400);
+        }, 2800);
+      } else {
+        submit.disabled = false;
+        submit.textContent = 'Send message ✉️';
+        alert('Oops! Something went wrong. Please try again.');
+      }
+    })
+    .catch(function() {
+      submit.disabled = false;
+      submit.textContent = 'Send message ✉️';
+      alert('Oops! Something went wrong. Please try again.');
+    });
+  });
+})();
+</script>
+<!-- ── END SUPPORT WIDGET ── -->
 </body>
 </html>
