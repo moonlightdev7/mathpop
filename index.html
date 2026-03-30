@@ -1981,6 +1981,9 @@
       <button class="wb-btn" id="wbPanBtn" onclick="toggleWbPan()">🖐️ Pan</button>
       <button class="wb-btn" onclick="clearWhiteboard()">🗑️ Clear All</button>
       <div class="wb-zoom-controls">
+        <button class="wb-zoom-btn" onclick="wbUndo()" title="Undo" id="wbUndoBtn" style="font-size:13px">↩</button>
+        <button class="wb-zoom-btn" onclick="wbRedo()" title="Redo" id="wbRedoBtn" style="font-size:13px">↪</button>
+        <span style="width:6px"></span>
         <button class="wb-zoom-btn" onclick="wbZoom(-0.1)" title="Zoom out">−</button>
         <span class="wb-zoom-label" id="wbZoomLabel">100%</span>
         <button class="wb-zoom-btn" onclick="wbZoom(0.1)" title="Zoom in">+</button>
@@ -3649,6 +3652,37 @@ function hideTutorials() {
 
 // ── WHITEBOARD ──
 let wbDrawing = false, wbLastX = 0, wbLastY = 0, wbInitialized = false;
+let wbUndoStack = [], wbRedoStack = [], wbMaxHistory = 40;
+
+function wbSaveState() {
+  const c = document.getElementById('whiteboardCanvas');
+  if (!c.width) return;
+  wbUndoStack.push(c.toDataURL());
+  if (wbUndoStack.length > wbMaxHistory) wbUndoStack.shift();
+  wbRedoStack = [];
+}
+function wbUndo() {
+  const c = document.getElementById('whiteboardCanvas');
+  if (!c.width || wbUndoStack.length === 0) return;
+  wbRedoStack.push(c.toDataURL());
+  const img = new Image();
+  img.onload = () => { const ctx = c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(img,0,0); };
+  img.src = wbUndoStack.pop();
+}
+function wbRedo() {
+  const c = document.getElementById('whiteboardCanvas');
+  if (!c.width || wbRedoStack.length === 0) return;
+  wbUndoStack.push(c.toDataURL());
+  const img = new Image();
+  img.onload = () => { const ctx = c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(img,0,0); };
+  img.src = wbRedoStack.pop();
+}
+document.addEventListener('keydown', (e) => {
+  const wb = document.getElementById('whiteboardWrap');
+  if (!wb || wb.style.display === 'none') return;
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); wbUndo(); }
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); wbRedo(); }
+});
 
 // Text object system for move mode
 let textObjects  = [];  // {id, lines, x, y, sz, col, type}
@@ -3768,7 +3802,9 @@ function initWhiteboard() {
   }
   function startDraw(e) {
     if (wbMoveMode || wbPanMode) return;
-    e.preventDefault(); wbDrawing = true;
+    e.preventDefault();
+    wbSaveState();
+    wbDrawing = true;
     const p = getDrawPos(e); wbLastX = p.x; wbLastY = p.y;
   }
   function draw(e) {
@@ -3973,6 +4009,7 @@ function toggleEraser() {
 function clearWhiteboard() {
   const canvas = document.getElementById('whiteboardCanvas');
   if (!canvas.width) return;
+  wbSaveState();
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
