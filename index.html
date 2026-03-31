@@ -652,7 +652,7 @@
 
   /* ── TUTORIAL SCREEN ── */
   #tutorial-screen {
-    display: none; max-width: 700px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 900px; margin: 0 auto; padding-bottom: 40px;
   }
   .tutorial-back-btn {
     background: transparent; border: none; color: var(--primary);
@@ -664,6 +664,34 @@
     font-family: 'Fredoka One', cursive; font-size: 2rem;
     color: var(--primary); text-align: center; margin-bottom: 24px;
   }
+  .tutorial-layout {
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .tutorial-sidebar {
+    width: 220px; flex-shrink: 0; position: sticky; top: 60px;
+    background: var(--card); border-radius: 16px; padding: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
+  }
+  .tutorial-sidebar-title {
+    font-family: 'Fredoka One', cursive; font-size: 0.85rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 6px 10px; margin-bottom: 4px;
+  }
+  .tutorial-nav-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 10px 12px; border: none; border-radius: 12px;
+    background: transparent; color: var(--text); font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer;
+    transition: all 0.15s; text-align: left;
+  }
+  .tutorial-nav-btn:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); }
+  .tutorial-nav-btn.active { background: color-mix(in srgb, var(--primary) 15%, transparent); color: var(--primary); }
+  .tutorial-nav-btn .nav-emoji { font-size: 1rem; }
+  .tutorial-nav-btn .coming-tag {
+    font-size: 0.6rem; background: var(--primary); color: var(--bg);
+    padding: 1px 6px; border-radius: 8px; font-weight: 800; margin-left: auto;
+  }
+  .tutorial-content { flex: 1; min-width: 0; }
   .tutorial-section {
     background: var(--card); border-radius: 20px;
     padding: 24px; margin-bottom: 20px;
@@ -676,6 +704,12 @@
   .tutorial-section p {
     color: var(--text); font-size: 0.95rem; line-height: 1.6;
     margin: 0 0 14px 0;
+  }
+  @media (max-width: 700px) {
+    .tutorial-layout { flex-direction: column; }
+    .tutorial-sidebar { width: 100%; position: static; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; }
+    .tutorial-sidebar-title { width: 100%; }
+    .tutorial-nav-btn { width: auto; padding: 8px 12px; font-size: 0.75rem; }
   }
   .video-wrapper {
     position: relative; padding-bottom: 56.25%; height: 0;
@@ -1866,68 +1900,84 @@
   <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Practice</button>
   <div class="tutorial-title">🎬 Tutorials</div>
 
-  <div class="tutorial-section">
-    <h3>✖️ Multiplication</h3>
-    <p>Learn how to use the multiplication practice mode — from choosing your tables to mastering your facts!</p>
-    <div class="video-wrapper" id="video-multiply">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
-      </div>
-    </div>
-  </div>
+  <div class="tutorial-layout">
+    <!-- Sidebar -->
+    <nav class="tutorial-sidebar">
+      <div class="tutorial-sidebar-title">Categories</div>
+      <button class="tutorial-nav-btn active" onclick="showTutorialCategory('multiply')"><span class="nav-emoji">✖️</span> Multiplication</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('longmultiply')"><span class="nav-emoji">✖️</span> Long Multiply</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('shortdivide')"><span class="nav-emoji">➗</span> Short Division</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('longdivide')"><span class="nav-emoji">📐</span> Long Division</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('remainderdiv')"><span class="nav-emoji">🔢</span> Long ÷ Remainders</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('add')"><span class="nav-emoji">➕</span> Addition</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('subtract')"><span class="nav-emoji">➖</span> Subtraction</button>
+      <button class="tutorial-nav-btn" onclick="showTutorialCategory('wordproblems')"><span class="nav-emoji">📝</span> Word Problems</button>
+      <div class="tutorial-sidebar-title" style="margin-top:10px;">Coming Soon</div>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">🔣</span> Algebra <span class="coming-tag">SOON</span></button>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">½</span> Fractions <span class="coming-tag">SOON</span></button>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">0.5</span> Decimals <span class="coming-tag">SOON</span></button>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">📐</span> Geometry <span class="coming-tag">SOON</span></button>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">📊</span> Trigonometry <span class="coming-tag">SOON</span></button>
+      <button class="tutorial-nav-btn" disabled style="opacity:0.5;cursor:default;"><span class="nav-emoji">∫</span> Calculus <span class="coming-tag">SOON</span></button>
+    </nav>
 
-  <div class="tutorial-section">
-    <h3>➗ Short Division</h3>
-    <p>Master short division by picking your divisors and working through problems quickly in your head.</p>
-    <div class="video-wrapper" id="video-shortdivide">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
+    <!-- Content -->
+    <div class="tutorial-content">
+      <div class="tutorial-section" id="tut-multiply">
+        <h3>✖️ Multiplication</h3>
+        <p>Learn how to use the multiplication practice mode — pick your tables (1–30), choose quick select options, and start drilling your facts. The more questions you solve, the higher you rank!</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="tutorial-section">
-    <h3>📐 Long Division</h3>
-    <p>Tackle long division step by step! Use the scratch pad to work through bigger problems.</p>
-    <div class="video-wrapper" id="video-longdivide">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
+      <div class="tutorial-section" id="tut-longmultiply" style="display:none">
+        <h3>✖️ Long Multiplication</h3>
+        <p>Take on bigger multiplication problems with multi-digit numbers. Use the scratch pad to work through each step just like you would on paper.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="tutorial-section">
-    <h3>📐R Long Division with Remainders</h3>
-    <p>Take long division to the next level! Work out the quotient AND the leftover remainder — great for building real division fluency.</p>
-    <div class="video-wrapper" id="video-remainderdiv">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
+      <div class="tutorial-section" id="tut-shortdivide" style="display:none">
+        <h3>➗ Short Division</h3>
+        <p>Master short division by picking your divisors and working through problems quickly in your head. Great for building mental math speed.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="tutorial-section">
-    <h3>➕ Addition</h3>
-    <p>Build your addition speed from single digits all the way up to 10-digit numbers!</p>
-    <div class="video-wrapper" id="video-add">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
+      <div class="tutorial-section" id="tut-longdivide" style="display:none">
+        <h3>📐 Long Division</h3>
+        <p>Tackle long division step by step! Use the scratch pad to work through bigger problems and show your work.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="tutorial-section">
-    <h3>➖ Subtraction</h3>
-    <p>Practice subtraction at every level — choose your number sizes and sharpen your skills.</p>
-    <div class="video-wrapper" id="video-subtract">
-      <div class="video-placeholder">
-        <span>🎬</span>
-        <p>Tutorial video coming soon!</p>
+      <div class="tutorial-section" id="tut-remainderdiv" style="display:none">
+        <h3>🔢 Long Division with Remainders</h3>
+        <p>Work out the quotient AND the leftover remainder. This mode builds real division fluency and prepares you for fractions and decimals.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
+      </div>
+      <div class="tutorial-section" id="tut-add" style="display:none">
+        <h3>➕ Addition</h3>
+        <p>Build your addition speed from single digits all the way up to 10-digit numbers! Choose your problem size and go.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
+      </div>
+      <div class="tutorial-section" id="tut-subtract" style="display:none">
+        <h3>➖ Subtraction</h3>
+        <p>Practice subtraction at every level — choose your number sizes and sharpen your skills with instant feedback.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
+      </div>
+      <div class="tutorial-section" id="tut-wordproblems" style="display:none">
+        <h3>📝 Word Problems</h3>
+        <p>Solve realistic math word problems that mix all operations — addition, subtraction, multiplication, and division in real-world scenarios.</p>
+        <div class="video-wrapper">
+          <div class="video-placeholder"><span>🎬</span><p>Tutorial video coming soon!</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -3653,6 +3703,13 @@ function showTutorials() {
 function hideTutorials() {
   document.getElementById('tutorial-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
+}
+function showTutorialCategory(cat) {
+  document.querySelectorAll('.tutorial-content .tutorial-section').forEach(s => s.style.display = 'none');
+  const el = document.getElementById('tut-' + cat);
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('.tutorial-nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
 }
 
 // ── WHITEBOARD ──
