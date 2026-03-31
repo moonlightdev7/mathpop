@@ -1339,11 +1339,13 @@
       <img class="user-avatar" id="userAvatar" src="" alt="avatar">
       <span class="user-name" id="userName"></span>
     </div>
+    <button class="trophy-btn" id="tutorialBtn" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
     <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
     <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
   </div>
-  <!-- Leaderboard still accessible when signed out -->
+  <!-- Leaderboard & tutorials still accessible when signed out -->
+  <button class="trophy-btn" id="tutorialBtnGuest" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
   <button class="trophy-btn" id="leaderboardBtnGuest" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
 </div>
 
@@ -1521,7 +1523,6 @@
   </div>
 
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose at least one table to start!</button>
-  <button class="tutorial-link-btn" onclick="showTutorials()">🎬 Watch Tutorials</button>
 </div>
 
 <!-- ── ACHIEVEMENTS ── -->
@@ -5329,7 +5330,7 @@ buildRemainderDivGrid();
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;margin-bottom:36px;">
       <div>
         <h3 style="font-family:'Fredoka One',cursive;font-size:1.3rem;margin-bottom:12px;color:var(--primary);">Mathpop</h3>
-        <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Mathpop is a free math practice platform built by Late Night Labs. Master multiplication, division, addition, subtraction, and word problems with instant feedback, XP ranks, and leaderboards.</p>
+        <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Mathpop is a free math practice platform built by Late Night Labs. Solve problems to climb rankings, unlock titles, and compete on global leaderboards. Premium passes unlock advanced topics like algebra, fractions, and decimals.</p>
       </div>
       <div>
         <h4 style="font-size:0.9rem;font-weight:800;margin-bottom:12px;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;">Practice</h4>
@@ -5343,7 +5344,7 @@ buildRemainderDivGrid();
       </div>
       <div>
         <h4 style="font-size:0.9rem;font-weight:800;margin-bottom:12px;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;">About</h4>
-        <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Mathpop is made with care by <strong style="color:var(--text);">Late Night Labs</strong> — a small team passionate about making math fun and accessible for everyone, from elementary school students to adults.</p>
+        <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;"><strong style="color:var(--text);">Late Night Labs</strong> is a small team passionate about making math fun and accessible for everyone — from elementary school students learning their times tables to adults brushing up on arithmetic.</p>
       </div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:20px;text-align:center;">
