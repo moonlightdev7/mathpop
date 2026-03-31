@@ -1373,14 +1373,14 @@
       <img class="user-avatar" id="userAvatar" src="" alt="avatar">
       <span class="user-name" id="userName"></span>
     </div>
-    <button class="trophy-btn" id="tutorialBtn" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
     <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
     <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
     <button class="trophy-btn" id="trophyBtn" onclick="showQuests()" title="Achievements">🏆 <span class="trophy-label">Achievements</span></button>
+    <button class="trophy-btn" id="tutorialBtn" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
   </div>
-  <!-- Leaderboard & tutorials still accessible when signed out -->
-  <button class="trophy-btn" id="tutorialBtnGuest" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
+  <!-- Leaderboard & tutorials accessible when signed out -->
   <button class="trophy-btn" id="leaderboardBtnGuest" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
+  <button class="trophy-btn" id="tutorialBtnGuest" onclick="showTutorials()" title="Tutorials">🎬 <span class="trophy-label">Tutorials</span></button>
 </div>
 
 <!-- ── ACHIEVEMENT TOAST ── -->
@@ -2414,6 +2414,7 @@
       document.getElementById('signedOut').style.display = 'none';
       document.getElementById('signedIn').style.display  = 'flex';
       document.getElementById('leaderboardBtnGuest').style.display = 'none';
+      document.getElementById('tutorialBtnGuest').style.display = 'none';
 
       // Step 1: Load from localStorage instantly
       try {
@@ -2468,6 +2469,7 @@
         document.getElementById('signedOut').style.display = 'flex';
         document.getElementById('signedIn').style.display  = 'none';
         document.getElementById('leaderboardBtnGuest').style.display = 'inline-flex';
+    document.getElementById('tutorialBtnGuest').style.display = 'inline-flex';
         if (window.lockPremiumOnSignOut) window.lockPremiumOnSignOut();
         if (window.resetToGuest) window.resetToGuest();
       }
@@ -3697,12 +3699,10 @@ function playAgain() {
 
 // ── TUTORIALS ──
 function showTutorials() {
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('tutorial-screen').style.display = 'block';
+  switchScreen('tutorial-screen');
 }
 function hideTutorials() {
-  document.getElementById('tutorial-screen').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'block';
+  goHome();
 }
 function showTutorialCategory(cat) {
   document.querySelectorAll('.tutorial-content .tutorial-section').forEach(s => s.style.display = 'none');
@@ -4524,7 +4524,7 @@ window.resetToGuest = function() {
 };
 
 // ── SCREEN SWITCHING HELPER ──
-const ALL_SCREENS = ['setup-screen', 'settings-screen', 'achievement-screen', 'leaderboard-screen', 'gamepass-screen'];
+const ALL_SCREENS = ['setup-screen', 'settings-screen', 'achievement-screen', 'leaderboard-screen', 'gamepass-screen', 'tutorial-screen'];
 
 function switchScreen(activeId) {
   ALL_SCREENS.forEach(id => {
@@ -4755,6 +4755,7 @@ async function confirmDeleteAccount() {
     document.getElementById('signedOut').style.display = 'flex';
     document.getElementById('signedIn').style.display  = 'none';
     document.getElementById('leaderboardBtnGuest').style.display = 'inline-flex';
+    document.getElementById('tutorialBtnGuest').style.display = 'inline-flex';
   } catch(e) {
     console.error('[MathPop] Account deletion error:', e);
     // If requires-recent-login, tell user
