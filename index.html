@@ -652,7 +652,7 @@
 
   /* ── TUTORIAL SCREEN ── */
   #tutorial-screen {
-    display: none; max-width: 900px; margin: 0 auto; padding-bottom: 40px;
+    display: none; max-width: 900px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px;
   }
   .tutorial-back-btn {
     background: var(--primary); border: none; color: #fff;
@@ -1240,6 +1240,31 @@
     color: #f59e0b; font-size: 0.65rem; font-weight: 800;
     border-radius: 6px; letter-spacing: 0.5px; vertical-align: middle;
   }
+  /* Premium Plus — rainbow border */
+  .gp-premium-plus {
+    border: 2px solid transparent;
+    background-image: linear-gradient(var(--card), var(--card)), linear-gradient(90deg, #ff0000, #ff8800, #ffdd00, #00cc44, #0088ff, #8800ff, #ff00cc);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+  .gp-premium-plus::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #ff0000, #ff8800, #ffdd00, #00cc44, #0088ff, #8800ff, #ff00cc);
+  }
+  .gp-premium-plus-badge {
+    position: absolute; top: 12px; right: 16px;
+    background: linear-gradient(90deg, #0088ff, #8800ff, #ff00cc);
+    color: white; font-family: 'Fredoka One', cursive; font-size: 0.65rem;
+    padding: 3px 10px; border-radius: 8px; letter-spacing: 1px;
+  }
+  .gp-premium-plus-btn { background: linear-gradient(90deg, #0088ff, #8800ff, #ff00cc) !important; }
+  .gp-premium-plus-perk {
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    padding: 10px 14px; border-radius: 12px;
+    background: color-mix(in srgb, #8800ff 8%, var(--bg));
+    line-height: 1.4;
+  }
+  .gp-premium-plus-perk strong { color: #bb77ff; }
 
   /* ── LEADERBOARD SCREEN ── */
   #leaderboard-screen {
@@ -1676,6 +1701,30 @@
     </div>
     <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
+  </div>
+
+  <!-- Premium Plus Pass -->
+  <div class="gp-card gp-premium-plus">
+    <div class="gp-premium-plus-badge">PREMIUM PLUS</div>
+    <div class="gp-card-header">
+      <span class="gp-emoji">💎</span>
+      <div>
+        <div class="gp-name" style="color:#bb77ff">Premium Plus Pass</div>
+        <div class="gp-price">$9.99/month or $99.99/year (save 17%!)</div>
+      </div>
+    </div>
+    <div class="gp-desc">The ultimate Mathpop experience. Everything in Premium Pass plus exclusive perks for the most dedicated math champions.</div>
+    <div class="gp-perks">
+      <div class="gp-premium-plus-perk">👑 <strong>Everything in Premium Pass</strong> — crown badge, 3 equipped titles, and all premium features</div>
+      <div class="gp-premium-plus-perk">💎 <strong>Diamond badge</strong> next to your name on leaderboards</div>
+      <div class="gp-premium-plus-perk">🏷️ <strong>Exclusive premium title</strong> only available to Premium Plus members</div>
+      <div class="gp-premium-plus-perk">📐 <strong>Advanced math</strong> — calculus, trigonometry, and more
+        <span class="gp-coming-soon">COMING SOON</span>
+      </div>
+      <div class="gp-premium-plus-perk">⚡ <strong>Priority access</strong> to every new feature and category before anyone else</div>
+    </div>
+    <button class="gp-buy-btn gp-premium-plus-btn" id="gpPremiumPlusBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <div class="gp-owned" id="gpPremiumPlusOwned" style="display:none">✅ Active — thank you for being a Mathpop champion!</div>
   </div>
 </div>
 
