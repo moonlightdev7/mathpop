@@ -2645,6 +2645,7 @@ function clearActive() { document.querySelectorAll('.swatch-btn').forEach(b => b
 window.applyThemeFromFirestore = function(t) {
   if (!t) return;
   if (t.mode === 'neon' && t.color) {
+    document.body.style.background = '';
     applyThemeVars(NEON[t.color]);
     clearActive();
     document.querySelectorAll('#neonSwatches .swatch-btn')[['cyber','synthwave','sunset','arctic','toxic','candy','aurora','ocean','lava','matrix','rose','golden','midnight','blood','vapor'].indexOf(t.color)]?.classList.add('active');
@@ -2680,6 +2681,7 @@ window.applyThemeFromFirestore = function(t) {
     });
     currentTheme = t;
   } else if (t.mode && t.color) {
+    document.body.style.background = '';
     applyThemeVars(t.mode === 'dark' ? DARK[t.color] : LIGHT[t.color]);
     clearActive();
     const rows = document.querySelectorAll('.theme-row');
