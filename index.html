@@ -655,11 +655,12 @@
     display: none; max-width: 900px; margin: 0 auto; padding-bottom: 40px;
   }
   .tutorial-back-btn {
-    background: transparent; border: none; color: var(--primary);
+    background: var(--primary); border: none; color: #fff;
     font-family: 'Fredoka One', cursive; font-size: 1.1rem;
-    cursor: pointer; padding: 8px 0; margin-bottom: 16px;
+    cursor: pointer; padding: 10px 20px; margin-bottom: 16px;
+    border-radius: 8px; display: inline-block;
   }
-  .tutorial-back-btn:hover { text-decoration: underline; }
+  .tutorial-back-btn:hover { opacity: 0.85; }
   .tutorial-title {
     font-family: 'Fredoka One', cursive; font-size: 2rem;
     color: var(--primary); text-align: center; margin-bottom: 24px;
@@ -1897,7 +1898,7 @@
 
 <!-- ── TUTORIAL ── -->
 <div id="tutorial-screen">
-  <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Practice</button>
+  <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Homepage</button>
   <div class="tutorial-title">🎬 Tutorials</div>
 
   <div class="tutorial-layout">

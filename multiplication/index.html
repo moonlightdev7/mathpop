@@ -48,41 +48,31 @@
         }
 
         header {
-            background-color: var(--card);
-            border-bottom: 2px solid var(--border);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            background-color: #001c2d;
+            border-bottom: 2px solid #003050;
+            padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-
         .logo {
-            font-family: 'Fredoka One', sans-serif;
+            font-family: 'Fredoka One', cursive;
             font-size: 1.5rem;
-            color: var(--primary);
+            color: #63b3ed;
             text-decoration: none;
         }
-
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         nav a {
-            color: var(--text);
+            color: #e2e8f0;
             text-decoration: none;
-            margin-left: 1.5rem;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
         }
-
-        nav a:hover {
-            color: var(--primary);
-        }
+        nav a:hover { color: #63b3ed; }
 
         main {
             max-width: 1200px;
@@ -209,14 +199,8 @@
                 font-size: 2rem;
             }
 
-            .logo {
-                font-size: 1.2rem;
-            }
-
-            nav a {
-                margin-left: 1rem;
-                font-size: 0.8rem;
-            }
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
 
             .section {
                 padding: 1.5rem;
@@ -231,19 +215,17 @@
 <body>
     <!-- Navigation -->
     <header>
-        <div class="nav-container">
-            <a href="https://mathpop.io/" class="logo">Mathpop</a>
-            <nav>
-                <a href="https://mathpop.io/">Home</a>
-                <a href="https://mathpop.io/addition/">Addition</a>
-                <a href="https://mathpop.io/subtraction/">Subtraction</a>
-                <a href="https://mathpop.io/multiplication/">Multiplication</a>
-                <a href="https://mathpop.io/division/">Division</a>
-                <a href="https://mathpop.io/word-problems/">Word Problems</a>
-                <a href="https://mathpop.io/#premium" title="Coming Soon">Premium Pass</a>
-                <a href="https://mathpop.io/#premium-plus" title="Coming Soon">Premium Plus</a>
-            </nav>
-        </div>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+            <a href="https://mathpop.io/premium-plus/">Premium Plus</a>
+        </nav>
     </header>
 
     <!-- Main Content -->

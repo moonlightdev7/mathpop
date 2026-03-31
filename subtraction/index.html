@@ -101,43 +101,32 @@
         header {
             background-color: #001c2d;
             border-bottom: 2px solid #003050;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-
         .logo {
-            font-family: 'Fredoka One', sans-serif;
+            font-family: 'Fredoka One', cursive;
             font-size: 1.5rem;
             color: #63b3ed;
             text-decoration: none;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #f0f9ff;
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a {
+            color: #e2e8f0;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
         }
-
-        .nav-links a:hover {
-            color: #63b3ed;
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) {
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
         }
 
         main {
@@ -281,9 +270,8 @@
                 font-size: 1.8rem;
             }
 
-            .nav-links {
-                gap: 1rem;
-                font-size: 0.85rem;
+            nav {
+                justify-content: center;
             }
 
             main {
@@ -302,18 +290,16 @@
 </head>
 <body>
     <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
         <nav>
-            <a href="https://mathpop.io/" class="logo">Mathpop</a>
-            <ul class="nav-links">
-                <li><a href="https://mathpop.io/">Home</a></li>
-                <li><a href="https://mathpop.io/addition/">Addition</a></li>
-                <li><a href="https://mathpop.io/subtraction/">Subtraction</a></li>
-                <li><a href="https://mathpop.io/multiplication/">Multiplication</a></li>
-                <li><a href="https://mathpop.io/division/">Division</a></li>
-                <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
-                <li><a href="https://mathpop.io/#premium" title="Coming Soon">Premium Pass</a></li>
-                <li><a href="https://mathpop.io/#premium-plus" title="Coming Soon">Premium Plus</a></li>
-            </ul>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+            <a href="https://mathpop.io/premium-plus/">Premium Plus</a>
         </nav>
     </header>
 
