@@ -6,8 +6,8 @@
 <title>Mathpop — Free Math Practice & Math Games | Multiplication, Division, Word Problems & More</title>
 
 <!-- SEO -->
-<meta name="description" content="Mathpop is the free math practice platform for students of all ages. Master multiplication tables 1–30, short & long division, addition, subtraction, and realistic word problems. Climb the ranks, unlock titles, and compete on global leaderboards with instant feedback and customizable themes. No download needed — play in your browser.">
-<meta name="keywords" content="math practice, free math games, multiplication practice, multiplication tables 1-30, times tables game, division practice, long division practice, short division, addition practice, subtraction practice, math word problems, word problem practice, mental math trainer, arithmetic practice, math facts drill, math quiz, math game online, math for kids, math for students, math for adults, math skill builder, learn multiplication, learn division, math leaderboard, competitive math, math XP, math ranks, math achievements, gamified math, interactive math, elementary math, middle school math, high school math, college math prep, SAT math practice, GRE math practice, math fluency, number sense, math speed drill, math challenge, daily math practice, free math website, online math practice, browser math game, math education, STEM practice, mathpop">
+<meta name="description" content="Mathpop is the free math practice platform for students of all ages. Master multiplication, division, addition, subtraction, fractions, decimals, percentages, geometry, algebra, and word problems. Climb the ranks, unlock titles, and compete on global leaderboards with instant feedback and customizable themes. No download needed — play in your browser.">
+<meta name="keywords" content="math practice, free math games, multiplication practice, multiplication tables 1-30, times tables game, division practice, long division practice, short division, addition practice, subtraction practice, fractions practice, simplify fractions, add fractions, mixed numbers, decimals practice, percentages practice, percent of a number, geometry practice, area perimeter volume, algebra practice, solve equations, math word problems, word problem practice, mental math trainer, arithmetic practice, math facts drill, math quiz, math game online, math for kids, math for students, math for adults, math skill builder, learn multiplication, learn division, math leaderboard, competitive math, math XP, math ranks, math achievements, gamified math, interactive math, elementary math, middle school math, high school math, college math prep, SAT math practice, GRE math practice, math fluency, number sense, math speed drill, math challenge, daily math practice, free math website, online math practice, browser math game, math education, STEM practice, mathpop">
 <meta name="author" content="Mathpop">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <link rel="canonical" href="https://mathpop.io/">
@@ -35,7 +35,7 @@
   "@type": "WebApplication",
   "name": "Mathpop",
   "url": "https://mathpop.io/",
-  "description": "Mathpop is a free math practice platform for students of all ages. Practice multiplication tables (1–30), short and long division, addition, subtraction, and realistic math word problems. Features rankings, unlockable titles, quests, global leaderboards, a built-in scratch pad, and customizable themes.",
+  "description": "Mathpop is a free math practice platform for students of all ages. Practice multiplication tables (1–30), short and long division, addition, subtraction, fractions, decimals, percentages, geometry, algebra, and realistic math word problems. Features rankings, unlockable titles, quests, global leaderboards, a built-in scratch pad, and customizable themes.",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
   "featureList": [
@@ -46,11 +46,16 @@
     "Addition up to 10-digit numbers",
     "Subtraction up to 10-digit numbers",
     "Realistic math word problems",
+    "Fractions — simplify, add, subtract, multiply, divide, mixed numbers",
+    "Decimals — arithmetic, rounding, place value, conversions",
+    "Percentages — of a number, increase/decrease, reverse percentage, interest",
+    "Geometry — area, perimeter, volume, Pythagorean theorem, coordinate geometry",
+    "Algebra — equations, quadratics, logarithms, systems, sequences, functions",
     "Rankings and unlockable titles",
     "Global leaderboards",
     "Infinite canvas whiteboard",
     "Customizable color themes",
-    "Premium Pass with advanced features"
+    "Premium Pass with 5 advanced math categories"
   ],
   "offers": {
     "@type": "Offer",
@@ -781,6 +786,12 @@
   }
   .remainder-input-wrap { flex: 1; }
   .remainder-input-wrap .answer-input { width: 100%; box-sizing: border-box; }
+  /* Fraction answer input */
+  .fraction-answer-row { display: flex; align-items: center; gap: 10px; }
+  .fraction-slash { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--primary); flex-shrink: 0; line-height: 1; }
+  .fraction-answer-row .answer-input { flex: 1; min-width: 0; }
+  /* Float/decimal answer input — allow step */
+  .answer-input[step] { letter-spacing: 0.5px; }
   .feedback {
     border-radius: 16px; padding: 16px 20px; display: none;
     align-items: center; gap: 12px; font-weight: 700; font-size: 1rem;
@@ -1557,6 +1568,112 @@
           <button class="mode-btn" id="wpBtn-wp_remdiv" onclick="toggleWordOp('wp_remdiv')">📐R Remainder</button>
         </div>
       </div>
+
+      <!-- ── FRACTIONS SETUP ── -->
+      <div id="setup-fractions" style="display:none">
+        <p class="section-label">Choose Fraction Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllFracOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllFracOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="fracOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="fracBtn-frac_simplify"   onclick="toggleFracOp('frac_simplify')">✂️ Simplify</button>
+          <button class="mode-btn" id="fracBtn-frac_add"        onclick="toggleFracOp('frac_add')">➕ Add Fractions</button>
+          <button class="mode-btn" id="fracBtn-frac_sub"        onclick="toggleFracOp('frac_sub')">➖ Subtract</button>
+          <button class="mode-btn" id="fracBtn-frac_mul"        onclick="toggleFracOp('frac_mul')">✖️ Multiply</button>
+          <button class="mode-btn" id="fracBtn-frac_div"        onclick="toggleFracOp('frac_div')">➗ Divide</button>
+          <button class="mode-btn" id="fracBtn-frac_mixed_add"  onclick="toggleFracOp('frac_mixed_add')">½➕ Mixed Add</button>
+          <button class="mode-btn" id="fracBtn-frac_mixed_sub"  onclick="toggleFracOp('frac_mixed_sub')">½➖ Mixed Subtract</button>
+          <button class="mode-btn" id="fracBtn-frac_mixed_mul"  onclick="toggleFracOp('frac_mixed_mul')">½✖️ Mixed Multiply</button>
+          <button class="mode-btn" id="fracBtn-frac_mixed_div"  onclick="toggleFracOp('frac_mixed_div')">½➗ Mixed Divide</button>
+          <button class="mode-btn" id="fracBtn-frac_of"         onclick="toggleFracOp('frac_of')">🔢 Fraction of #</button>
+          <button class="mode-btn" id="fracBtn-frac_to_dec"     onclick="toggleFracOp('frac_to_dec')">🔄 Frac → Decimal</button>
+          <button class="mode-btn" id="fracBtn-frac_complex"    onclick="toggleFracOp('frac_complex')">🔀 Complex Fractions</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">💡 Enter fraction answers using the ½ input that appears below the question</p>
+      </div>
+
+      <!-- ── DECIMALS SETUP ── -->
+      <div id="setup-decimals" style="display:none">
+        <p class="section-label">Choose Decimal Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllDecOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllDecOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="decOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="decBtn-dec_add"            onclick="toggleDecOp('dec_add')">➕ Add Decimals</button>
+          <button class="mode-btn" id="decBtn-dec_sub"            onclick="toggleDecOp('dec_sub')">➖ Subtract</button>
+          <button class="mode-btn" id="decBtn-dec_mul"            onclick="toggleDecOp('dec_mul')">✖️ Multiply</button>
+          <button class="mode-btn" id="decBtn-dec_div"            onclick="toggleDecOp('dec_div')">➗ Divide</button>
+          <button class="mode-btn" id="decBtn-dec_round"          onclick="toggleDecOp('dec_round')">🔄 Rounding</button>
+          <button class="mode-btn" id="decBtn-dec_frac_to_dec"    onclick="toggleDecOp('dec_frac_to_dec')">½→ Frac to Dec</button>
+          <button class="mode-btn" id="decBtn-dec_percent_to_dec" onclick="toggleDecOp('dec_percent_to_dec')">%→ Percent to Dec</button>
+          <button class="mode-btn" id="decBtn-dec_place_value"    onclick="toggleDecOp('dec_place_value')">📍 Place Value</button>
+        </div>
+      </div>
+
+      <!-- ── PERCENTAGES SETUP ── -->
+      <div id="setup-percentages" style="display:none">
+        <p class="section-label">Choose Percentage Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllPctOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllPctOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="pctOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="pctBtn-pct_of"       onclick="togglePctOp('pct_of')">🔢 % of a Number</button>
+          <button class="mode-btn" id="pctBtn-pct_what"     onclick="togglePctOp('pct_what')">❓ What % is it?</button>
+          <button class="mode-btn" id="pctBtn-pct_increase" onclick="togglePctOp('pct_increase')">📈 % Increase</button>
+          <button class="mode-btn" id="pctBtn-pct_decrease" onclick="togglePctOp('pct_decrease')">📉 % Decrease</button>
+          <button class="mode-btn" id="pctBtn-pct_change"   onclick="togglePctOp('pct_change')">🔄 % Change</button>
+          <button class="mode-btn" id="pctBtn-pct_reverse"  onclick="togglePctOp('pct_reverse')">↩️ Reverse %</button>
+          <button class="mode-btn" id="pctBtn-pct_interest" onclick="togglePctOp('pct_interest')">💰 Simple Interest</button>
+          <button class="mode-btn" id="pctBtn-pct_tax"      onclick="togglePctOp('pct_tax')">🧾 Tax / Discount</button>
+        </div>
+      </div>
+
+      <!-- ── GEOMETRY SETUP ── -->
+      <div id="setup-geometry" style="display:none">
+        <p class="section-label">Choose Geometry Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllGeoOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllGeoOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="geoOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="geoBtn-geo_area"        onclick="toggleGeoOp('geo_area')">📐 Area</button>
+          <button class="mode-btn" id="geoBtn-geo_perimeter"   onclick="toggleGeoOp('geo_perimeter')">📏 Perimeter</button>
+          <button class="mode-btn" id="geoBtn-geo_volume"      onclick="toggleGeoOp('geo_volume')">📦 Volume</button>
+          <button class="mode-btn" id="geoBtn-geo_surface"     onclick="toggleGeoOp('geo_surface')">🌐 Surface Area</button>
+          <button class="mode-btn" id="geoBtn-geo_angles"      onclick="toggleGeoOp('geo_angles')">📐 Angles</button>
+          <button class="mode-btn" id="geoBtn-geo_pythagoras"  onclick="toggleGeoOp('geo_pythagoras')">📐² Pythagorean Thm</button>
+          <button class="mode-btn" id="geoBtn-geo_coordinate"  onclick="toggleGeoOp('geo_coordinate')">🗺️ Coordinate Geo</button>
+          <button class="mode-btn" id="geoBtn-geo_circles"     onclick="toggleGeoOp('geo_circles')">⭕ Circles</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">💡 Answers with π are rounded to 2 decimal places</p>
+      </div>
+
+      <!-- ── ALGEBRA SETUP ── -->
+      <div id="setup-algebra" style="display:none">
+        <p class="section-label">Choose Algebra Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllAlgOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllAlgOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="algOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="algBtn-alg_one_step"   onclick="toggleAlgOp('alg_one_step')">1️⃣ One-Step Eq</button>
+          <button class="mode-btn" id="algBtn-alg_two_step"   onclick="toggleAlgOp('alg_two_step')">2️⃣ Two-Step Eq</button>
+          <button class="mode-btn" id="algBtn-alg_multi_step" onclick="toggleAlgOp('alg_multi_step')">🔢 Multi-Step Eq</button>
+          <button class="mode-btn" id="algBtn-alg_quadratic"  onclick="toggleAlgOp('alg_quadratic')">² Quadratics</button>
+          <button class="mode-btn" id="algBtn-alg_factor"     onclick="toggleAlgOp('alg_factor')">✂️ Factoring</button>
+          <button class="mode-btn" id="algBtn-alg_exponent"   onclick="toggleAlgOp('alg_exponent')">xⁿ Exponents</button>
+          <button class="mode-btn" id="algBtn-alg_log"        onclick="toggleAlgOp('alg_log')">log Logarithms</button>
+          <button class="mode-btn" id="algBtn-alg_system"     onclick="toggleAlgOp('alg_system')">⚖️ Systems of Eqs</button>
+          <button class="mode-btn" id="algBtn-alg_inequality" onclick="toggleAlgOp('alg_inequality')">≥ Inequalities</button>
+          <button class="mode-btn" id="algBtn-alg_sequence"   onclick="toggleAlgOp('alg_sequence')">📈 Sequences</button>
+          <button class="mode-btn" id="algBtn-alg_function"   onclick="toggleAlgOp('alg_function')">f(x) Functions</button>
+          <button class="mode-btn" id="algBtn-alg_poly"       onclick="toggleAlgOp('alg_poly')">📊 Polynomials</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1567,17 +1684,16 @@
       <span id="moreMathArrow" style="transition:transform 0.3s">▼</span>
     </button>
     <div id="moreMathPanel" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease">
-      <div style="padding:14px 0 4px;display:flex;flex-wrap:wrap;gap:8px">
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📐 Geometry <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📊 Fractions <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">🔺 Trigonometry <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">🔢 Decimals <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">📈 Algebra <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
-        <button class="mode-btn" disabled style="opacity:0.55;cursor:default">∫ Calculus <span class="gp-coming-soon" style="margin-left:6px">SOON</span></button>
+      <div style="padding:14px 0 4px;display:flex;flex-wrap:wrap;gap:8px" id="premiumModeBtns">
+        <button class="mode-btn" id="modeBtn-fractions"   onclick="setPremiumMode('fractions')">📊 Fractions 👑</button>
+        <button class="mode-btn" id="modeBtn-decimals"    onclick="setPremiumMode('decimals')">🔢 Decimals 👑</button>
+        <button class="mode-btn" id="modeBtn-percentages" onclick="setPremiumMode('percentages')">📈 Percentages 👑</button>
+        <button class="mode-btn" id="modeBtn-geometry"    onclick="setPremiumMode('geometry')">📐 Geometry 👑</button>
+        <button class="mode-btn" id="modeBtn-algebra"     onclick="setPremiumMode('algebra')">🔣 Algebra 👑</button>
       </div>
-      <div style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center">
-        👑 These categories are coming soon with the <strong>Premium Pass</strong>!
-        <button class="gp-buy-btn gp-premium-btn" disabled style="margin-top:10px;padding:8px 20px;font-size:0.85rem;opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+      <div id="premiumLockedMsg" style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center;display:none">
+        👑 These categories require the <strong>Premium Pass</strong>.
+        <button class="gp-buy-btn gp-premium-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem;">👑 Get Premium Pass</button>
       </div>
     </div>
   </div>
@@ -1694,12 +1810,10 @@
     <div class="gp-perks">
       <div class="gp-perk">👑 <strong>Crown badge</strong> next to your name on the homepage and leaderboards</div>
       <div class="gp-perk">🏷️ <strong>Equip up to 3 titles</strong> at once</div>
-      <div class="gp-perk">🔢 <strong>Complex math categories</strong> — geometry, trig, fractions, decimals, algebra, calculus
-        <span class="gp-coming-soon">COMING SOON</span>
-      </div>
+      <div class="gp-perk">🔢 <strong>5 advanced math categories</strong> — Fractions, Decimals, Percentages, Geometry, and Algebra (with full sub-topics from basics to college-level)</div>
       <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
-    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="document.getElementById('modalPremium').style.display='flex'" style="">👑 Get Premium Pass</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
   </div>
 
@@ -2053,6 +2167,12 @@
         <div class="remainder-input-wrap">
           <input type="number" class="answer-input" id="remainderInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
         </div>
+      </div>
+      <!-- Fraction answer: numerator / denominator -->
+      <div class="fraction-answer-row" id="fractionWrap" style="display:none">
+        <input type="number" class="answer-input" id="fracNumerInput" placeholder="numerator" autocomplete="off" onkeydown="handleFracKey(event)"/>
+        <span class="fraction-slash">/ </span>
+        <input type="number" class="answer-input" id="fracDenomInput" placeholder="denominator" min="1" autocomplete="off" onkeydown="handleFracKey(event)"/>
       </div>
     </div>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
@@ -2846,6 +2966,9 @@ window.unlockPremium = function(silent = false) {
   // Update subscription section if visible
   const subStatus = document.getElementById('subStatus');
   if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Active</span><div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">Your subscription renews automatically. Manage it via PayPal.</div>';
+  // Hide locked message in More Math panel
+  const lockedMsg = document.getElementById('premiumLockedMsg');
+  if (lockedMsg) lockedMsg.style.display = 'none';
   if (!silent) {
     closeModals();
     showPremiumCongrats();
@@ -3230,6 +3353,54 @@ function genRemainderDiv(cfg) {
 function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 const ALL_MODES = ['multiply','longmultiply','shortdivide','longdivide','remainderdiv','add','subtract','wordproblems'];
+const PREMIUM_MODES = ['fractions','decimals','percentages','geometry','algebra'];
+
+// Answer type tracking for premium modes
+let currentAnswerType = 'integer'; // 'integer' | 'fraction' | 'float'
+let currentAnswerNumerator = 0;
+let currentAnswerDenominator = 1;
+
+// Math utilities
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a || 1; }
+function lcm(a, b) { return Math.abs(a * b) / gcd(a, b); }
+function reduceFrac(n, d) { const g = gcd(Math.abs(n), d); return [n / g, d / g]; }
+
+function setAnswerMode(type) {
+  currentAnswerType = type;
+  const fracWrap  = document.getElementById('fractionWrap');
+  const ansInput  = document.getElementById('answerInput');
+  const remWrap   = document.getElementById('remainderWrap');
+  if (type === 'fraction') {
+    fracWrap.style.display = 'flex';
+    ansInput.style.display = 'none';
+    remWrap.style.display  = 'none';
+    document.getElementById('fracNumerInput').value = '';
+    document.getElementById('fracDenomInput').value = '';
+  } else {
+    fracWrap.style.display = 'none';
+    ansInput.style.display = '';
+    ansInput.value = '';
+    if (type === 'float') {
+      ansInput.setAttribute('step', '0.01');
+      ansInput.removeAttribute('min');
+    } else {
+      ansInput.removeAttribute('step');
+      ansInput.setAttribute('min', '0');
+    }
+  }
+}
+
+function setPremiumMode(mode) {
+  if (!window.isPremium) {
+    document.getElementById('premiumLockedMsg').style.display = 'block';
+    document.getElementById('premiumLockedMsg').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+  setMode(mode);
+  // Scroll setup panel into view
+  const setupEl = document.getElementById('setup-' + mode);
+  if (setupEl) setupEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
 function setMode(mode) {
   currentMode = mode;
@@ -3238,14 +3409,34 @@ function setMode(mode) {
   selectedLongMul.clear();
   selectedRemainderDiv.clear();
   if (mode !== 'wordproblems') { selectedWordOps.clear(); document.querySelectorAll('#wordOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'fractions')    { selectedFracOps.clear(); document.querySelectorAll('#fracOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'decimals')     { selectedDecOps.clear();  document.querySelectorAll('#decOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'percentages')  { selectedPctOps.clear();  document.querySelectorAll('#pctOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'geometry')     { selectedGeoOps.clear();  document.querySelectorAll('#geoOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'algebra')      { selectedAlgOps.clear();  document.querySelectorAll('#algOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+
   ALL_MODES.forEach(m => {
-    document.getElementById('modeBtn-' + m).classList.toggle('active', m === mode);
-    document.getElementById('setup-' + m).style.display = m === mode ? 'block' : 'none';
+    const btn = document.getElementById('modeBtn-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+    const setup = document.getElementById('setup-' + m);
+    if (setup) setup.style.display = m === mode ? 'block' : 'none';
   });
+  PREMIUM_MODES.forEach(m => {
+    const btn = document.getElementById('modeBtn-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+    const setup = document.getElementById('setup-' + m);
+    if (setup) setup.style.display = m === mode ? 'block' : 'none';
+  });
+
   document.querySelectorAll('.digit-btn').forEach(b => b.classList.remove('selected'));
-  // Show/hide remainder input row
+
+  // Show/hide remainder input row (only for integer remainder mode)
   const isRemainder = mode === 'remainderdiv';
   document.getElementById('remainderWrap').style.display = isRemainder ? 'flex' : 'none';
+  // Fraction input hidden by default — shown per-question in nextQuestion()
+  document.getElementById('fractionWrap').style.display = 'none';
+  document.getElementById('answerInput').style.display = '';
+
   const info = {
     multiply:     { emoji:'✖️',  sub:'Pick your tables and start practicing!' },
     longmultiply: { emoji:'✖️📐', sub:'Pick number sizes for long multiplication!' },
@@ -3255,6 +3446,11 @@ function setMode(mode) {
     add:          { emoji:'➕',  sub:'Pick number sizes and start adding!' },
     subtract:     { emoji:'➖',  sub:'Pick number sizes and start subtracting!' },
     wordproblems: { emoji:'📝',  sub:'Pick your operation types and solve real-world word problems!' },
+    fractions:    { emoji:'½',   sub:'Choose fraction topics — from simplifying to complex operations!' },
+    decimals:     { emoji:'🔢',  sub:'Practice decimal arithmetic, rounding, and conversions!' },
+    percentages:  { emoji:'📈',  sub:'Master percentages — from basics to reverse percentage!' },
+    geometry:     { emoji:'📐',  sub:'Area, perimeter, volume, angles, Pythagorean theorem and more!' },
+    algebra:      { emoji:'🔣',  sub:'From one-step equations to logarithms and polynomial functions!' },
   };
   document.getElementById('modeEmoji').textContent = info[mode].emoji;
   document.getElementById('modeEmoji2').textContent = info[mode].emoji;
@@ -3370,6 +3566,64 @@ function clearAllWordOps() {
   updateStartBtn();
 }
 
+// ── PREMIUM MODE OP SETS ──
+const selectedFracOps = new Set();
+const selectedDecOps  = new Set();
+const selectedPctOps  = new Set();
+const selectedGeoOps  = new Set();
+const selectedAlgOps  = new Set();
+
+const FRAC_OPS = ['frac_simplify','frac_add','frac_sub','frac_mul','frac_div','frac_mixed_add','frac_mixed_sub','frac_mixed_mul','frac_mixed_div','frac_of','frac_to_dec','frac_complex'];
+const DEC_OPS  = ['dec_add','dec_sub','dec_mul','dec_div','dec_round','dec_frac_to_dec','dec_percent_to_dec','dec_place_value'];
+const PCT_OPS  = ['pct_of','pct_what','pct_increase','pct_decrease','pct_change','pct_reverse','pct_interest','pct_tax'];
+const GEO_OPS  = ['geo_area','geo_perimeter','geo_volume','geo_surface','geo_angles','geo_pythagoras','geo_coordinate','geo_circles'];
+const ALG_OPS  = ['alg_one_step','alg_two_step','alg_multi_step','alg_quadratic','alg_factor','alg_exponent','alg_log','alg_system','alg_inequality','alg_sequence','alg_function','alg_poly'];
+
+function makeToggle(set, prefix, allOps, updateFn) {
+  return function(op) {
+    const btn = document.getElementById(prefix + op);
+    if (set.has(op)) { set.delete(op); if(btn) btn.classList.remove('active'); }
+    else             { set.add(op);    if(btn) btn.classList.add('active'); }
+    updateStartBtn();
+  };
+}
+function makeSelectAll(set, prefix, allOps) {
+  return function() { allOps.forEach(op => { set.add(op); const b=document.getElementById(prefix+op); if(b) b.classList.add('active'); }); updateStartBtn(); };
+}
+function makeClearAll(set, gridId) {
+  return function() { set.clear(); document.querySelectorAll('#'+gridId+' .mode-btn').forEach(b=>b.classList.remove('active')); updateStartBtn(); };
+}
+
+const toggleFracOp  = makeToggle(selectedFracOps, 'fracBtn-', FRAC_OPS);
+const selectAllFracOps = makeSelectAll(selectedFracOps, 'fracBtn-', FRAC_OPS);
+const clearAllFracOps  = makeClearAll(selectedFracOps, 'fracOpsGrid');
+
+const toggleDecOp   = makeToggle(selectedDecOps,  'decBtn-',  DEC_OPS);
+const selectAllDecOps  = makeSelectAll(selectedDecOps, 'decBtn-', DEC_OPS);
+const clearAllDecOps   = makeClearAll(selectedDecOps, 'decOpsGrid');
+
+const togglePctOp   = makeToggle(selectedPctOps,  'pctBtn-',  PCT_OPS);
+const selectAllPctOps  = makeSelectAll(selectedPctOps, 'pctBtn-', PCT_OPS);
+const clearAllPctOps   = makeClearAll(selectedPctOps, 'pctOpsGrid');
+
+const toggleGeoOp   = makeToggle(selectedGeoOps,  'geoBtn-',  GEO_OPS);
+const selectAllGeoOps  = makeSelectAll(selectedGeoOps, 'geoBtn-', GEO_OPS);
+const clearAllGeoOps   = makeClearAll(selectedGeoOps, 'geoOpsGrid');
+
+const toggleAlgOp   = makeToggle(selectedAlgOps,  'algBtn-',  ALG_OPS);
+const selectAllAlgOps  = makeSelectAll(selectedAlgOps, 'algBtn-', ALG_OPS);
+const clearAllAlgOps   = makeClearAll(selectedAlgOps, 'algOpsGrid');
+
+function handleFracKey(e) {
+  if (e.key === 'Enter') {
+    if (e.target === document.getElementById('fracNumerInput')) {
+      document.getElementById('fracDenomInput').focus();
+    } else {
+      checkAnswer();
+    }
+  }
+}
+
 // --- Word problem template bank ---
 const WP_TEMPLATES = {
   wp_add: [
@@ -3470,6 +3724,604 @@ const WP_TEMPLATES = {
   ],
 };
 
+// ── PREMIUM PROBLEM GENERATORS ──
+
+function pickOp(set) { const a = Array.from(set); return a[Math.floor(Math.random() * a.length)]; }
+function r2(n) { return Math.round(n * 100) / 100; } // round to 2dp
+function r1(n) { return Math.round(n * 10) / 10; }   // round to 1dp
+
+// ── FRACTIONS ──
+function generateFractionQuestion() {
+  const op = pickOp(selectedFracOps);
+  const primes = [2,3,5,7,11,13];
+  function randDenom() { return primes[Math.floor(Math.random() * 5)] || rnd(2,12); }
+  function randSmallDenom() { return rnd(2,8); }
+
+  if (op === 'frac_of') {
+    // Fraction of a number → integer answer
+    const d = randSmallDenom();
+    const n = rnd(1, d-1);
+    const mult = rnd(2, 10);
+    const whole = d * mult;
+    currentAnswer = n * mult;
+    setAnswerMode('integer');
+    setQuestion(`What is ${n}/${d} of ${whole}?`);
+    document.getElementById('answerInput').focus();
+    return;
+  }
+  if (op === 'frac_to_dec') {
+    // Common fraction → decimal (float answer)
+    const pairs = [[1,2,0.5],[1,4,0.25],[3,4,0.75],[1,5,0.2],[2,5,0.4],[3,5,0.6],[4,5,0.8],[1,8,0.125],[3,8,0.375],[5,8,0.625],[7,8,0.875],[1,10,0.1],[3,10,0.3],[7,10,0.7],[9,10,0.9],[1,3,0.33],[2,3,0.67]];
+    const [n,d,val] = pairs[Math.floor(Math.random()*pairs.length)];
+    currentAnswer = val;
+    setAnswerMode('float');
+    setQuestion(`Convert ${n}/${d} to a decimal (round to 2dp if needed)`);
+    document.getElementById('answerInput').focus();
+    return;
+  }
+
+  // All remaining ops → fraction answer
+  setAnswerMode('fraction');
+  let n1,d1,n2,d2,rn,rd,g;
+
+  if (op === 'frac_simplify') {
+    d1 = randSmallDenom(); n1 = rnd(1,d1-1);
+    const factor = rnd(2,6);
+    n2 = n1*factor; d2 = d1*factor;
+    [rn,rd] = reduceFrac(n2,d2);
+    currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    setQuestion(`Simplify: ${n2}/${d2}`);
+  } else if (op === 'frac_add') {
+    d1 = randSmallDenom(); n1 = rnd(1,d1-1);
+    d2 = randSmallDenom(); n2 = rnd(1,d2-1);
+    const L = lcm(d1,d2);
+    [rn,rd] = reduceFrac(n1*(L/d1)+n2*(L/d2), L);
+    currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    setQuestion(`${n1}/${d1} + ${n2}/${d2} = ?`);
+  } else if (op === 'frac_sub') {
+    d1 = randSmallDenom(); d2 = randSmallDenom();
+    n1 = rnd(1,d1-1); n2 = rnd(1,d2-1);
+    const L = lcm(d1,d2);
+    let num = n1*(L/d1)-n2*(L/d2);
+    if (num <= 0) { n1 = rnd(2,d1-1) || d1; n2 = 1; num = n1*(L/d1)-n2*(L/d2); }
+    if (num <= 0) { num = Math.abs(num) || 1; }
+    [rn,rd] = reduceFrac(num, L);
+    currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    setQuestion(`${n1}/${d1} − ${n2}/${d2} = ?  (give positive result)`);
+  } else if (op === 'frac_mul') {
+    d1 = randSmallDenom(); n1 = rnd(1,d1);
+    d2 = randSmallDenom(); n2 = rnd(1,d2);
+    [rn,rd] = reduceFrac(n1*n2, d1*d2);
+    currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    setQuestion(`${n1}/${d1} × ${n2}/${d2} = ?`);
+  } else if (op === 'frac_div') {
+    d1 = randSmallDenom(); n1 = rnd(1,d1);
+    d2 = randSmallDenom(); n2 = rnd(1,d2);
+    [rn,rd] = reduceFrac(n1*d2, d1*n2);
+    currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    setQuestion(`${n1}/${d1} ÷ ${n2}/${d2} = ?`);
+  } else if (op === 'frac_mixed_add') {
+    const w1=rnd(1,5), w2=rnd(1,5);
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    const L=lcm(d1,d2);
+    let totalNum=(w1+w2)*L + n1*(L/d1)+n2*(L/d2);
+    [rn,rd]=reduceFrac(totalNum,L);
+    currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    setQuestion(`${w1} ${n1}/${d1} + ${w2} ${n2}/${d2} = ? (as improper fraction)`);
+  } else if (op === 'frac_mixed_sub') {
+    let w1=rnd(2,8),w2=rnd(1,4);
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    const L=lcm(d1,d2);
+    let totalNum=(w1-w2)*L + n1*(L/d1)-n2*(L/d2);
+    if(totalNum<=0){w1=w2+3; totalNum=(w1-w2)*L+n1*(L/d1)-n2*(L/d2);}
+    [rn,rd]=reduceFrac(Math.abs(totalNum),L);
+    currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    setQuestion(`${w1} ${n1}/${d1} − ${w2} ${n2}/${d2} = ? (as improper fraction)`);
+  } else if (op === 'frac_mixed_mul') {
+    const w1=rnd(1,4), w2=rnd(1,4);
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    const imp1=w1*d1+n1, imp2=w2*d2+n2;
+    [rn,rd]=reduceFrac(imp1*imp2,d1*d2);
+    currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    setQuestion(`${w1} ${n1}/${d1} × ${w2} ${n2}/${d2} = ? (as improper fraction)`);
+  } else if (op === 'frac_mixed_div') {
+    const w1=rnd(1,4), w2=rnd(1,3);
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    const imp1=w1*d1+n1, imp2=w2*d2+n2;
+    [rn,rd]=reduceFrac(imp1*d2,d1*imp2);
+    currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    setQuestion(`${w1} ${n1}/${d1} ÷ ${w2} ${n2}/${d2} = ? (as improper fraction)`);
+  } else { // frac_complex: nested fraction
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    d1=d1||2; n1=n1||1;
+    // (n1/d1) / (n2/d2) effectively
+    [rn,rd]=reduceFrac(n1*d2,d1*n2);
+    currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    setQuestion(`Evaluate the complex fraction: (${n1}/${d1}) ÷ (${n2}/${d2}) = ?`);
+  }
+  document.getElementById('fracNumerInput').focus();
+}
+
+// ── DECIMALS ──
+function generateDecimalQuestion() {
+  const op = pickOp(selectedDecOps);
+  let q, ans;
+  setAnswerMode('float');
+
+  if (op === 'dec_add') {
+    const a=r1(rnd(10,999)/10), b=r1(rnd(10,999)/10);
+    currentAnswer=r2(a+b);
+    setQuestion(`${a} + ${b} = ?`);
+  } else if (op === 'dec_sub') {
+    let a=r1(rnd(100,999)/10), b=r1(rnd(10,a*10-1)/10);
+    currentAnswer=r2(a-b);
+    setQuestion(`${a} − ${b} = ?`);
+  } else if (op === 'dec_mul') {
+    const a=r1(rnd(11,99)/10), b=rnd(2,9);
+    currentAnswer=r2(a*b);
+    setQuestion(`${a} × ${b} = ?`);
+  } else if (op === 'dec_div') {
+    const b=rnd(2,9), q=r1(rnd(11,99)/10);
+    const a=r2(b*q);
+    currentAnswer=q;
+    setQuestion(`${a} ÷ ${b} = ?`);
+  } else if (op === 'dec_round') {
+    const dp = rnd(0,2);
+    const raw = r2(rnd(100,9999)/100);
+    currentAnswer = parseFloat(raw.toFixed(dp));
+    setQuestion(`Round ${raw} to ${dp===0?'the nearest whole number':dp===1?'1 decimal place':'2 decimal places'}`);
+    setAnswerMode(dp === 0 ? 'integer' : 'float');
+    if (dp === 0) { currentAnswer = Math.round(raw); setAnswerMode('integer'); }
+  } else if (op === 'dec_frac_to_dec') {
+    const pairs=[[1,2,0.5],[1,4,0.25],[3,4,0.75],[1,5,0.2],[2,5,0.4],[3,5,0.6],[4,5,0.8],[1,8,0.125],[3,8,0.375],[1,10,0.1],[3,10,0.3],[7,10,0.7]];
+    const [n,d,val]=pairs[Math.floor(Math.random()*pairs.length)];
+    currentAnswer=val;
+    setQuestion(`Convert ${n}/${d} to a decimal`);
+  } else if (op === 'dec_percent_to_dec') {
+    const pcts=[5,10,15,20,25,30,40,50,60,75,80,90,125,150];
+    const p=pcts[Math.floor(Math.random()*pcts.length)];
+    currentAnswer=r2(p/100);
+    setQuestion(`Convert ${p}% to a decimal`);
+  } else { // dec_place_value
+    const val=r2(rnd(100,9999)/100);
+    const places=['tenths','hundredths'];
+    const pl=places[rnd(0,1)];
+    const str=val.toFixed(2);
+    const tenths=parseInt(str.split('.')[1][0]);
+    const hundredths=parseInt(str.split('.')[1][1]);
+    currentAnswer=pl==='tenths'?tenths:hundredths;
+    setAnswerMode('integer');
+    setQuestion(`What digit is in the ${pl} place in ${val}?`);
+  }
+  if (currentAnswerType !== 'integer') {
+    document.getElementById('answerInput').focus();
+  } else {
+    document.getElementById('answerInput').focus();
+  }
+}
+
+// ── PERCENTAGES ──
+function generatePercentageQuestion() {
+  const op = pickOp(selectedPctOps);
+  setAnswerMode('float');
+
+  if (op === 'pct_of') {
+    const pcts=[5,10,15,20,25,30,40,50,60,75,80,90];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const whole=rnd(2,200)*5;
+    currentAnswer=r2(p/100*whole);
+    if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    setQuestion(`What is ${p}% of ${whole}?`);
+  } else if (op === 'pct_what') {
+    const pcts=[10,20,25,40,50,75,80];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const whole=rnd(2,40)*10;
+    const part=p/100*whole;
+    currentAnswer=p;
+    setAnswerMode('integer');
+    setQuestion(`${part} is what percent of ${whole}? (enter the number only)`);
+  } else if (op === 'pct_increase') {
+    const pcts=[5,10,15,20,25,50];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const orig=rnd(2,100)*10;
+    currentAnswer=r2(orig*(1+p/100));
+    if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    setQuestion(`A value of ${orig} increases by ${p}%. What is the new value?`);
+  } else if (op === 'pct_decrease') {
+    const pcts=[5,10,20,25,30,50];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const orig=rnd(2,100)*10;
+    currentAnswer=r2(orig*(1-p/100));
+    if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    setQuestion(`A value of ${orig} decreases by ${p}%. What is the new value?`);
+  } else if (op === 'pct_change') {
+    const pcts=[10,20,25,50,100];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const orig=rnd(2,40)*10;
+    const isUp=rnd(0,1)===1;
+    const newVal=isUp?orig*(1+p/100):orig*(1-p/100);
+    currentAnswer=p;
+    setAnswerMode('integer');
+    setQuestion(`A value changes from ${orig} to ${newVal}. What is the percentage ${isUp?'increase':'decrease'}? (enter number only)`);
+  } else if (op === 'pct_reverse') {
+    const pcts=[10,20,25,50];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const orig=rnd(2,40)*10;
+    const isUp=rnd(0,1)===1;
+    const newVal=orig*(isUp?1+p/100:1-p/100);
+    currentAnswer=orig;
+    setAnswerMode('integer');
+    setQuestion(`After a ${p}% ${isUp?'increase':'decrease'}, a value is ${newVal}. What was the original value?`);
+  } else if (op === 'pct_interest') {
+    const P=rnd(1,20)*100, R=rnd(1,10)*5, T=rnd(1,5);
+    currentAnswer=r2(P*R*T/100);
+    if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    setQuestion(`Simple Interest: P=$${P}, R=${R}%, T=${T} years. Find I (I = PRT/100)`);
+  } else { // pct_tax
+    const pcts=[5,8,10,15,20];
+    const p=pcts[rnd(0,pcts.length-1)];
+    const price=rnd(2,100)*5;
+    const types=['tax','tip','discount'];
+    const type=types[rnd(0,2)];
+    if(type==='discount') {
+      currentAnswer=r2(price*(1-p/100));
+      setQuestion(`An item costs $${price}. With a ${p}% discount, what is the final price?`);
+    } else {
+      currentAnswer=r2(price*(1+p/100));
+      setQuestion(`An item costs $${price}. With ${p}% ${type}, what is the total?`);
+    }
+    if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+  }
+  document.getElementById('answerInput').focus();
+}
+
+// ── GEOMETRY ──
+function generateGeometryQuestion() {
+  const op = pickOp(selectedGeoOps);
+  const PI = Math.PI;
+  setAnswerMode('integer');
+
+  if (op === 'geo_area') {
+    const shapes=['rectangle','triangle','trapezoid','parallelogram','square'];
+    const shape=shapes[rnd(0,shapes.length-1)];
+    if(shape==='rectangle') {
+      const l=rnd(2,20),w=rnd(2,20);
+      currentAnswer=l*w;
+      setQuestion(`Find the area of a rectangle with length ${l} and width ${w}.`);
+    } else if(shape==='triangle') {
+      const b=rnd(2,20)*2,h=rnd(2,20);
+      currentAnswer=(b*h)/2;
+      setQuestion(`Find the area of a triangle with base ${b} and height ${h}.`);
+    } else if(shape==='trapezoid') {
+      const a=rnd(2,15),b=rnd(2,15),h=rnd(2,10)*2;
+      currentAnswer=(a+b)*h/2;
+      setQuestion(`Find the area of a trapezoid with parallel sides ${a} and ${b}, height ${h}.`);
+    } else if(shape==='parallelogram') {
+      const b=rnd(2,20),h=rnd(2,20);
+      currentAnswer=b*h;
+      setQuestion(`Find the area of a parallelogram with base ${b} and height ${h}.`);
+    } else {
+      const s=rnd(2,20);
+      currentAnswer=s*s;
+      setQuestion(`Find the area of a square with side length ${s}.`);
+    }
+  } else if (op === 'geo_perimeter') {
+    const shapes=['rectangle','triangle','square','regular polygon'];
+    const shape=shapes[rnd(0,shapes.length-1)];
+    if(shape==='rectangle') {
+      const l=rnd(2,30),w=rnd(2,30);
+      currentAnswer=2*(l+w);
+      setQuestion(`Find the perimeter of a rectangle with length ${l} and width ${w}.`);
+    } else if(shape==='triangle') {
+      const a=rnd(3,20),b=rnd(3,20),c=rnd(3,20);
+      currentAnswer=a+b+c;
+      setQuestion(`Find the perimeter of a triangle with sides ${a}, ${b}, and ${c}.`);
+    } else if(shape==='square') {
+      const s=rnd(2,30);
+      currentAnswer=4*s;
+      setQuestion(`Find the perimeter of a square with side length ${s}.`);
+    } else {
+      const n=rnd(3,8),s=rnd(2,20);
+      currentAnswer=n*s;
+      setQuestion(`Find the perimeter of a regular ${n}-sided polygon with each side = ${s}.`);
+    }
+  } else if (op === 'geo_volume') {
+    const shapes=['cube','cuboid','cylinder','cone','sphere'];
+    const shape=shapes[rnd(0,shapes.length-1)];
+    if(shape==='cube') {
+      const s=rnd(2,12);
+      currentAnswer=s*s*s;
+      setQuestion(`Find the volume of a cube with side ${s}. (V = s³)`);
+    } else if(shape==='cuboid') {
+      const l=rnd(2,12),w=rnd(2,12),h=rnd(2,12);
+      currentAnswer=l*w*h;
+      setQuestion(`Find the volume of a cuboid: l=${l}, w=${w}, h=${h}.`);
+    } else if(shape==='cylinder') {
+      const r=rnd(1,8),h=rnd(2,12);
+      currentAnswer=r2(PI*r*r*h);
+      setAnswerMode('float');
+      setQuestion(`Find the volume of a cylinder: r=${r}, h=${h}. (V = πr²h, use π≈3.14159, round to 2dp)`);
+    } else if(shape==='cone') {
+      const r=rnd(1,8),h=rnd(2,12);
+      currentAnswer=r2((1/3)*PI*r*r*h);
+      setAnswerMode('float');
+      setQuestion(`Find the volume of a cone: r=${r}, h=${h}. (V = ⅓πr²h, round to 2dp)`);
+    } else {
+      const r=rnd(1,6);
+      currentAnswer=r2((4/3)*PI*r*r*r);
+      setAnswerMode('float');
+      setQuestion(`Find the volume of a sphere: r=${r}. (V = 4/3·πr³, round to 2dp)`);
+    }
+  } else if (op === 'geo_surface') {
+    const shapes=['cube','cuboid','cylinder','sphere'];
+    const shape=shapes[rnd(0,shapes.length-1)];
+    if(shape==='cube') {
+      const s=rnd(2,12);
+      currentAnswer=6*s*s;
+      setQuestion(`Find the surface area of a cube with side ${s}. (SA = 6s²)`);
+    } else if(shape==='cuboid') {
+      const l=rnd(2,10),w=rnd(2,10),h=rnd(2,10);
+      currentAnswer=2*(l*w+w*h+l*h);
+      setQuestion(`Find the surface area of a cuboid: l=${l}, w=${w}, h=${h}. (SA = 2(lw+wh+lh))`);
+    } else if(shape==='cylinder') {
+      const r=rnd(1,8),h=rnd(2,12);
+      currentAnswer=r2(2*PI*r*(r+h));
+      setAnswerMode('float');
+      setQuestion(`Surface area of a cylinder: r=${r}, h=${h}. (SA = 2πr(r+h), round to 2dp)`);
+    } else {
+      const r=rnd(1,8);
+      currentAnswer=r2(4*PI*r*r);
+      setAnswerMode('float');
+      setQuestion(`Surface area of a sphere: r=${r}. (SA = 4πr², round to 2dp)`);
+    }
+  } else if (op === 'geo_angles') {
+    const types=['supplementary','complementary','triangle','polygon','vertically opposite'];
+    const type=types[rnd(0,types.length-1)];
+    if(type==='supplementary') {
+      const a=rnd(10,170);
+      currentAnswer=180-a;
+      setQuestion(`Two angles are supplementary. One angle is ${a}°. Find the other angle.`);
+    } else if(type==='complementary') {
+      const a=rnd(5,85);
+      currentAnswer=90-a;
+      setQuestion(`Two angles are complementary. One angle is ${a}°. Find the other angle.`);
+    } else if(type==='triangle') {
+      const a=rnd(20,80),b=rnd(20,80);
+      currentAnswer=180-a-b;
+      if(currentAnswer>0) setQuestion(`A triangle has angles ${a}° and ${b}°. Find the third angle.`);
+      else { currentAnswer=60; setQuestion(`A triangle has angles 60° and 60°. Find the third angle.`); }
+    } else if(type==='polygon') {
+      const n=rnd(3,8);
+      currentAnswer=(n-2)*180;
+      setQuestion(`Find the sum of interior angles of a ${n}-sided polygon. (Formula: (n−2)×180°)`);
+    } else {
+      const a=rnd(20,160);
+      currentAnswer=a;
+      setQuestion(`Two lines cross. One angle is ${a}°. What is the vertically opposite angle?`);
+    }
+  } else if (op === 'geo_pythagoras') {
+    const type=rnd(0,2);
+    if(type===0) {
+      // find hypotenuse (use Pythagorean triples for clean answers)
+      const triples=[[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10],[9,12,15],[12,16,20]];
+      const [a,b,c]=triples[rnd(0,triples.length-1)];
+      const k=rnd(1,3);
+      currentAnswer=c*k;
+      setQuestion(`Right triangle: legs = ${a*k} and ${b*k}. Find the hypotenuse c.`);
+    } else if(type===1) {
+      // find a leg
+      const triples=[[3,4,5],[5,12,13],[8,15,17],[7,24,25]];
+      const [a,b,c]=triples[rnd(0,triples.length-1)];
+      const k=rnd(1,3);
+      currentAnswer=a*k;
+      setQuestion(`Right triangle: hypotenuse = ${c*k}, one leg = ${b*k}. Find the other leg.`);
+    } else {
+      // float hypotenuse
+      const a=rnd(3,12),b=rnd(3,12);
+      currentAnswer=r2(Math.sqrt(a*a+b*b));
+      setAnswerMode('float');
+      setQuestion(`Right triangle: legs = ${a} and ${b}. Find the hypotenuse (round to 2dp).`);
+    }
+  } else if (op === 'geo_coordinate') {
+    const types=['distance','midpoint_x','midpoint_y','slope'];
+    const type=types[rnd(0,types.length-1)];
+    const x1=rnd(-8,8),y1=rnd(-8,8),x2=rnd(-8,8),y2=rnd(-8,8);
+    if(type==='distance') {
+      currentAnswer=r2(Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)));
+      setAnswerMode('float');
+      setQuestion(`Distance between (${x1},${y1}) and (${x2},${y2})? Round to 2dp.`);
+    } else if(type==='midpoint_x') {
+      currentAnswer=r2((x1+x2)/2);
+      if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+      setQuestion(`Midpoint of (${x1},${y1}) and (${x2},${y2}). What is the x-coordinate?`);
+    } else if(type==='midpoint_y') {
+      currentAnswer=r2((y1+y2)/2);
+      if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+      setQuestion(`Midpoint of (${x1},${y1}) and (${x2},${y2}). What is the y-coordinate?`);
+    } else {
+      if(x2===x1){ currentAnswer=999; setAnswerMode('integer'); setQuestion(`Slope of line through (${x1},${y1}) and (${x2},${y2})? (enter 999 for undefined)`); }
+      else {
+        currentAnswer=r2((y2-y1)/(x2-x1));
+        if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+        setQuestion(`Find the slope of the line through (${x1},${y1}) and (${x2},${y2}).`);
+      }
+    }
+  } else { // geo_circles
+    const types=['area','circumference','arc_length','sector_area'];
+    const type=types[rnd(0,types.length-1)];
+    const r=rnd(1,12);
+    if(type==='area') {
+      currentAnswer=r2(PI*r*r);
+      setAnswerMode('float');
+      setQuestion(`Area of a circle with radius ${r}. (A = πr², round to 2dp)`);
+    } else if(type==='circumference') {
+      currentAnswer=r2(2*PI*r);
+      setAnswerMode('float');
+      setQuestion(`Circumference of a circle with radius ${r}. (C = 2πr, round to 2dp)`);
+    } else if(type==='arc_length') {
+      const deg=[30,45,60,90,120,180][rnd(0,5)];
+      currentAnswer=r2(2*PI*r*deg/360);
+      setAnswerMode('float');
+      setQuestion(`Arc length of a ${deg}° sector in a circle with radius ${r}. Round to 2dp.`);
+    } else {
+      const deg=[30,45,60,90,120,180][rnd(0,5)];
+      currentAnswer=r2(PI*r*r*deg/360);
+      setAnswerMode('float');
+      setQuestion(`Area of a ${deg}° sector in a circle with radius ${r}. Round to 2dp.`);
+    }
+  }
+  document.getElementById('answerInput').focus();
+}
+
+// ── ALGEBRA ──
+function generateAlgebraQuestion() {
+  const op = pickOp(selectedAlgOps);
+  setAnswerMode('integer');
+
+  if (op === 'alg_one_step') {
+    const types=['add','sub','mul','div'];
+    const t=types[rnd(0,3)];
+    const x=rnd(1,20);
+    if(t==='add') { const a=rnd(1,30); currentAnswer=x; setQuestion(`Solve for x: x + ${a} = ${x+a}`); }
+    else if(t==='sub') { const a=rnd(1,30); currentAnswer=x; setQuestion(`Solve for x: x − ${a} = ${x-a}`); }
+    else if(t==='mul') { const a=rnd(2,12); currentAnswer=x; setQuestion(`Solve for x: ${a}x = ${a*x}`); }
+    else { const a=rnd(2,12); currentAnswer=x; setQuestion(`Solve for x: x / ${a} = ${x} (so x/${a} = ${x})`); currentAnswer=x*a; setQuestion(`Solve for x: x ÷ ${a} = ${x}`); }
+  } else if (op === 'alg_two_step') {
+    const x=rnd(1,15);
+    const a=rnd(2,8),b=rnd(1,20);
+    const ops2=['+','-'];
+    const op2=ops2[rnd(0,1)];
+    const rhs=op2==='+'?a*x+b:a*x-b;
+    currentAnswer=x;
+    setQuestion(`Solve for x: ${a}x ${op2} ${b} = ${rhs}`);
+  } else if (op === 'alg_multi_step') {
+    const x=rnd(1,10);
+    const a=rnd(2,6),b=rnd(1,10),c=rnd(1,8);
+    const rhs=a*(x+b)+c;
+    currentAnswer=x;
+    setQuestion(`Solve for x: ${a}(x + ${b}) + ${c} = ${rhs}`);
+  } else if (op === 'alg_quadratic') {
+    // ax²+bx+c=0 with integer roots
+    const r1v=rnd(-8,8), r2v=rnd(-8,8);
+    if(r1v===0&&r2v===0){currentAnswer=1;setQuestion(`Solve: x² − 2x + 1 = 0 (give the larger root)`);return;}
+    const b2=-(r1v+r2v), c2=r1v*r2v;
+    const larger=Math.max(r1v,r2v);
+    currentAnswer=larger;
+    const bStr=b2>=0?`+ ${b2}`:`− ${Math.abs(b2)}`;
+    const cStr=c2>=0?`+ ${c2}`:`− ${Math.abs(c2)}`;
+    setQuestion(`Solve x² ${bStr}x ${cStr} = 0. Give the larger root.`);
+  } else if (op === 'alg_factor') {
+    // Factor x²+bx+c into (x+p)(x+q), find p and q
+    const p=rnd(1,10), q=rnd(1,10);
+    const b2=p+q, c2=p*q;
+    currentAnswer=Math.max(p,q);
+    const bStr=b2>0?`+ ${b2}`:`− ${Math.abs(b2)}`;
+    const cStr=c2>0?`+ ${c2}`:`− ${Math.abs(c2)}`;
+    setQuestion(`Factor x² ${bStr}x ${cStr} = (x+a)(x+b). Give the larger of a and b.`);
+  } else if (op === 'alg_exponent') {
+    const types=['solve_x','simplify_power','negative_exp'];
+    const t=types[rnd(0,2)];
+    if(t==='solve_x') {
+      const base=[2,3,4,5][rnd(0,3)];
+      const exp=rnd(2,5);
+      currentAnswer=exp;
+      setQuestion(`Solve for x: ${base}^x = ${Math.pow(base,exp)}`);
+    } else if(t==='simplify_power') {
+      const base=rnd(2,6);
+      const e1=rnd(1,5),e2=rnd(1,4);
+      currentAnswer=e1+e2;
+      setQuestion(`Simplify: ${base}^${e1} × ${base}^${e2} = ${base}^? (give the exponent)`);
+    } else {
+      const base=[2,3,4,5][rnd(0,3)];
+      const exp=rnd(1,4);
+      currentAnswer=1; // result = 1/(base^exp), but show as fraction... use float
+      setAnswerMode('float');
+      currentAnswer=r2(1/Math.pow(base,exp));
+      setQuestion(`Evaluate: ${base}^(−${exp}) (round to 4dp if needed)`);
+      currentAnswer=parseFloat((1/Math.pow(base,exp)).toFixed(4));
+    }
+  } else if (op === 'alg_log') {
+    const bases=[2,3,4,5,10];
+    const base=bases[rnd(0,bases.length-1)];
+    const exp=rnd(1,5);
+    const val=Math.pow(base,exp);
+    currentAnswer=exp;
+    setQuestion(`log${base}(${val}) = ? (log base ${base} of ${val})`);
+  } else if (op === 'alg_system') {
+    // x+y=a, x-y=b → x=(a+b)/2, y=(a-b)/2
+    const x=rnd(1,15),y=rnd(1,15);
+    const a=x+y,b=x-y;
+    currentAnswer=x;
+    setQuestion(`Solve the system: x + y = ${a} and x − y = ${b}. Find x.`);
+  } else if (op === 'alg_inequality') {
+    const x=rnd(2,15);
+    const a=rnd(2,8),b=rnd(1,20);
+    const rhs=a*x+b;
+    currentAnswer=x+1; // minimum integer where ax+b > rhs doesn't work; solve ax>rhs-b → x>...
+    // Actually: ax + b > C means x > (C-b)/a
+    const C=a*(x-1)+b; // so x > x-1, min integer is x
+    currentAnswer=x;
+    setQuestion(`Solve: ${a}x + ${b} > ${C}. What is the smallest integer value of x?`);
+  } else if (op === 'alg_sequence') {
+    const isArith=rnd(0,1)===1;
+    if(isArith) {
+      const a1=rnd(1,20),d=rnd(1,10);
+      const n=rnd(4,8);
+      currentAnswer=a1+(n-1)*d;
+      setQuestion(`Arithmetic sequence: first term = ${a1}, common difference = ${d}. Find the ${n}th term.`);
+    } else {
+      const bases=[2,3][rnd(0,1)];
+      const a1=rnd(1,5);
+      const n=rnd(3,6);
+      currentAnswer=a1*Math.pow(bases,n-1);
+      if(currentAnswer>99999){currentAnswer=a1*Math.pow(2,3);setQuestion(`Geometric sequence: a₁=${a1}, r=2. Find the 4th term.`);}
+      else setQuestion(`Geometric sequence: a₁=${a1}, common ratio r=${bases}. Find the ${n}th term.`);
+    }
+  } else if (op === 'alg_function') {
+    const types=['eval','compose'];
+    const t=types[rnd(0,1)];
+    if(t==='eval') {
+      const a=rnd(1,6),b=rnd(-10,10),xv=rnd(-5,5);
+      currentAnswer=a*xv*xv+b;
+      setQuestion(`f(x) = ${a}x² + ${b<0?b:'+'+b}. Find f(${xv}).`);
+    } else {
+      // f(g(x)) where f(x)=ax+b, g(x)=cx+d
+      const a=rnd(1,5),b=rnd(-5,5),c=rnd(1,5),d=rnd(-5,5);
+      const xv=rnd(-4,4);
+      const gx=c*xv+d;
+      const fgx=a*gx+b;
+      currentAnswer=fgx;
+      setQuestion(`f(x)=${a}x${b>=0?'+'+b:b}, g(x)=${c}x${d>=0?'+'+d:d}. Find f(g(${xv})).`);
+    }
+  } else { // alg_poly
+    const types=['add','eval','multiply_term'];
+    const t=types[rnd(0,2)];
+    if(t==='add') {
+      const a1=rnd(1,8),b1=rnd(-10,10),a2=rnd(1,8),b2=rnd(-10,10);
+      const xv=rnd(1,5);
+      currentAnswer=(a1+a2)*xv+(b1+b2);
+      setQuestion(`Add: (${a1}x + ${b1}) + (${a2}x + ${b2}). Evaluate at x=${xv}.`);
+    } else if(t==='eval') {
+      const a=rnd(1,5),b=rnd(-8,8),c=rnd(-10,10);
+      const xv=rnd(-3,3);
+      currentAnswer=a*xv*xv+b*xv+c;
+      const bStr=b>=0?`+${b}x`:`${b}x`;
+      const cStr=c>=0?`+${c}`:String(c);
+      setQuestion(`Evaluate ${a}x²${bStr}${cStr} at x=${xv}.`);
+    } else {
+      const a=rnd(1,6),b=rnd(1,8),xv=rnd(1,5);
+      currentAnswer=(a*xv)*b;
+      setQuestion(`Expand and evaluate: ${a}x · ${b} at x=${xv}.`);
+    }
+  }
+  document.getElementById('answerInput').focus();
+}
+
 function generateWordProblem() {
   const ops = Array.from(selectedWordOps);
   const op = ops[Math.floor(Math.random() * ops.length)];
@@ -3545,10 +4397,15 @@ function updateStartBtn() {
   const btn = document.getElementById('startBtn');
   const ready = currentMode === 'multiply'      ? selected.size > 0
               : currentMode === 'longmultiply'  ? selectedLongMul.size > 0
-              : currentMode === 'shortdivide'  ? selectedDivisors.size > 0
-              : currentMode === 'longdivide'   ? selectedLongDiv.size > 0
-              : currentMode === 'remainderdiv' ? selectedRemainderDiv.size > 0
-              : currentMode === 'wordproblems' ? selectedWordOps.size > 0
+              : currentMode === 'shortdivide'   ? selectedDivisors.size > 0
+              : currentMode === 'longdivide'    ? selectedLongDiv.size > 0
+              : currentMode === 'remainderdiv'  ? selectedRemainderDiv.size > 0
+              : currentMode === 'wordproblems'  ? selectedWordOps.size > 0
+              : currentMode === 'fractions'     ? selectedFracOps.size > 0
+              : currentMode === 'decimals'      ? selectedDecOps.size > 0
+              : currentMode === 'percentages'   ? selectedPctOps.size > 0
+              : currentMode === 'geometry'      ? selectedGeoOps.size > 0
+              : currentMode === 'algebra'       ? selectedAlgOps.size > 0
               : selectedDigits.size > 0;
   btn.disabled = !ready;
   if (!ready) {
@@ -3561,9 +4418,19 @@ function updateStartBtn() {
       add:          'Choose at least one number size!',
       subtract:     'Choose at least one number size!',
       wordproblems: 'Choose at least one operation type!',
+      fractions:    'Choose at least one fraction topic!',
+      decimals:     'Choose at least one decimal topic!',
+      percentages:  'Choose at least one percentage topic!',
+      geometry:     'Choose at least one geometry topic!',
+      algebra:      'Choose at least one algebra topic!',
     };
-    btn.textContent = hints[currentMode];
+    btn.textContent = hints[currentMode] || 'Choose a topic to start!';
   } else {
+    const count = currentMode === 'fractions' ? selectedFracOps.size
+                : currentMode === 'decimals'  ? selectedDecOps.size
+                : currentMode === 'percentages' ? selectedPctOps.size
+                : currentMode === 'geometry'  ? selectedGeoOps.size
+                : currentMode === 'algebra'   ? selectedAlgOps.size : 0;
     const labels = {
       multiply:     `Start Multiplying! (${selected.size} table${selected.size>1?'s':''} selected)`,
       longmultiply: `Start Long Multiplication! (${selectedLongMul.size} size${selectedLongMul.size>1?'s':''} selected)`,
@@ -3573,8 +4440,13 @@ function updateStartBtn() {
       add:          `Start Adding! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
       subtract:     `Start Subtracting! (${selectedDigits.size} size${selectedDigits.size>1?'s':''} selected)`,
       wordproblems: `Start Word Problems! (${selectedWordOps.size} type${selectedWordOps.size>1?'s':''} selected)`,
+      fractions:    `Start Fractions! (${count} topic${count>1?'s':''} selected)`,
+      decimals:     `Start Decimals! (${count} topic${count>1?'s':''} selected)`,
+      percentages:  `Start Percentages! (${count} topic${count>1?'s':''} selected)`,
+      geometry:     `Start Geometry! (${count} topic${count>1?'s':''} selected)`,
+      algebra:      `Start Algebra! (${count} topic${count>1?'s':''} selected)`,
     };
-    btn.textContent = labels[currentMode];
+    btn.textContent = labels[currentMode] || 'Start!';
   }
 }
 
@@ -3670,7 +4542,18 @@ function nextQuestion() {
   
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
+  } else if (currentMode === 'fractions') {
+    generateFractionQuestion(); return;
+  } else if (currentMode === 'decimals') {
+    generateDecimalQuestion(); return;
+  } else if (currentMode === 'percentages') {
+    generatePercentageQuestion(); return;
+  } else if (currentMode === 'geometry') {
+    generateGeometryQuestion(); return;
+  } else if (currentMode === 'algebra') {
+    generateAlgebraQuestion(); return;
   }
+  setAnswerMode('integer');
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
 }
@@ -3689,37 +4572,65 @@ function handleKey(e) {
 function handleRemainderKey(e) { if(e.key==='Enter') checkAnswer(); }
 
 function checkAnswer() {
-  const qVal = parseInt(document.getElementById('answerInput').value);
-  if (isNaN(qVal)) return;
   let ok = false;
-  const needsRemainder = currentMode === 'remainderdiv' || (currentMode === 'wordproblems' && currentWordProblemRemainder !== null);
-  if (needsRemainder) {
-    const rVal = parseInt(document.getElementById('remainderInput').value);
-    if (isNaN(rVal)) { document.getElementById('remainderInput').focus(); return; }
+
+  if (currentAnswerType === 'fraction') {
+    const n = parseInt(document.getElementById('fracNumerInput').value);
+    const d = parseInt(document.getElementById('fracDenomInput').value);
+    if (isNaN(n) || isNaN(d) || d <= 0) { document.getElementById('fracNumerInput').focus(); return; }
     total++;
-    ok = qVal === currentAnswer && rVal === currentRemainder;
-    ok ? (correct++, showFeedback(true))
-       : (wrong++,   showFeedback(false, currentAnswer, currentRemainder));
+    const [rn, rd] = reduceFrac(n, d);
+    const [an, ad] = reduceFrac(currentAnswerNumerator, currentAnswerDenominator);
+    ok = (rn === an && rd === ad);
+    ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false));
+  } else if (currentAnswerType === 'float') {
+    const raw = document.getElementById('answerInput').value;
+    const qVal = parseFloat(raw);
+    if (isNaN(qVal)) return;
+    total++;
+    ok = Math.abs(qVal - currentAnswer) < 0.011;
+    ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false));
   } else {
-    total++;
-    ok = qVal === currentAnswer;
-    ok ? (correct++, showFeedback(true))
-       : (wrong++,  showFeedback(false, currentAnswer));
+    const qVal = parseInt(document.getElementById('answerInput').value);
+    if (isNaN(qVal)) return;
+    const needsRemainder = currentMode === 'remainderdiv' || (currentMode === 'wordproblems' && currentWordProblemRemainder !== null);
+    if (needsRemainder) {
+      const rVal = parseInt(document.getElementById('remainderInput').value);
+      if (isNaN(rVal)) { document.getElementById('remainderInput').focus(); return; }
+      total++;
+      ok = qVal === currentAnswer && rVal === currentRemainder;
+      ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false, currentAnswer, currentRemainder));
+    } else {
+      total++;
+      ok = qVal === currentAnswer;
+      ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false, currentAnswer));
+    }
   }
+
   if (ok) onCorrectAnswer(); else onWrongAnswer();
-  // Check perfect session
   if (total >= 20 && wrong === 0) userData.perfectSession = true;
   updateScore();
-  const delay = (currentMode === 'longdivide' || currentMode === 'longmultiply' || currentMode === 'remainderdiv' || currentMode === 'wordproblems') ? 2800 : 1400;
-  setTimeout(()=>{hideFeedback();nextQuestion();}, delay);
+  const longDelay = ['longdivide','longmultiply','remainderdiv','wordproblems','fractions','decimals','percentages','geometry','algebra'];
+  const delay = longDelay.includes(currentMode) ? 2800 : 1400;
+  setTimeout(()=>{hideFeedback(); nextQuestion();}, delay);
 }
 
 function showFeedback(ok, ans, rem) {
   const fb=document.getElementById('feedback');
   fb.className='feedback show '+(ok?'correct-fb':'wrong-fb');
   document.getElementById('feedbackIcon').textContent=ok?'✅':'❌';
-  let msg = ok ? 'Correct! Great job!' : `Not quite — the answer was ${fmtN(ans)}`;
-  if (!ok && rem !== undefined) msg += ` remainder ${fmtN(rem)}`;
+  let msg;
+  if (ok) {
+    msg = 'Correct! Great job!';
+  } else if (currentAnswerType === 'fraction') {
+    const [rn, rd] = reduceFrac(currentAnswerNumerator, currentAnswerDenominator);
+    msg = `Not quite — the answer was ${rn}/${rd}`;
+  } else if (currentAnswerType === 'float') {
+    msg = `Not quite — the answer was ${currentAnswer}`;
+  } else {
+    msg = `Not quite — the answer was ${ans !== undefined ? fmtN(ans) : fmtN(currentAnswer)}`;
+    if (rem !== undefined) msg += ` remainder ${fmtN(rem)}`;
+  }
   document.getElementById('feedbackText').textContent = msg;
 }
 function hideFeedback() { document.getElementById('feedback').className='feedback'; }
@@ -4363,7 +5274,7 @@ const QUESTS = [
 // ── USER DATA (quests + selected title, synced to Firestore) ──
 function freshUserData() {
   return {
-    stats: { multiply:0, longmultiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0, wordproblems:0 },
+    stats: { multiply:0, longmultiply:0, shortdivide:0, longdivide:0, remainderdiv:0, add:0, subtract:0, wordproblems:0, fractions:0, decimals:0, percentages:0, geometry:0, algebra:0 },
     totalCorrect: 0, maxStreak: 0,
     perfectSession: false, comebackKid: false, sessionTotal: 0,
     _solved67: false,

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractions Practice Online — Simplify, Add, Subtract, Multiply, Divide | Mathpop</title>
+    <meta name="description" content="Practice fractions online with Mathpop Premium. Simplify fractions, add and subtract unlike fractions, multiply and divide, work with mixed numbers, complex fractions, and more. From elementary to college level.">
+    <meta name="keywords" content="fractions practice, simplify fractions, add fractions, subtract fractions, multiply fractions, divide fractions, mixed numbers, improper fractions, complex fractions, fraction games, free fractions practice">
+    <link rel="canonical" href="https://mathpop.io/fractions/">
+    <meta property="og:title" content="Fractions Practice Online | Mathpop Premium">
+    <meta property="og:description" content="Practice simplifying, adding, subtracting, multiplying, and dividing fractions — with mixed numbers and complex fractions too.">
+    <meta property="og:url" content="https://mathpop.io/fractions/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fractions Practice Online | Mathpop Premium">
+    <meta name="twitter:description" content="Practice simplifying, adding, subtracting, multiplying, and dividing fractions — with mixed numbers and complex fractions too.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Fractions Practice — Mathpop",
+      "url": "https://mathpop.io/fractions/",
+      "description": "Interactive fractions practice from simplifying to complex fractions. Covers all topics for elementary through college-level students.",
+      "educationalLevel": ["Elementary School", "Middle School", "High School", "College"],
+      "learningResourceType": "Game",
+      "teaches": "Fractions"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #00101a; color: #f0f9ff; font-family: 'Nunito', sans-serif; line-height: 1.6; }
+        header { background-color: #001c2d; border-bottom: 2px solid #003050; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #63b3ed; text-decoration: none; }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a { color: #e2e8f0; text-decoration: none; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) { header { justify-content: center; text-align: center; } nav { justify-content: center; } }
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #63b3ed; margin-bottom: 1rem; text-align: center; }
+        h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #63b3ed; margin-top: 2rem; margin-bottom: 1rem; }
+        .feature-card h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .faq-item h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .intro { text-align: center; font-size: 1.1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .cta-button {
+            display: block;
+            width: fit-content;
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            margin: 1.5rem auto;
+        }
+        .cta-button:hover { background-color: #4a9fd8; }
+        .premium-badge { display: inline-block; background: linear-gradient(135deg, #6B21A8, #8B5CF6); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .feature-card {
+            background-color: #001c2d;
+            border: 1px solid #003050;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #63b3ed;
+        }
+        .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .topic-pill { background: #001c2d; border: 1px solid #003050; border-radius: 8px; padding: 1rem; font-size: 0.95rem; }
+        .topic-pill span { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .faq-section { margin-top: 3rem; }
+        .faq-item {
+            background-color: #001c2d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        footer {
+            background-color: #001c2d;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: #f0f9ff; }
+        .footer-links a:hover { color: #f0f9ff; }
+        @media (max-width: 768px) { h1 { font-size: 2rem; } h2 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Fractions Practice Online <span class="premium-badge">👑 Premium</span></h1>
+        <p class="intro">Master every type of fraction problem — from simplifying and converting to adding mixed numbers and evaluating complex fractions. Includes instant feedback, rank progression, and leaderboards. Available with the Mathpop Premium Pass.</p>
+        <a href="https://mathpop.io/" class="cta-button">Start Practicing Fractions</a>
+
+        <h2>All Fraction Topics Covered</h2>
+        <p>Mathpop's fractions mode covers the full curriculum from elementary through college level. Pick as many topics as you want and practice them in one session.</p>
+        <div class="topics-grid">
+            <div class="topic-pill"><span>✂️</span> <strong>Simplify Fractions</strong><br>Reduce fractions to their lowest terms (e.g., 12/16 → 3/4).</div>
+            <div class="topic-pill"><span>➕</span> <strong>Add Fractions</strong><br>Add fractions with same or different denominators using LCM.</div>
+            <div class="topic-pill"><span>➖</span> <strong>Subtract Fractions</strong><br>Subtract fractions with different denominators.</div>
+            <div class="topic-pill"><span>✖️</span> <strong>Multiply Fractions</strong><br>Multiply numerators and denominators, then simplify.</div>
+            <div class="topic-pill"><span>➗</span> <strong>Divide Fractions</strong><br>Divide by multiplying by the reciprocal.</div>
+            <div class="topic-pill"><span>½➕</span> <strong>Mixed Number Addition</strong><br>Add mixed numbers (e.g., 2½ + 1⅓).</div>
+            <div class="topic-pill"><span>½➖</span> <strong>Mixed Number Subtraction</strong><br>Subtract mixed numbers, including borrowing.</div>
+            <div class="topic-pill"><span>½✖️</span> <strong>Mixed Number Multiplication</strong><br>Convert to improper fractions and multiply.</div>
+            <div class="topic-pill"><span>½➗</span> <strong>Mixed Number Division</strong><br>Divide mixed numbers by converting first.</div>
+            <div class="topic-pill"><span>🔢</span> <strong>Fraction of a Number</strong><br>Calculate fractions of whole numbers (e.g., ¾ of 20 = 15).</div>
+            <div class="topic-pill"><span>🔄</span> <strong>Fractions to Decimals</strong><br>Convert common fractions to their decimal equivalents.</div>
+            <div class="topic-pill"><span>🔀</span> <strong>Complex Fractions</strong><br>Evaluate compound fractions (fraction within a fraction).</div>
+        </div>
+
+        <h2>How Fraction Answers Work</h2>
+        <p>When a problem needs a fraction answer, a special two-field input appears — one for the numerator and one for the denominator. Enter both and Mathpop automatically checks your answer in its lowest terms, so 6/8 and 3/4 are both accepted as correct.</p>
+
+        <h2>Why Practice Fractions?</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>📚 School & University Ready</h3>
+                <p>Fractions underpin algebra, calculus, and probability. Mastering them now pays dividends across the entire math curriculum.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Instant Feedback</h3>
+                <p>Every answer is checked immediately. Wrong answers show the correct fraction so you learn in real time.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏆 Leaderboards</h3>
+                <p>Compete globally across all Mathpop topics on a unified leaderboard.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Scratch Pad</h3>
+                <p>Use the built-in whiteboard to work out LCMs, common denominators, and long conversions.</p>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>Do I need to simplify my fraction answer?</h3>
+                <p>Not necessarily — Mathpop automatically checks whether your answer is equivalent to the correct fraction in lowest terms. 6/8 is accepted if the answer is 3/4.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is fractions practice free?</h3>
+                <p>Fractions is a premium category, available with the Mathpop Premium Pass ($4.99/month or $49.99/year). All other core modes are free.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What level is the fractions content?</h3>
+                <p>Problems range from elementary simplification all the way to mixed number operations and complex fractions covered in college pre-calculus courses.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I mix multiple fraction topics in one session?</h3>
+                <p>Yes — select as many topics as you want and Mathpop will randomly pick questions from all of them in a single session.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Late Night Labs &middot; Mathpop</p>
+        <ul class="footer-links">
+            <li><a href="https://mathpop.io/fractions/">Fractions</a></li>
+            <li><a href="https://mathpop.io/decimals/">Decimals</a></li>
+            <li><a href="https://mathpop.io/percentages/">Percentages</a></li>
+            <li><a href="https://mathpop.io/geometry/">Geometry</a></li>
+            <li><a href="https://mathpop.io/algebra/">Algebra</a></li>
+            <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
+            <li><a href="https://mathpop.io/premium-pass/">Premium Pass</a></li>
+        </ul>
+    </footer>
+</body>
+</html>

@@ -214,37 +214,25 @@
         /* Footer */
         footer {
             background-color: #001c2d;
-            border-top: 1px solid #003050;
-            padding: 2rem;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
             margin-top: 3rem;
         }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
         .footer-links {
-            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin-top: 1rem;
+            flex-wrap: wrap;
         }
-
         .footer-links a {
             color: #63b3ed;
             text-decoration: none;
-            margin: 0 1rem;
-            font-size: 0.95rem;
+            transition: color 0.3s;
         }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        .copyright {
-            font-size: 0.9rem;
-            color: #8fa3b8;
-            margin-top: 1rem;
-        }
+        .footer-links a:hover { color: #f0f9ff; }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -274,9 +262,13 @@
             <a href="https://mathpop.io/subtraction/">Subtraction</a>
             <a href="https://mathpop.io/multiplication/">Multiplication</a>
             <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
             <a href="https://mathpop.io/word-problems/">Word Problems</a>
             <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
-            <a href="https://mathpop.io/premium-plus/">Premium Plus</a>
         </nav>
     </header>
 
@@ -354,16 +346,16 @@
     </main>
 
     <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="https://mathpop.io/division/">Division</a>
-                <a href="https://mathpop.io/multiplication/">Multiplication</a>
-                <a href="https://mathpop.io/addition/">Addition</a>
-                <a href="https://mathpop.io/subtraction/">Subtraction</a>
-                <a href="https://mathpop.io/word-problems/">Word Problems</a>
-            </div>
-            <div class="copyright">© 2026 Late Night Labs · Mathpop</div>
-        </div>
+        <p>&copy; 2026 Late Night Labs &middot; Mathpop</p>
+        <ul class="footer-links">
+            <li><a href="https://mathpop.io/fractions/">Fractions</a></li>
+            <li><a href="https://mathpop.io/decimals/">Decimals</a></li>
+            <li><a href="https://mathpop.io/percentages/">Percentages</a></li>
+            <li><a href="https://mathpop.io/geometry/">Geometry</a></li>
+            <li><a href="https://mathpop.io/algebra/">Algebra</a></li>
+            <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
+            <li><a href="https://mathpop.io/premium-pass/">Premium Pass</a></li>
+        </ul>
     </footer>
 </body>
 </html>

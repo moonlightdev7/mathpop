@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebra Practice Online — Equations, Quadratics, Logs, Functions, Sequences | Mathpop</title>
+    <meta name="description" content="Practice algebra with Mathpop Premium. Solve one-step, two-step, and multi-step equations. Practice quadratics, factoring, exponents, logarithms, systems of equations, inequalities, sequences, functions, and polynomials. From basic to college algebra.">
+    <meta name="keywords" content="algebra practice, solve equations, quadratic equations, factoring, logarithms, exponents, systems of equations, inequalities, sequences, functions, polynomials, college algebra, algebra games online, free algebra practice">
+    <link rel="canonical" href="https://mathpop.io/algebra/">
+    <meta property="og:title" content="Algebra Practice Online | Mathpop Premium">
+    <meta property="og:description" content="Practice solving equations, quadratics, logarithms, functions, sequences, and polynomials — from basic to college algebra level.">
+    <meta property="og:url" content="https://mathpop.io/algebra/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Algebra Practice Online | Mathpop Premium">
+    <meta name="twitter:description" content="Practice equations, quadratics, logarithms, functions, sequences, and polynomials from basic to college level.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Algebra Practice — Mathpop",
+      "url": "https://mathpop.io/algebra/",
+      "description": "Comprehensive algebra practice from one-step equations through college-level logarithms, functions, and polynomial evaluation.",
+      "educationalLevel": ["Middle School", "High School", "College"],
+      "learningResourceType": "Game",
+      "teaches": "Algebra"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #00101a; color: #f0f9ff; font-family: 'Nunito', sans-serif; line-height: 1.6; }
+        header { background-color: #001c2d; border-bottom: 2px solid #003050; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #63b3ed; text-decoration: none; }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a { color: #e2e8f0; text-decoration: none; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) { header { justify-content: center; text-align: center; } nav { justify-content: center; } }
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #63b3ed; margin-bottom: 1rem; text-align: center; }
+        h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #63b3ed; margin-top: 2rem; margin-bottom: 1rem; }
+        .feature-card h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .faq-item h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .intro { text-align: center; font-size: 1.1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .cta-button {
+            display: block;
+            width: fit-content;
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            margin: 1.5rem auto;
+        }
+        .cta-button:hover { background-color: #4a9fd8; }
+        .premium-badge { display: inline-block; background: linear-gradient(135deg, #6B21A8, #8B5CF6); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .feature-card {
+            background-color: #001c2d;
+            border: 1px solid #003050;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #63b3ed;
+        }
+        .level-section { margin-top: 1.5rem; }
+        .level-label { font-weight: 700; color: #8B5CF6; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem; }
+        .topic-pill { background: #001c2d; border: 1px solid #003050; border-radius: 8px; padding: 1rem; font-size: 0.95rem; }
+        .topic-pill span { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .faq-section { margin-top: 3rem; }
+        .faq-item {
+            background-color: #001c2d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        footer {
+            background-color: #001c2d;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: #f0f9ff; }
+        @media (max-width: 768px) { h1 { font-size: 2rem; } h2 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Algebra Practice Online <span class="premium-badge">👑 Premium</span></h1>
+        <p class="intro">From solving your first equation to evaluating polynomial functions — Mathpop's algebra mode covers the full spectrum from middle school basics to college algebra. Pick any combination of topics and practice with instant feedback.</p>
+        <a href="https://mathpop.io/" class="cta-button">Start Practicing Algebra</a>
+
+        <h2>All Algebra Topics Covered</h2>
+
+        <div class="level-section">
+            <div class="level-label">📘 Foundation — Middle School</div>
+            <div class="topics-grid">
+                <div class="topic-pill"><span>1️⃣</span> <strong>One-Step Equations</strong><br>Solve x + a = b, ax = b, x/a = b.</div>
+                <div class="topic-pill"><span>2️⃣</span> <strong>Two-Step Equations</strong><br>Solve ax + b = c with integer solutions.</div>
+                <div class="topic-pill"><span>🔢</span> <strong>Multi-Step Equations</strong><br>Expand brackets and solve multi-step equations.</div>
+                <div class="topic-pill"><span>≥</span> <strong>Inequalities</strong><br>Solve linear inequalities and find the smallest integer solution.</div>
+            </div>
+        </div>
+
+        <div class="level-section" style="margin-top:1.5rem">
+            <div class="level-label">📗 Intermediate — High School</div>
+            <div class="topics-grid">
+                <div class="topic-pill"><span>²</span> <strong>Quadratic Equations</strong><br>Solve x²+bx+c=0 with integer roots — find the larger root.</div>
+                <div class="topic-pill"><span>✂️</span> <strong>Factoring</strong><br>Factor x²+bx+c = (x+p)(x+q), find p and q.</div>
+                <div class="topic-pill"><span>xⁿ</span> <strong>Exponents</strong><br>Solve b^x = c, simplify products of powers, negative exponents.</div>
+                <div class="topic-pill"><span>⚖️</span> <strong>Systems of Equations</strong><br>Solve 2×2 linear systems to find x.</div>
+            </div>
+        </div>
+
+        <div class="level-section" style="margin-top:1.5rem">
+            <div class="level-label">📕 Advanced — College Algebra</div>
+            <div class="topics-grid">
+                <div class="topic-pill"><span>log</span> <strong>Logarithms</strong><br>Evaluate log base 2, 3, 4, 5, and 10.</div>
+                <div class="topic-pill"><span>📈</span> <strong>Sequences</strong><br>Arithmetic sequences (nth term) and geometric sequences.</div>
+                <div class="topic-pill"><span>f(x)</span> <strong>Functions</strong><br>Evaluate f(x) at a given value, including function composition f(g(x)).</div>
+                <div class="topic-pill"><span>📊</span> <strong>Polynomials</strong><br>Add polynomials and evaluate quadratic expressions at a given x.</div>
+            </div>
+        </div>
+
+        <h2>Why Practice Algebra?</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>🎓 Foundation of Higher Math</h3>
+                <p>Algebra underpins calculus, statistics, physics, and computer science. Fluency here opens every STEM door.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📝 Exam Ready</h3>
+                <p>Covers topics tested in GCSE, A-Level, SAT, ACT, and AP Math exams. Build speed and accuracy before your next test.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🖊️ Scratch Pad</h3>
+                <p>Use the whiteboard to work through multi-step equations, sketch function graphs, and verify your answers.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Instant Feedback</h3>
+                <p>See the correct answer immediately when you're wrong — so every mistake becomes a learning moment.</p>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What level of algebra is covered?</h3>
+                <p>Mathpop algebra covers middle school (one and two-step equations, inequalities) through college algebra (logarithms, function composition, polynomial evaluation, and geometric sequences).</p>
+            </div>
+            <div class="faq-item">
+                <h3>Are algebra answers always integers?</h3>
+                <p>Most algebra problems are designed with integer solutions for clean practice. Negative exponent problems may produce decimals, which are entered and checked with a tolerance.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is algebra practice free?</h3>
+                <p>Algebra is a premium category available with the Mathpop Premium Pass ($4.99/month or $49.99/year).</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I practice just one algebra topic?</h3>
+                <p>Yes — simply select only the topics you want (e.g., just Logarithms or just Quadratics) and Mathpop will generate only those question types for your session.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How does function composition work in Mathpop?</h3>
+                <p>You'll be given two linear functions f(x) and g(x) and asked to evaluate f(g(x)) at a specific value of x. The problem shows both functions clearly so you can work through it step by step.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Late Night Labs &middot; Mathpop</p>
+        <ul class="footer-links">
+            <li><a href="https://mathpop.io/fractions/">Fractions</a></li>
+            <li><a href="https://mathpop.io/decimals/">Decimals</a></li>
+            <li><a href="https://mathpop.io/percentages/">Percentages</a></li>
+            <li><a href="https://mathpop.io/geometry/">Geometry</a></li>
+            <li><a href="https://mathpop.io/algebra/">Algebra</a></li>
+            <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
+            <li><a href="https://mathpop.io/premium-pass/">Premium Pass</a></li>
+        </ul>
+    </footer>
+</body>
+</html>

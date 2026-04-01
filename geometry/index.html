@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Practice Online — Area, Perimeter, Volume, Angles, Pythagorean Theorem | Mathpop</title>
+    <meta name="description" content="Practice geometry with Mathpop Premium. Calculate area and perimeter of 2D shapes, volume and surface area of 3D solids, angles in polygons, the Pythagorean theorem, circles, and coordinate geometry. From elementary to high school.">
+    <meta name="keywords" content="geometry practice, area calculator, perimeter practice, volume practice, surface area, Pythagorean theorem, angles in polygons, coordinate geometry, circle area, circumference, geometry games online, free geometry practice">
+    <link rel="canonical" href="https://mathpop.io/geometry/">
+    <meta property="og:title" content="Geometry Practice Online | Mathpop Premium">
+    <meta property="og:description" content="Practice area, perimeter, volume, angles, the Pythagorean theorem, circles, and coordinate geometry with instant feedback.">
+    <meta property="og:url" content="https://mathpop.io/geometry/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Geometry Practice Online | Mathpop Premium">
+    <meta name="twitter:description" content="Practice area, perimeter, volume, angles, Pythagorean theorem, and more with instant feedback.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Geometry Practice — Mathpop",
+      "url": "https://mathpop.io/geometry/",
+      "description": "Interactive geometry practice covering area, perimeter, volume, surface area, angles, Pythagorean theorem, circles, and coordinate geometry.",
+      "educationalLevel": ["Elementary School", "Middle School", "High School"],
+      "learningResourceType": "Game",
+      "teaches": "Geometry"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #00101a; color: #f0f9ff; font-family: 'Nunito', sans-serif; line-height: 1.6; }
+        header { background-color: #001c2d; border-bottom: 2px solid #003050; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #63b3ed; text-decoration: none; }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a { color: #e2e8f0; text-decoration: none; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) { header { justify-content: center; text-align: center; } nav { justify-content: center; } }
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #63b3ed; margin-bottom: 1rem; text-align: center; }
+        h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #63b3ed; margin-top: 2rem; margin-bottom: 1rem; }
+        .feature-card h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .faq-item h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .intro { text-align: center; font-size: 1.1rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .cta-button {
+            display: block;
+            width: fit-content;
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            margin: 1.5rem auto;
+        }
+        .cta-button:hover { background-color: #4a9fd8; }
+        .premium-badge { display: inline-block; background: linear-gradient(135deg, #6B21A8, #8B5CF6); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .feature-card {
+            background-color: #001c2d;
+            border: 1px solid #003050;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #63b3ed;
+        }
+        .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .topic-pill { background: #001c2d; border: 1px solid #003050; border-radius: 8px; padding: 1rem; font-size: 0.95rem; }
+        .topic-pill span { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .sub-list { margin-top: 4px; font-size: 0.82rem; color: #a0aec0; }
+        .faq-section { margin-top: 3rem; }
+        .faq-item {
+            background-color: #001c2d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        footer {
+            background-color: #001c2d;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: #f0f9ff; }
+        @media (max-width: 768px) { h1 { font-size: 2rem; } h2 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Geometry Practice Online <span class="premium-badge">👑 Premium</span></h1>
+        <p class="intro">Practice area, perimeter, volume, surface area, angles, the Pythagorean theorem, circles, and coordinate geometry — all with instant feedback and formulas shown in the question. Available with Mathpop Premium.</p>
+        <a href="https://mathpop.io/" class="cta-button">Start Practicing Geometry</a>
+
+        <h2>All Geometry Topics Covered</h2>
+        <div class="topics-grid">
+            <div class="topic-pill">
+                <span>📐</span> <strong>Area</strong>
+                <div class="sub-list">Rectangle, square, triangle, trapezoid, parallelogram</div>
+            </div>
+            <div class="topic-pill">
+                <span>📏</span> <strong>Perimeter</strong>
+                <div class="sub-list">Rectangle, square, triangle, regular polygons</div>
+            </div>
+            <div class="topic-pill">
+                <span>📦</span> <strong>Volume</strong>
+                <div class="sub-list">Cube, cuboid, cylinder, cone, sphere</div>
+            </div>
+            <div class="topic-pill">
+                <span>🌐</span> <strong>Surface Area</strong>
+                <div class="sub-list">Cube, cuboid, cylinder, sphere</div>
+            </div>
+            <div class="topic-pill">
+                <span>📐</span> <strong>Angles</strong>
+                <div class="sub-list">Supplementary, complementary, triangle angles, polygon angle sums, vertically opposite</div>
+            </div>
+            <div class="topic-pill">
+                <span>📐²</span> <strong>Pythagorean Theorem</strong>
+                <div class="sub-list">Find hypotenuse or a leg; both exact and rounded answers</div>
+            </div>
+            <div class="topic-pill">
+                <span>🗺️</span> <strong>Coordinate Geometry</strong>
+                <div class="sub-list">Distance between points, midpoint coordinates, slope of a line</div>
+            </div>
+            <div class="topic-pill">
+                <span>⭕</span> <strong>Circles</strong>
+                <div class="sub-list">Area, circumference, arc length, sector area</div>
+            </div>
+        </div>
+
+        <h2>Formulas Included In Every Question</h2>
+        <p>Mathpop shows the relevant formula directly in the question text for geometry problems — so you learn the formulas as you practice, not just the mechanical steps. For example: "Find the volume of a cone: r=4, h=6. (V = ⅓πr²h, round to 2dp)"</p>
+
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>🖊️ Scratch Pad</h3>
+                <p>Use the whiteboard to sketch diagrams, label sides, and work through multi-step calculations alongside the problem.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Instant Feedback</h3>
+                <p>Know immediately if your area or volume answer is correct. Decimal answers are checked with a small tolerance for rounding.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📐 Exam Ready</h3>
+                <p>Covers GCSE, SAT, ACT, and AP geometry topics. Practicing these problem types builds the speed and confidence you need for exams.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏆 Leaderboards</h3>
+                <p>Every correct geometry answer contributes to your overall Mathpop rank and leaderboard placement.</p>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>Do I need to memorize formulas?</h3>
+                <p>Formulas are shown in the question, so you can learn them in context. Over time you'll naturally memorize them through repetition.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How are π (pi) answers handled?</h3>
+                <p>For problems involving circles, cylinders, cones, and spheres, answers are computed using the full value of π and should be entered rounded to 2 decimal places. Mathpop accepts answers within 0.01.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is geometry practice free?</h3>
+                <p>Geometry is a premium category available with the Mathpop Premium Pass ($4.99/month or $49.99/year).</p>
+            </div>
+            <div class="faq-item">
+                <h3>What level of geometry is covered?</h3>
+                <p>Content ranges from elementary shapes (rectangles, triangles) through high school topics (3D volumes, coordinate geometry, circle sectors, and the Pythagorean theorem in non-integer contexts).</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Late Night Labs &middot; Mathpop</p>
+        <ul class="footer-links">
+            <li><a href="https://mathpop.io/fractions/">Fractions</a></li>
+            <li><a href="https://mathpop.io/decimals/">Decimals</a></li>
+            <li><a href="https://mathpop.io/percentages/">Percentages</a></li>
+            <li><a href="https://mathpop.io/geometry/">Geometry</a></li>
+            <li><a href="https://mathpop.io/algebra/">Algebra</a></li>
+            <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
+            <li><a href="https://mathpop.io/premium-pass/">Premium Pass</a></li>
+        </ul>
+    </footer>
+</body>
+</html>
