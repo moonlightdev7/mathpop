@@ -792,6 +792,12 @@
   .fraction-answer-row { display: flex; align-items: center; gap: 10px; }
   .fraction-slash { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--primary); flex-shrink: 0; line-height: 1; }
   .fraction-answer-row .answer-input { flex: 1; min-width: 0; }
+  /* Fraction/whole number toggle */
+  .frac-toggle-wrap { display: none; margin-bottom: 8px; text-align: center; }
+  .frac-toggle-btn { background: var(--card,#f0f4f8); border: 2px solid var(--primary); color: var(--primary); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+  .frac-toggle-btn:hover { background: var(--primary); color: #fff; }
+  .whole-number-wrap { display: none; }
+  .whole-number-wrap .answer-input { width: 100%; box-sizing: border-box; }
   /* Float/decimal answer input — allow step */
   .answer-input[step] { letter-spacing: 0.5px; }
   .feedback {
@@ -1571,6 +1577,23 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ── MORE MATH (Premium) ── -->
+  <div style="margin-top:18px">
+    <button class="mode-btn" onclick="toggleMoreMath()" id="moreMathToggle" style="width:100%;padding:12px;font-size:0.95rem;border-radius:12px;display:flex;align-items:center;justify-content:space-between">
+      <span>🧮 More Math Categories</span>
+      <span id="moreMathArrow" style="transition:transform 0.3s">▼</span>
+    </button>
+    <div id="moreMathPanel" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease">
+      <div style="padding:14px 0 4px;display:flex;flex-wrap:wrap;gap:8px" id="premiumModeBtns">
+        <button class="mode-btn" id="modeBtn-fractions"   onclick="setPremiumMode('fractions')">📊 Fractions 👑</button>
+        <button class="mode-btn" id="modeBtn-decimals"    onclick="setPremiumMode('decimals')">🔢 Decimals 👑</button>
+        <button class="mode-btn" id="modeBtn-percentages" onclick="setPremiumMode('percentages')">📈 Percentages 👑</button>
+        <button class="mode-btn" id="modeBtn-geometry"    onclick="setPremiumMode('geometry')">📐 Geometry 👑</button>
+        <button class="mode-btn" id="modeBtn-algebra"     onclick="setPremiumMode('algebra')">🔣 Algebra 👑</button>
+      </div>
       <!-- ── FRACTIONS SETUP ── -->
       <div id="setup-fractions" style="display:none">
         <p class="section-label">Choose Fraction Topics</p>
@@ -1676,23 +1699,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ── MORE MATH (Premium Coming Soon) ── -->
-  <div style="margin-top:18px">
-    <button class="mode-btn" onclick="toggleMoreMath()" id="moreMathToggle" style="width:100%;padding:12px;font-size:0.95rem;border-radius:12px;display:flex;align-items:center;justify-content:space-between">
-      <span>🧮 More Math Categories</span>
-      <span id="moreMathArrow" style="transition:transform 0.3s">▼</span>
-    </button>
-    <div id="moreMathPanel" style="max-height:0;overflow:hidden;transition:max-height 0.35s ease">
-      <div style="padding:14px 0 4px;display:flex;flex-wrap:wrap;gap:8px" id="premiumModeBtns">
-        <button class="mode-btn" id="modeBtn-fractions"   onclick="setPremiumMode('fractions')">📊 Fractions 👑</button>
-        <button class="mode-btn" id="modeBtn-decimals"    onclick="setPremiumMode('decimals')">🔢 Decimals 👑</button>
-        <button class="mode-btn" id="modeBtn-percentages" onclick="setPremiumMode('percentages')">📈 Percentages 👑</button>
-        <button class="mode-btn" id="modeBtn-geometry"    onclick="setPremiumMode('geometry')">📐 Geometry 👑</button>
-        <button class="mode-btn" id="modeBtn-algebra"     onclick="setPremiumMode('algebra')">🔣 Algebra 👑</button>
-      </div>
       <div id="premiumLockedMsg" style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center;display:none">
         👑 These categories require the <strong>Premium Pass</strong>.
         <button class="gp-buy-btn gp-premium-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem;">👑 Get Premium Pass</button>
@@ -2181,11 +2187,19 @@
           <input type="number" class="answer-input" id="remainderInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
         </div>
       </div>
+      <!-- Fraction / whole number toggle -->
+      <div class="frac-toggle-wrap" id="fracToggleWrap">
+        <button class="frac-toggle-btn" id="fracToggleBtn" onclick="toggleFracMode()">Switch to Whole Number</button>
+      </div>
       <!-- Fraction answer: numerator / denominator -->
       <div class="fraction-answer-row" id="fractionWrap" style="display:none">
         <input type="number" class="answer-input" id="fracNumerInput" placeholder="numerator" autocomplete="off" onkeydown="handleFracKey(event)"/>
         <span class="fraction-slash">/ </span>
         <input type="number" class="answer-input" id="fracDenomInput" placeholder="denominator" min="1" autocomplete="off" onkeydown="handleFracKey(event)"/>
+      </div>
+      <!-- Whole number answer for fraction questions -->
+      <div class="whole-number-wrap" id="wholeNumberWrap" style="display:none">
+        <input type="number" class="answer-input" id="wholeNumberInput" placeholder="whole number" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer()"/>
       </div>
     </div>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
@@ -3394,19 +3408,52 @@ function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, 
 function lcm(a, b) { return Math.abs(a * b) / gcd(a, b); }
 function reduceFrac(n, d) { const g = gcd(Math.abs(n), d); return [n / g, d / g]; }
 
+let fracInputMode = 'fraction'; // 'fraction' or 'whole'
+
+function toggleFracMode() {
+  const fracWrap = document.getElementById('fractionWrap');
+  const wholeWrap = document.getElementById('wholeNumberWrap');
+  const btn = document.getElementById('fracToggleBtn');
+  if (fracInputMode === 'fraction') {
+    fracInputMode = 'whole';
+    fracWrap.style.display = 'none';
+    wholeWrap.style.display = 'block';
+    btn.textContent = 'Switch to Fraction';
+    document.getElementById('wholeNumberInput').value = '';
+    document.getElementById('wholeNumberInput').focus();
+  } else {
+    fracInputMode = 'fraction';
+    fracWrap.style.display = 'flex';
+    wholeWrap.style.display = 'none';
+    btn.textContent = 'Switch to Whole Number';
+    document.getElementById('fracNumerInput').value = '';
+    document.getElementById('fracDenomInput').value = '';
+    document.getElementById('fracNumerInput').focus();
+  }
+}
+
 function setAnswerMode(type) {
   currentAnswerType = type;
   const fracWrap  = document.getElementById('fractionWrap');
   const ansInput  = document.getElementById('answerInput');
   const remWrap   = document.getElementById('remainderWrap');
+  const fracToggle = document.getElementById('fracToggleWrap');
+  const wholeWrap  = document.getElementById('wholeNumberWrap');
   if (type === 'fraction') {
+    fracInputMode = 'fraction';
+    fracToggle.style.display = 'block';
     fracWrap.style.display = 'flex';
+    wholeWrap.style.display = 'none';
     ansInput.style.display = 'none';
     remWrap.style.display  = 'none';
     document.getElementById('fracNumerInput').value = '';
     document.getElementById('fracDenomInput').value = '';
+    document.getElementById('wholeNumberInput').value = '';
+    document.getElementById('fracToggleBtn').textContent = 'Switch to Whole Number';
   } else {
+    fracToggle.style.display = 'none';
     fracWrap.style.display = 'none';
+    wholeWrap.style.display = 'none';
     ansInput.style.display = '';
     ansInput.value = '';
     if (type === 'float') {
@@ -3812,11 +3859,10 @@ function generateFractionQuestion() {
     n1 = rnd(1,d1-1); n2 = rnd(1,d2-1);
     const L = lcm(d1,d2);
     let num = n1*(L/d1)-n2*(L/d2);
-    if (num <= 0) { n1 = rnd(2,d1-1) || d1; n2 = 1; num = n1*(L/d1)-n2*(L/d2); }
-    if (num <= 0) { num = Math.abs(num) || 1; }
+    if (num < 0) { const tmp=n1; n1=n2; n2=tmp; const tmpd=d1; d1=d2; d2=tmpd; num = Math.abs(num); }
     [rn,rd] = reduceFrac(num, L);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
-    setQuestion(`${n1}/${d1} − ${n2}/${d2} = ?  (give positive result)`);
+    setQuestion(`${n1}/${d1} − ${n2}/${d2} = ?`);
   } else if (op === 'frac_mul') {
     d1 = randSmallDenom(); n1 = rnd(1,d1);
     d2 = randSmallDenom(); n2 = rnd(1,d2);
@@ -4604,14 +4650,24 @@ function checkAnswer() {
   let ok = false;
 
   if (currentAnswerType === 'fraction') {
-    const n = parseInt(document.getElementById('fracNumerInput').value);
-    const d = parseInt(document.getElementById('fracDenomInput').value);
-    if (isNaN(n) || isNaN(d) || d <= 0) { document.getElementById('fracNumerInput').focus(); return; }
-    total++;
-    const [rn, rd] = reduceFrac(n, d);
     const [an, ad] = reduceFrac(currentAnswerNumerator, currentAnswerDenominator);
-    ok = (rn === an && rd === ad);
-    ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false));
+    if (fracInputMode === 'whole') {
+      const raw = document.getElementById('wholeNumberInput').value;
+      if (raw === '') { document.getElementById('wholeNumberInput').focus(); return; }
+      const w = parseInt(raw);
+      if (isNaN(w)) { document.getElementById('wholeNumberInput').focus(); return; }
+      total++;
+      ok = (ad === 1 && w === an) || (w === 0 && an === 0);
+      ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false));
+    } else {
+      const n = parseInt(document.getElementById('fracNumerInput').value);
+      const d = parseInt(document.getElementById('fracDenomInput').value);
+      if (isNaN(n) || isNaN(d) || d <= 0) { document.getElementById('fracNumerInput').focus(); return; }
+      total++;
+      const [rn, rd] = reduceFrac(n, d);
+      ok = (rn === an && rd === ad);
+      ok ? (correct++, showFeedback(true)) : (wrong++, showFeedback(false));
+    }
   } else if (currentAnswerType === 'float') {
     const raw = document.getElementById('answerInput').value;
     const qVal = parseFloat(raw);
@@ -4653,7 +4709,7 @@ function showFeedback(ok, ans, rem) {
     msg = 'Correct! Great job!';
   } else if (currentAnswerType === 'fraction') {
     const [rn, rd] = reduceFrac(currentAnswerNumerator, currentAnswerDenominator);
-    msg = `Not quite — the answer was ${rn}/${rd}`;
+    msg = rd === 1 ? `Not quite — the answer was ${rn}` : `Not quite — the answer was ${rn}/${rd}`;
   } else if (currentAnswerType === 'float') {
     msg = `Not quite — the answer was ${currentAnswer}`;
   } else {
@@ -5823,7 +5879,7 @@ function toggleMoreMath() {
     panel.style.maxHeight = '0px';
     arrow.style.transform = 'rotate(0deg)';
   } else {
-    panel.style.maxHeight = '500px';
+    panel.style.maxHeight = '2000px';
     arrow.style.transform = 'rotate(180deg)';
   }
 }
