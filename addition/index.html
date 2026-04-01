@@ -180,18 +180,22 @@
         }
 
         .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
             margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
             color: var(--primary);
             text-decoration: none;
-            margin: 0 1rem;
             transition: color 0.3s;
         }
 
         .footer-links a:hover {
-            color: var(--accent);
+            color: var(--text);
         }
 
         @media (max-width: 768px) {

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Pass - Coming Soon | Mathpop</title>
-    <meta name="description" content="Mathpop Premium Pass is coming soon! Unlock advanced math categories like algebra, fractions, decimals, and more. Upgrade your math practice experience.">
+    <title>Premium Pass | Unlock Advanced Math Categories | Mathpop</title>
+    <meta name="description" content="Upgrade to the Mathpop Premium Pass. Unlock advanced math categories like algebra, fractions, decimals, percentages, and geometry. Get a crown badge, equip up to 3 titles, and more.">
     <link rel="canonical" href="https://mathpop.io/premium-pass/">
 
-    <meta property="og:title" content="Premium Pass - Coming Soon | Mathpop">
-    <meta property="og:description" content="Unlock advanced math categories like algebra, fractions, and decimals with the Mathpop Premium Pass. Coming soon!">
+    <meta property="og:title" content="Premium Pass | Mathpop">
+    <meta property="og:description" content="Unlock advanced math categories like algebra, fractions, and decimals with the Mathpop Premium Pass.">
     <meta property="og:url" content="https://mathpop.io/premium-pass/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Premium Pass - Coming Soon | Mathpop">
-    <meta name="twitter:description" content="Advanced math categories coming soon to Mathpop. Algebra, fractions, decimals, and more.">
+    <meta name="twitter:title" content="Premium Pass | Mathpop">
+    <meta name="twitter:description" content="Unlock algebra, fractions, decimals, geometry, percentages, crown badge, and more with the Mathpop Premium Pass.">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -28,16 +28,18 @@
         .container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 2rem; }
         .badge { font-size: 4rem; margin-bottom: 1rem; }
         h1 { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .price-tag { display: inline-block; background: linear-gradient(135deg, #f59e0b, #f97316); color: white; font-family: 'Fredoka One', cursive; font-size: 1rem; padding: 0.5rem 1.5rem; border-radius: 999px; margin-bottom: 1rem; }
         .subtitle { font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; line-height: 1.7; }
         .features-preview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; max-width: 700px; width: 100%; margin-bottom: 2.5rem; }
         .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; }
         .feature-card h3 { font-family: 'Fredoka One', cursive; color: var(--primary); font-size: 1rem; margin-bottom: 0.4rem; }
         .feature-card p { font-size: 0.9rem; color: #a0aec0; }
-        .coming-soon-tag { display: inline-block; background: var(--primary); color: var(--bg); font-family: 'Fredoka One', cursive; font-size: 1rem; padding: 0.5rem 1.5rem; border-radius: 999px; margin-bottom: 2rem; }
-        .home-btn { display: inline-block; background: var(--primary); color: var(--bg); font-family: 'Fredoka One', cursive; font-size: 1.1rem; padding: 0.7rem 2rem; border-radius: 8px; text-decoration: none; transition: opacity 0.2s; }
-        .home-btn:hover { opacity: 0.85; }
-        footer { background: var(--card); border-top: 2px solid var(--border); padding: 1.5rem; text-align: center; font-size: 0.85rem; color: #a0aec0; }
-        footer nav { justify-content: center; margin-top: 0.5rem; }
+        .home-btn { display: inline-block; background: linear-gradient(135deg, var(--primary), #5a9fd4); color: var(--bg); font-family: 'Fredoka One', cursive; font-size: 1.1rem; padding: 0.7rem 2rem; border-radius: 8px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .home-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(99, 179, 237, 0.3); }
+        footer { background: var(--card); border-top: 2px solid var(--border); padding: 2rem; text-align: center; font-size: 0.85rem; color: #a0aec0; }
+        .footer-links { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-top: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: var(--primary); text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--text); }
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
             .badge { font-size: 3rem; }
@@ -67,8 +69,8 @@
     <div class="container">
         <div class="badge">👑</div>
         <h1>Premium Pass</h1>
-        <div class="coming-soon-tag">Coming Soon</div>
-        <p class="subtitle">We're building something special. The Premium Pass will unlock advanced math categories and take your practice to the next level.</p>
+        <div class="price-tag">$4.99/month or $49.99/year (save 17%)</div>
+        <p class="subtitle">The ultimate Mathpop membership. Unlock 5 advanced math categories, a crown badge, up to 3 equipped titles, and priority access to new features.</p>
 
         <div class="features-preview">
             <div class="feature-card">
@@ -84,12 +86,20 @@
                 <p>Practice decimal operations with real-world precision.</p>
             </div>
             <div class="feature-card">
+                <h3>Percentages</h3>
+                <p>Calculate discounts, tips, and conversions with confidence.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Geometry</h3>
+                <p>Practice area, perimeter, and spatial reasoning problems.</p>
+            </div>
+            <div class="feature-card">
                 <h3>Crown Badge</h3>
                 <p>Stand out on leaderboards with an exclusive premium crown badge.</p>
             </div>
         </div>
 
-        <a href="https://mathpop.io/" class="home-btn">Back to Mathpop</a>
+        <a href="https://mathpop.io/" class="home-btn">Get Premium Pass on Mathpop</a>
     </div>
 
     <footer>
@@ -113,8 +123,8 @@
     {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Premium Pass - Coming Soon | Mathpop",
-        "description": "Unlock advanced math categories like algebra, fractions, and decimals with the Mathpop Premium Pass.",
+        "name": "Premium Pass | Mathpop",
+        "description": "Unlock advanced math categories like algebra, fractions, decimals, percentages, and geometry with the Mathpop Premium Pass.",
         "url": "https://mathpop.io/premium-pass/"
     }
     </script>

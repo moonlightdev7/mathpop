@@ -2051,6 +2051,17 @@
   </div>
 </div>
 
+<!-- ── CUSTOMIZATION CONGRATS ── -->
+<div class="premium-congrats-overlay" id="customizationCongratsOverlay">
+  <div class="premium-congrats-box" style="border-top: none;">
+    <div style="content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#63b3ed,#a855f7,#63b3ed);border-radius:24px 24px 0 0;"></div>
+    <div class="premium-congrats-crown">🎨</div>
+    <h2 style="background:linear-gradient(90deg,#63b3ed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Congratulations!</h2>
+    <p id="customizationCongratsMsg">You've unlocked all customization features! Enjoy neon themes, gradients, color wheel, and gradient maker.</p>
+    <button class="premium-congrats-btn" style="background:linear-gradient(90deg,#63b3ed,#a855f7);" onclick="hideCustomizationCongrats()">Start Customizing</button>
+  </div>
+</div>
+
 <!-- ── PREMIUM CONGRATS ── -->
 <div class="premium-congrats-overlay" id="premiumCongratsOverlay">
   <div class="premium-congrats-box">
@@ -3061,10 +3072,26 @@ window.unlockCustomization = function(silent = false) {
   document.getElementById('colorPanel').style.display = 'block';
   if (!silent) {
     closeModals();
-    document.getElementById('themePanelWrap').classList.add('open');
-    document.getElementById('themeToggleBtn').classList.add('open');
+    showCustomizationCongrats();
   }
 };
+
+function showCustomizationCongrats() {
+  const nameEl = document.getElementById('userName');
+  const name = nameEl ? nameEl.textContent : '';
+  const msg = document.getElementById('customizationCongratsMsg');
+  if (msg) msg.textContent = name
+    ? `Thank you for your purchase, ${name}! You've unlocked all customization features!`
+    : 'Thank you for your purchase! You\'ve unlocked all customization features!';
+  document.getElementById('customizationCongratsOverlay').classList.add('visible');
+}
+
+function hideCustomizationCongrats() {
+  document.getElementById('customizationCongratsOverlay').classList.remove('visible');
+  document.getElementById('themePanelWrap').classList.add('open');
+  document.getElementById('themeToggleBtn').classList.add('open');
+  goHome();
+}
 
 function openWheel() {
   if (wheelUnlocked) {
@@ -6361,6 +6388,11 @@ buildRemainderDivGrid();
           <li style="margin-bottom:8px;"><a href="/addition/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Addition Practice</a></li>
           <li style="margin-bottom:8px;"><a href="/subtraction/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Subtraction Practice</a></li>
           <li style="margin-bottom:8px;"><a href="/word-problems/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Word Problems</a></li>
+          <li style="margin-bottom:8px;"><a href="/fractions/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Fractions</a></li>
+          <li style="margin-bottom:8px;"><a href="/decimals/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Decimals</a></li>
+          <li style="margin-bottom:8px;"><a href="/percentages/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Percentages</a></li>
+          <li style="margin-bottom:8px;"><a href="/geometry/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Geometry</a></li>
+          <li style="margin-bottom:8px;"><a href="/algebra/" style="color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;">Algebra</a></li>
         </ul>
       </div>
       <div>
