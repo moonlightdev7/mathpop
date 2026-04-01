@@ -107,8 +107,10 @@
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- PayPal SDK (live) -->
-<script src="https://www.paypal.com/sdk/js?client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux&currency=USD"></script>
+<!-- PayPal SDK (sandbox — swap to live client-id for production) -->
+<!-- LIVE:    client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux -->
+<!-- SANDBOX: client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0 -->
+<script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -4524,6 +4526,16 @@ function nextQuestion() {
       document.getElementById('remainderInput').value = '';
     }
     setQuestion(wp.text);
+  } else if (currentMode === 'fractions') {
+    generateFractionQuestion(); return;
+  } else if (currentMode === 'decimals') {
+    generateDecimalQuestion(); return;
+  } else if (currentMode === 'percentages') {
+    generatePercentageQuestion(); return;
+  } else if (currentMode === 'geometry') {
+    generateGeometryQuestion(); return;
+  } else if (currentMode === 'algebra') {
+    generateAlgebraQuestion(); return;
   } else {
     const cfgIds = Array.from(selectedDigits);
     const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
@@ -4535,23 +4547,13 @@ function nextQuestion() {
       if (a === b) b = Math.max(cfg.bMin, b - rnd(1, Math.max(1, Math.floor(b * 0.3)))); // avoid answer = 0
       _lastQA = a; _lastQB = b;
       currentAnswer = a - b;
-  
+
       setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
       currentAnswer = a + b;
-  
+
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
-  } else if (currentMode === 'fractions') {
-    generateFractionQuestion(); return;
-  } else if (currentMode === 'decimals') {
-    generateDecimalQuestion(); return;
-  } else if (currentMode === 'percentages') {
-    generatePercentageQuestion(); return;
-  } else if (currentMode === 'geometry') {
-    generateGeometryQuestion(); return;
-  } else if (currentMode === 'algebra') {
-    generateAlgebraQuestion(); return;
   }
   setAnswerMode('integer');
   document.getElementById('answerInput').value = '';
