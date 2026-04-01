@@ -1794,7 +1794,7 @@
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)"></div>
     </div>
-    <button class="gp-buy-btn" id="gpCustomizationBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <button class="gp-buy-btn" id="gpCustomizationBtn" onclick="openCustomization()">🎨 Get Customization Pass</button>
     <div class="gp-owned" id="gpCustomizationOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
   </div>
 
@@ -1815,7 +1815,7 @@
       <div class="gp-perk">🔢 <strong>5 advanced math categories</strong> — Fractions, Decimals, Percentages, Geometry, and Algebra (with full sub-topics from basics to college-level)</div>
       <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
-    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="document.getElementById('modalPremium').style.display='flex'" style="">👑 Get Premium Pass</button>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="openPremiumModal()" style="">👑 Get Premium Pass</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
   </div>
 
@@ -1933,8 +1933,8 @@
       </div>
       <div class="theme-row">
         <span class="row-label">✨ Plus</span>
-        <button class="premium-chip" id="chipCustomization" disabled style="opacity:0.5;cursor:default;pointer-events:none;">
-          🎨 Customization Pass <span class="chip-price" id="priceCustomization">Soon</span>
+        <button class="premium-chip" id="chipCustomization" onclick="openCustomization()">
+          🎨 Customization Pass <span class="chip-price" id="priceCustomization">$2.99</span>
         </button>
         <span id="neonSwatches" style="display:none; gap:6px; align-items:center; flex-wrap:wrap;">
           <button class="swatch-btn" title="Cyber"     style="background:linear-gradient(135deg,#00ff87,#00cfff)" onclick="setNeon('cyber')"></button>
