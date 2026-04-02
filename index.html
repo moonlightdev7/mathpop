@@ -107,8 +107,7 @@
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- PayPal SDK (LIVE) -->
-<script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
+<!-- Payment integration coming soon -->
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -585,28 +584,6 @@
   .neon-preview { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
   .neon-pill { height: 20px; width: 50px; border-radius: 10px; }
 
-  /* sign-in gate inside modal */
-  .modal-signin-gate {
-    background: var(--bg);
-    border: 2px solid var(--border);
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 14px;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .modal-signin-gate strong { color: var(--text); }
-
-  /* paypal containers */
-  .paypal-container { margin-top: 12px; }
-  .paypal-or {
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin: 8px 0;
-    letter-spacing: 0.5px;
-  }
-
   .modal-close {
     background: transparent; border: none; color: var(--muted);
     font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem;
@@ -841,11 +818,6 @@
   }
   .play-again-btn:hover { transform: translateY(-2px); }
   .no-select { user-select: none; }
-
-  /* loading spinner for paypal */
-  .paypal-loading {
-    color: var(--muted); font-size: 0.82rem; padding: 10px 0; text-align: center;
-  }
 
   /* ── MODE SELECTOR ── */
   .mode-selector {
@@ -1453,20 +1425,10 @@
       <div class="neon-pill" style="background:#a78bfa"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
     </div>
-    <div id="customizationSigninGate" class="modal-signin-gate" style="display:none">
-      <strong>Sign in first!</strong> We save your purchase to your account so you never lose it.
-      <br><br>
-      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
-        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84z"/></svg>
-        Sign in with Google
-      </button>
+    <div style="text-align:center;padding:16px 0;color:var(--muted);font-weight:700;font-size:0.9rem;">
+      🔒 Payments coming soon — stay tuned!
     </div>
-    <div class="paypal-container" id="paypal-section-customization">
-      <div id="paypal-customization"></div>
-      <div class="paypal-or">— or pay with card —</div>
-      <div id="paypal-customization-card"></div>
-    </div>
-    <button class="modal-close" onclick="closeModals()">Maybe later</button>
+    <button class="modal-close" onclick="closeModals()">Close</button>
   </div>
 </div>
 
@@ -1805,7 +1767,7 @@
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)"></div>
     </div>
-    <button class="gp-buy-btn" id="gpCustomizationBtn" onclick="openCustomization()">🎨 Get Customization Pass</button>
+    <button class="gp-buy-btn" id="gpCustomizationBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
     <div class="gp-owned" id="gpCustomizationOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
   </div>
 
@@ -1826,7 +1788,7 @@
       <div class="gp-perk">🔢 <strong>5 advanced math categories</strong> — Fractions, Decimals, Percentages, Geometry, and Algebra (with full sub-topics from basics to college-level)</div>
       <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
-    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="openPremiumModal()" style="">👑 Get Premium Pass</button>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
   </div>
 
@@ -1861,27 +1823,10 @@
     <div class="modal-emoji">👑</div>
     <div class="modal-title">Premium Pass</div>
     <div class="modal-desc">Crown badge, up to 3 equipped titles, and upcoming complex math categories.</div>
-    <div id="premiumSigninGate" class="modal-signin-gate" style="display:none">
-      <strong>Sign in first!</strong> We save your subscription to your account.
-      <br><br>
-      <button class="google-btn" style="margin:0 auto" onclick="signIn()">
-        <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Sign in with Google
-      </button>
+    <div style="text-align:center;padding:16px 0;color:var(--muted);font-weight:700;font-size:0.9rem;">
+      🔒 Payments coming soon — stay tuned!
     </div>
-    <div id="paypal-section-premium">
-      <!-- Plan toggle -->
-      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">
-        <button class="mode-btn active" id="premPlanMonth" onclick="setPremiumPlan('month')" style="font-size:0.85rem;padding:8px 16px">$4.99 / month</button>
-        <button class="mode-btn" id="premPlanYear" onclick="setPremiumPlan('year')" style="font-size:0.85rem;padding:8px 16px">$49.99 / year <span style="color:#2ec27e;font-weight:900;font-size:0.7rem">SAVE 17%</span></button>
-      </div>
-      <div class="paypal-container">
-        <div id="paypal-premium"></div>
-        <div class="paypal-or">— or pay with card —</div>
-        <div id="paypal-premium-card"></div>
-      </div>
-    </div>
-    <button class="modal-close" onclick="closeModals()">Maybe later</button>
+    <button class="modal-close" onclick="closeModals()">Close</button>
   </div>
 </div>
 
@@ -2016,8 +1961,7 @@
     <h3 class="ach-toggle" onclick="toggleSection('settingsSubscription')">💳 Subscription <span class="ach-toggle-arrow" id="settingsSubscription-arrow">▼</span></h3>
     <div class="ach-toggle-body open" id="settingsSubscription">
       <div style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;font-weight:600" id="subStatus">Not subscribed</div>
-      <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;line-height:1.5">Your subscription renews automatically. You can cancel anytime via PayPal.</p>
-      <a href="https://www.paypal.com/myaccount/autopay" target="_blank" class="settings-btn" style="display:inline-block;text-decoration:none;text-align:center;cursor:pointer;">🔗 Manage on PayPal</a>
+      <p style="font-size:0.82rem;color:var(--muted);margin:0 0 12px;line-height:1.5">Subscriptions coming soon! Stay tuned for updates.</p>
     </div>
   </div>
 
@@ -2966,23 +2910,18 @@ function toggleThemePanel() {
 
 // ── UNLOCK ──
 let wheelUnlocked = false, neonUnlocked = false, customizationUnlocked = false;
-let paypalWheelRendered = false, paypalNeonRendered = false, paypalCustomizationRendered = false;
-let paypalPremiumRendered = false;
 window.isPremium = false;
 
 window.lockWheel = function() {
   wheelUnlocked = false;
-  paypalWheelRendered = false;
 };
 
 window.lockNeon = function() {
   neonUnlocked = false;
-  paypalNeonRendered = false;
 };
 
 window.lockCustomization = function() {
   customizationUnlocked = false;
-  paypalCustomizationRendered = false;
   wheelUnlocked = false;
   neonUnlocked = false;
   try { localStorage.removeItem('mathpop_customization'); } catch(e) {}
@@ -2997,7 +2936,6 @@ window.lockCustomization = function() {
 
 window.unlockPremium = function(silent = false) {
   window.isPremium = true;
-  paypalPremiumRendered = false;
   try { localStorage.setItem('mathpop_premium', '1'); } catch(e) {}
   const btn = document.getElementById('gpPremiumBtn');
   const owned = document.getElementById('gpPremiumOwned');
@@ -3008,7 +2946,7 @@ window.unlockPremium = function(silent = false) {
   if (crownEl) crownEl.style.display = 'inline';
   // Update subscription section if visible
   const subStatus = document.getElementById('subStatus');
-  if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Active</span><div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">Your subscription renews automatically. Manage it via PayPal.</div>';
+  if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Active</span>';
   // Hide locked message in More Math panel
   const lockedMsg = document.getElementById('premiumLockedMsg');
   if (lockedMsg) lockedMsg.style.display = 'none';
@@ -3020,7 +2958,6 @@ window.unlockPremium = function(silent = false) {
 
 window.lockPremium = function() {
   window.isPremium = false;
-  paypalPremiumRendered = false;
   try { localStorage.removeItem('mathpop_premium'); } catch(e) {}
   const btn = document.getElementById('gpPremiumBtn');
   const owned = document.getElementById('gpPremiumOwned');
@@ -3130,149 +3067,27 @@ function openWheel() {
     document.getElementById('themePanelWrap').classList.add('open');
     document.getElementById('themeToggleBtn').classList.add('open');
   } else {
-    // Check if signed in
-    const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-    document.getElementById('wheelSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
-    document.getElementById('paypal-section-wheel').style.display = isSignedIn ? 'block' : 'none';
-    document.getElementById('modalWheel').classList.add('open');
-    if (isSignedIn && !paypalWheelRendered) { renderPayPalWheel(); paypalWheelRendered = true; }
+    // Purchases disabled — coming soon
   }
 }
 
 function openNeon() {
   if (neonUnlocked) return;
-  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-  document.getElementById('neonSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
-  document.getElementById('paypal-section-neon').style.display = isSignedIn ? 'block' : 'none';
-  document.getElementById('modalNeon').classList.add('open');
-  if (isSignedIn && !paypalNeonRendered) { renderPayPalNeon(); paypalNeonRendered = true; }
+  // Purchases disabled — coming soon
 }
 
 function openCustomization() {
   if (customizationUnlocked) return;
-  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-  document.getElementById('customizationSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
-  document.getElementById('paypal-section-customization').style.display = isSignedIn ? 'block' : 'none';
-  document.getElementById('modalCustomization').classList.add('open');
-  if (isSignedIn && !paypalCustomizationRendered) { renderPayPalCustomization(); paypalCustomizationRendered = true; }
+  // Purchases disabled — coming soon
 }
 
 function openPremiumModal() {
   if (window.isPremium) return;
-  const isSignedIn = document.getElementById('signedIn').style.display !== 'none';
-  document.getElementById('premiumSigninGate').style.display     = isSignedIn ? 'none'  : 'block';
-  document.getElementById('paypal-section-premium').style.display = isSignedIn ? 'block' : 'none';
-  document.getElementById('modalPremium').classList.add('open');
-  if (isSignedIn && !paypalPremiumRendered) { renderPayPalPremium(); paypalPremiumRendered = true; }
+  // Purchases disabled — coming soon
 }
 
 function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeModals(); }));
-
-// ── PAYPAL ──
-function renderPayPalButtons(containerId, cardContainerId, description, onSuccess) {
-  const orderCfg = {
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '0.99' }, description }]
-    }),
-    onApprove: async (data, actions) => {
-      await actions.order.capture();
-      await onSuccess();
-    },
-    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
-  };
-  // PayPal account login button
-  const ppBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
-  if (ppBtn.isEligible()) ppBtn.render('#' + containerId);
-  else document.getElementById(containerId).style.display = 'none';
-  // Card button
-  const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
-  if (cardBtn.isEligible()) cardBtn.render('#' + cardContainerId);
-  else { document.getElementById(cardContainerId).style.display = 'none'; document.querySelector('#' + containerId + ' ~ .paypal-or')?.remove(); }
-}
-
-function renderPayPalWheel() {
-  document.getElementById('paypal-wheel').innerHTML = '';
-  document.getElementById('paypal-wheel-card').innerHTML = '';
-  renderPayPalButtons('paypal-wheel', 'paypal-wheel-card', 'Mathpop Color Wheel', async () => {
-    try { if (window.savePurchase) await window.savePurchase('colorWheel'); }
-    catch (err) { console.error('Failed to save colorWheel purchase:', err); }
-    window.unlockWheel();
-  });
-}
-
-function renderPayPalNeon() {
-  document.getElementById('paypal-neon').innerHTML = '';
-  document.getElementById('paypal-neon-card').innerHTML = '';
-  renderPayPalButtons('paypal-neon', 'paypal-neon-card', 'Mathpop Neon Pack', async () => {
-    try { if (window.savePurchase) await window.savePurchase('neonPack'); }
-    catch (err) { console.error('Failed to save neonPack purchase:', err); }
-    window.unlockNeon();
-  });
-}
-
-function renderPayPalCustomization() {
-  document.getElementById('paypal-customization').innerHTML = '';
-  document.getElementById('paypal-customization-card').innerHTML = '';
-  const orderCfg = {
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: '2.99' }, description: 'Mathpop Customization Pass' }]
-    }),
-    onApprove: async (data, actions) => {
-      await actions.order.capture();
-      try { if (window.savePurchase) await window.savePurchase('customizationPass'); }
-      catch (err) { console.error('Failed to save customizationPass purchase:', err); }
-      window.unlockCustomization();
-    },
-    onError: () => alert('Payment failed. Please try again.')
-  };
-  const btn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
-  if (btn.isEligible()) btn.render('#paypal-customization');
-  else document.getElementById('paypal-customization').style.display = 'none';
-  const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
-  if (cardBtn.isEligible()) cardBtn.render('#paypal-customization-card');
-  else { document.getElementById('paypal-customization-card').style.display = 'none'; document.querySelector('#paypal-section-customization ~ .paypal-or')?.remove(); }
-}
-
-let premiumPlan = 'month'; // 'month' or 'year'
-
-function setPremiumPlan(plan) {
-  premiumPlan = plan;
-  document.getElementById('premPlanMonth').classList.toggle('active', plan === 'month');
-  document.getElementById('premPlanYear').classList.toggle('active', plan === 'year');
-  paypalPremiumRendered = false;
-  renderPayPalPremium();
-}
-
-function renderPayPalPremium() {
-  const ppContainer = document.getElementById('paypal-premium');
-  const cardContainer = document.getElementById('paypal-premium-card');
-  ppContainer.innerHTML = '';
-  cardContainer.innerHTML = '';
-  const amount = premiumPlan === 'year' ? '49.99' : '4.99';
-  const label  = premiumPlan === 'year' ? 'Mathpop Premium Pass (Yearly)' : 'Mathpop Premium Pass (Monthly)';
-  const orderCfg = {
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: amount }, description: label }]
-    }),
-    onApprove: async (data, actions) => {
-      await actions.order.capture();
-      try { if (window.savePurchase) await window.savePurchase('premiumPass'); }
-      catch (err) { console.error('Failed to save premiumPass purchase:', err); }
-      window.unlockPremium();
-    },
-    onError: err => { console.error(err); alert('Payment failed. Please try again.'); }
-  };
-  if (typeof paypal !== 'undefined') {
-    const ppBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.PAYPAL, style: { shape: 'pill' }, ...orderCfg });
-    if (ppBtn.isEligible()) ppBtn.render('#paypal-premium');
-    else ppContainer.style.display = 'none';
-    const cardBtn = paypal.Buttons({ fundingSource: paypal.FUNDING.CARD, style: { shape: 'pill' }, ...orderCfg });
-    if (cardBtn.isEligible()) cardBtn.render('#paypal-premium-card');
-    else { cardContainer.style.display = 'none'; document.querySelector('#paypal-premium ~ .paypal-or')?.remove(); }
-  }
-  paypalPremiumRendered = true;
-}
 
 // ── CUSTOM COLORS ──
 function applyColor(prop, val) {
