@@ -107,9 +107,7 @@
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- PayPal SDK (sandbox — swap to live client-id for production) -->
-<!-- LIVE:    client-id=AfMueOivWD-2SbD6oL_N5aCpSmZU5XFOHArzOkYJmiiCsPA5leO_Hvq2-ogOUchlldpKkbLJ48Wrieux -->
-<!-- SANDBOX: client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0 -->
+<!-- PayPal SDK (LIVE) -->
 <script src="https://www.paypal.com/sdk/js?client-id=AV1i47QcsG1BE3KPo8DXqX5579W6ORfhj2eicREaEvHXkDwdnsxOBloyrCkP1DxT8owvulYAFMlrdUH0&currency=USD"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -794,8 +792,11 @@
   .fraction-answer-row .answer-input { flex: 1; min-width: 0; }
   /* Fraction/whole number toggle */
   .frac-toggle-wrap { display: none; margin-bottom: 8px; text-align: center; }
-  .frac-toggle-btn { background: var(--card,#f0f4f8); border: 2px solid var(--primary); color: var(--primary); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
-  .frac-toggle-btn:hover { background: var(--primary); color: #fff; }
+  .frac-toggle-group { display: inline-flex; border: 2px solid var(--primary); border-radius: 20px; overflow: hidden; }
+  .frac-toggle-opt { background: var(--card,#f0f4f8); border: none; color: var(--primary); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem; padding: 5px 13px; cursor: pointer; transition: all 0.2s; border-right: 1px solid var(--primary); }
+  .frac-toggle-opt:last-child { border-right: none; }
+  .frac-toggle-opt:hover { background: color-mix(in srgb, var(--primary) 15%, transparent); }
+  .frac-toggle-opt.active { background: var(--primary); color: #fff; }
   .whole-number-wrap { display: none; }
   .whole-number-wrap .answer-input { width: 100%; box-sizing: border-box; }
   /* Mixed fraction input */
@@ -2191,9 +2192,13 @@
           <input type="number" class="answer-input" id="remainderInput" placeholder="?" min="0" autocomplete="off" onkeydown="handleRemainderKey(event)"/>
         </div>
       </div>
-      <!-- Fraction / whole number toggle -->
+      <!-- Fraction answer format toggle (3-way: Whole / Fraction / Mixed) -->
       <div class="frac-toggle-wrap" id="fracToggleWrap">
-        <button class="frac-toggle-btn" id="fracToggleBtn" onclick="toggleFracMode()">Switch to Whole Number</button>
+        <div class="frac-toggle-group">
+          <button class="frac-toggle-opt" id="fracOptWhole" onclick="setFracMode('whole')">Whole #</button>
+          <button class="frac-toggle-opt active" id="fracOptFraction" onclick="setFracMode('fraction')">Fraction</button>
+          <button class="frac-toggle-opt" id="fracOptMixed" onclick="setFracMode('mixed')">Mixed</button>
+        </div>
       </div>
       <!-- Fraction answer: numerator / denominator -->
       <div class="fraction-answer-row" id="fractionWrap" style="display:none">
@@ -3422,52 +3427,38 @@ function reduceFrac(n, d) { const g = gcd(Math.abs(n), d); return [n / g, d / g]
 let fracInputMode = 'fraction'; // 'fraction' | 'whole' | 'mixed' | 'improper'
 let currentIsMixed = false; // true when current question is a mixed fraction op
 
-function toggleFracMode() {
+function setFracMode(mode) {
+  fracInputMode = mode;
   const fracWrap = document.getElementById('fractionWrap');
   const wholeWrap = document.getElementById('wholeNumberWrap');
   const mixedWrap = document.getElementById('mixedFracWrap');
-  const btn = document.getElementById('fracToggleBtn');
 
-  if (currentIsMixed) {
-    // Toggle between mixed fraction and improper fraction
-    if (fracInputMode === 'mixed') {
-      fracInputMode = 'improper';
-      mixedWrap.style.display = 'none';
-      fracWrap.style.display = 'flex';
-      wholeWrap.style.display = 'none';
-      btn.textContent = 'Switch to Mixed Fraction';
-      document.getElementById('fracNumerInput').value = '';
-      document.getElementById('fracDenomInput').value = '';
-      document.getElementById('fracNumerInput').focus();
-    } else {
-      fracInputMode = 'mixed';
-      mixedWrap.style.display = 'flex';
-      fracWrap.style.display = 'none';
-      wholeWrap.style.display = 'none';
-      btn.textContent = 'Switch to Improper Fraction';
-      clearMixedInputs();
-      document.getElementById('mixedWholeInput').focus();
-    }
+  // Update active button highlight
+  document.getElementById('fracOptWhole').classList.toggle('active', mode === 'whole');
+  document.getElementById('fracOptFraction').classList.toggle('active', mode === 'fraction' || mode === 'improper');
+  document.getElementById('fracOptMixed').classList.toggle('active', mode === 'mixed');
+
+  if (mode === 'whole') {
+    fracWrap.style.display = 'none';
+    wholeWrap.style.display = 'block';
+    mixedWrap.style.display = 'none';
+    document.getElementById('wholeNumberInput').value = '';
+    document.getElementById('wholeNumberInput').focus();
+  } else if (mode === 'mixed') {
+    fracWrap.style.display = 'none';
+    wholeWrap.style.display = 'none';
+    mixedWrap.style.display = 'flex';
+    clearMixedInputs();
+    document.getElementById('mixedWholeInput').focus();
   } else {
-    // Toggle between fraction and whole number
-    if (fracInputMode === 'fraction') {
-      fracInputMode = 'whole';
-      fracWrap.style.display = 'none';
-      wholeWrap.style.display = 'block';
-      mixedWrap.style.display = 'none';
-      btn.textContent = 'Switch to Fraction';
-      document.getElementById('wholeNumberInput').value = '';
-      document.getElementById('wholeNumberInput').focus();
-    } else {
-      fracInputMode = 'fraction';
-      fracWrap.style.display = 'flex';
-      wholeWrap.style.display = 'none';
-      mixedWrap.style.display = 'none';
-      btn.textContent = 'Switch to Whole Number';
-      document.getElementById('fracNumerInput').value = '';
-      document.getElementById('fracDenomInput').value = '';
-      document.getElementById('fracNumerInput').focus();
-    }
+    // 'fraction' or 'improper' — both use the same num/den input
+    fracInputMode = 'fraction';
+    fracWrap.style.display = 'flex';
+    wholeWrap.style.display = 'none';
+    mixedWrap.style.display = 'none';
+    document.getElementById('fracNumerInput').value = '';
+    document.getElementById('fracDenomInput').value = '';
+    document.getElementById('fracNumerInput').focus();
   }
 }
 
@@ -3498,22 +3489,11 @@ function setAnswerMode(type, isMixed) {
     fracToggle.style.display = 'block';
     ansInput.style.display = 'none';
     remWrap.style.display  = 'none';
+    // Default: mixed ops → mixed input, regular ops → fraction input
     if (isMixed) {
-      // Default to mixed fraction input for mixed questions
-      fracInputMode = 'mixed';
-      fracWrap.style.display = 'none';
-      wholeWrap.style.display = 'none';
-      mixedWrap.style.display = 'flex';
-      document.getElementById('fracToggleBtn').textContent = 'Switch to Improper Fraction';
-      clearMixedInputs();
+      setFracMode('mixed');
     } else {
-      fracInputMode = 'fraction';
-      fracWrap.style.display = 'flex';
-      wholeWrap.style.display = 'none';
-      mixedWrap.style.display = 'none';
-      document.getElementById('fracToggleBtn').textContent = 'Switch to Whole Number';
-      document.getElementById('fracNumerInput').value = '';
-      document.getElementById('fracDenomInput').value = '';
+      setFracMode('fraction');
     }
     document.getElementById('wholeNumberInput').value = '';
   } else {
@@ -3987,8 +3967,11 @@ function generateFractionQuestion() {
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
     setQuestion(`Evaluate the complex fraction: (${n1}/${d1}) ÷ (${n2}/${d2}) = ?`);
   }
-  if (isMixedOp) {
+  // Focus the appropriate input based on current toggle mode
+  if (fracInputMode === 'mixed') {
     document.getElementById('mixedWholeInput').focus();
+  } else if (fracInputMode === 'whole') {
+    document.getElementById('wholeNumberInput').focus();
   } else {
     document.getElementById('fracNumerInput').focus();
   }
@@ -4795,9 +4778,16 @@ function showFeedback(ok, ans, rem) {
   } else if (currentAnswerType === 'fraction') {
     const [rn, rd] = reduceFrac(currentAnswerNumerator, currentAnswerDenominator);
     let fracStr;
-    if (rd === 1) { fracStr = `${rn}`; }
-    else if (currentIsMixed && rn > rd) { const mw = Math.floor(rn/rd); const mr = rn % rd; fracStr = mr === 0 ? `${mw}` : `${mw} ${mr}/${rd}`; }
-    else { fracStr = `${rn}/${rd}`; }
+    if (rd === 1) {
+      fracStr = `${rn}`;
+    } else if (fracInputMode === 'mixed' && rn > rd) {
+      const mw = Math.floor(rn / rd); const mr = rn % rd;
+      fracStr = mr === 0 ? `${mw}` : `${mw} ${mr}/${rd}`;
+    } else if (fracInputMode === 'whole' && rd === 1) {
+      fracStr = `${rn}`;
+    } else {
+      fracStr = `${rn}/${rd}`;
+    }
     msg = `Not quite — the answer was ${fracStr}`;
   } else if (currentAnswerType === 'float') {
     msg = `Not quite — the answer was ${currentAnswer}`;
