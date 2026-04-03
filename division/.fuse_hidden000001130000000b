@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Division Practice Online | Short & Long Division | Mathpop</title>
+    <meta name="description" content="Master division practice with free online exercises. Learn short division, long division, and division with remainders on Mathpop.">
+    <link rel="canonical" href="https://mathpop.io/division/">
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="Free Division Practice Online | Mathpop">
+    <meta property="og:description" content="Master division practice with instant feedback, rank progression, and leaderboards.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mathpop.io/division/">
+    <meta property="og:image" content="https://mathpop.io/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Division Practice Online | Mathpop">
+    <meta name="twitter:description" content="Master division practice with instant feedback, rank progression, and leaderboards.">
+    <meta name="twitter:image" content="https://mathpop.io/og-image.png">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Free Division Practice Online",
+        "description": "Master division practice with free online exercises including short division, long division, and remainders.",
+        "url": "https://mathpop.io/division/",
+        "mainEntity": {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What is the difference between short division and long division?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Short division is a faster method used for simple divisors, working from left to right with mental math. Long division is a step-by-step method that works with larger numbers and divisors, showing all work and remainders."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do I find remainders in division?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "A remainder is what's left over after dividing. For example, 7 ÷ 2 = 3 with a remainder of 1. Mathpop's division practice helps you master remainders with instant feedback."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I use the scratch pad while practicing division?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes! Mathpop includes a built-in scratch pad where you can write out long division steps, draw area models, or work through problems visually before submitting your answer."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do ranks and leaderboards work?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Every 25 questions answered unlocks a new rank, progressing through 41+ ranks from Seedling to Mathpop Legend. Complete quests to unlock titles, and compete on global leaderboards with friends."
+                    }
+                }
+            ]
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #00101a;
+            color: #f0f9ff;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background-color: #001c2d;
+            border-bottom: 2px solid #003050;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #63b3ed;
+            text-decoration: none;
+        }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+        nav a:hover { color: #63b3ed; }
+
+        /* Main Content */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #63b3ed;
+        }
+
+        h2 {
+            font-family: 'Fredoka One', sans-serif;
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #63b3ed;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .intro {
+            background-color: #001c2d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background-color: #001c2d;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #003050;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background-color: #001c2d;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #003050;
+        }
+
+        .feature-card h3 {
+            color: #63b3ed;
+            margin-bottom: 0.5rem;
+            font-family: 'Fredoka One', sans-serif;
+        }
+
+        .cta-button {
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: 'Fredoka One', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            margin: 2rem 0;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .cta-button:hover {
+            background-color: #4a9fd8;
+            transform: scale(1.05);
+        }
+
+        .faq-item {
+            background-color: #001c2d;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid #63b3ed;
+        }
+
+        .faq-item h3 {
+            color: #63b3ed;
+            margin-bottom: 0.75rem;
+            font-family: 'Fredoka One', sans-serif;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #001c2d;
+            border-top: 1px solid #003050;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            margin: 1rem 0;
+        }
+
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #8fa3b8;
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Free Division Practice Online</h1>
+
+        <div class="intro">
+            <p>Master division with interactive online practice. Whether you're learning short division, tackling long division, or working with remainders, Mathpop makes division fun and engaging with instant feedback, rank progression through 41+ ranks, and competitive leaderboards.</p>
+        </div>
+
+        <section class="section">
+            <h2>Short Division & Long Division</h2>
+            <p>Mathpop offers both short division and long division practice modes. Short division is perfect for quick mental math with single-digit divisors, while long division teaches the step-by-step method needed for more complex problems. Choose the mode that matches your skill level and progress at your own pace.</p>
+        </section>
+
+        <section class="section">
+            <h2>Long Division with Remainders</h2>
+            <p>Understanding remainders is crucial in division. Mathpop's specialized remainder practice helps you master how to express remainders as whole numbers, fractions, or decimals. With instant feedback, you'll quickly learn to identify and correctly handle remainders in every problem.</p>
+        </section>
+
+        <section class="section">
+            <h2>Built-in Scratch Pad</h2>
+            <p>Every division problem comes with a built-in whiteboard scratch pad. Write out long division steps, draw models, or work through calculations visually before submitting your answer. This tool helps you show your work and catch mistakes before they happen.</p>
+        </section>
+
+        <section class="section">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Instant Feedback</h3>
+                    <p>Get immediate corrections and explanations for every answer to reinforce learning.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>41+ Ranks</h3>
+                    <p>Unlock new ranks with every 25 questions answered, climbing from Seedling to Mathpop Legend and beyond.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Leaderboards</h3>
+                    <p>Compete with friends and track your standing on daily, weekly, and monthly leaderboards.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Scratch Pad</h3>
+                    <p>Use the integrated whiteboard to work out problems and show your complete division process.</p>
+                </div>
+            </div>
+        </section>
+
+        <div style="text-align: center;">
+            <a href="https://mathpop.io/" class="cta-button">Start Practicing Now — It's Free!</a>
+        </div>
+
+        <section class="section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <h3>What is the difference between short division and long division?</h3>
+                <p>Short division is a faster method used for simple divisors, working from left to right with mental math. Long division is a step-by-step method that works with larger numbers and divisors, showing all work and remainders.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How do I find remainders in division?</h3>
+                <p>A remainder is what's left over after dividing. For example, 7 ÷ 2 = 3 with a remainder of 1. Mathpop's division practice helps you master remainders with instant feedback and detailed explanations.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I use the scratch pad while practicing division?</h3>
+                <p>Yes! Mathpop includes a built-in scratch pad where you can write out long division steps, draw area models, or work through problems visually before submitting your answer.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How do ranks and leaderboards work?</h3>
+                <p>Every 25 questions answered unlocks a new rank, helping you progress through 41+ ranks from Seedling to Mathpop Legend. Complete quests to unlock titles for your profile, and track your progress on global leaderboards to compete with friends.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="https://mathpop.io/division/">Division</a>
+                <a href="https://mathpop.io/multiplication/">Multiplication</a>
+                <a href="https://mathpop.io/addition/">Addition</a>
+                <a href="https://mathpop.io/subtraction/">Subtraction</a>
+                <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            </div>
+            <div class="copyright">© 2026 Late Night Labs · Mathpop</div>
+        </div>
+    </footer>
+</body>
+</html>

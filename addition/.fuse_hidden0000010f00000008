@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Addition Practice Online | Add Numbers Up to 10 Digits | Mathpop</title>
+    <meta name="description" content="Master addition with free online practice games. Add numbers up to 10 digits with instant feedback, rank progression, and leaderboards. Perfect for students.">
+    <meta name="keywords" content="addition practice, addition games, math addition online, free math games">
+    <link rel="canonical" href="https://mathpop.io/addition/">
+
+    <meta property="og:title" content="Free Addition Practice Online | Mathpop">
+    <meta property="og:description" content="Master addition with free online practice games. Add numbers up to 10 digits.">
+    <meta property="og:url" content="https://mathpop.io/addition/">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Addition Practice Online | Mathpop">
+    <meta name="twitter:description" content="Master addition with free online practice games. Add numbers up to 10 digits.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #00101a;
+            color: #f0f9ff;
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #001c2d;
+            border-bottom: 2px solid #003050;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #63b3ed;
+            text-decoration: none;
+        }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) {
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
+        }
+
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: #63b3ed;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            color: #63b3ed;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .intro {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            margin: 1.5rem auto;
+            display: block;
+            width: fit-content;
+        }
+        .cta-button:hover { background-color: #4a9fd8; }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .feature-card {
+            background-color: #001c2d;
+            border: 1px solid #003050;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #63b3ed;
+        }
+        .feature-card h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+
+        .faq-section { margin-top: 3rem; }
+        .faq-item {
+            background-color: #001c2d;
+            border-left: 4px solid #63b3ed;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .faq-item h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+
+        footer {
+            background-color: #001c2d;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: #f0f9ff; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Free Addition Practice Online</h1>
+        <p class="intro">Master addition with engaging games and instant feedback. Practice adding numbers up to 10 digits, climb through 41+ ranks, and compete on leaderboards. Perfect for students of all levels.</p>
+        <a href="https://mathpop.io/" class="cta-button">Start Practicing Addition Now</a>
+
+        <h2>Practice Addition Up to 10-Digit Numbers</h2>
+        <p>Challenge yourself with progressively difficult addition problems. From single digits to complex multi-digit calculations, our adaptive practice system adjusts to your skill level and helps you improve faster.</p>
+
+        <h2>How It Works</h2>
+        <p>Simply solve addition problems as they appear on your screen. Get instant feedback on every answer. Every 25 questions answered unlocks a new rank as you climb from Seedling toward Mathpop Legend. Complete quests to unlock titles for your profile. The more you practice, the faster you'll improve.</p>
+
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>⚡ Instant Feedback</h3>
+                <p>See if your answer is correct immediately and learn from mistakes in real time.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏆 41+ Ranks</h3>
+                <p>Unlock new ranks with every 25 questions answered, from Seedling to Mathpop Legend and beyond.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Leaderboards</h3>
+                <p>Compete with friends and players worldwide to reach the top of the global rankings.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Custom Themes</h3>
+                <p>Choose from multiple themes to personalize your learning experience and stay motivated.</p>
+            </div>
+        </div>
+
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What is addition practice?</h3>
+                <p>Addition practice involves solving arithmetic problems to improve your ability to add numbers. Regular practice strengthens mental math skills, speeds up calculations, and builds confidence in mathematics.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How can addition games help me improve?</h3>
+                <p>Our addition games make learning fun and engaging. The gamification elements like rank progression, quest completion, title unlocks, and leaderboards motivate you to practice consistently, which leads to faster skill development and better retention.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is Mathpop's addition practice suitable for all ages?</h3>
+                <p>Yes! Our adaptive difficulty system works for beginners learning basic addition and advanced learners practicing with large numbers. You can start at your level and progress at your own pace.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I track my progress?</h3>
+                <p>Absolutely! Your rank progression, quest completion, title unlocks, and performance metrics are tracked automatically. You can see your improvement over time and use this data to set personal goals.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Late Night Labs · Mathpop</p>
+        <ul class="footer-links">
+            <li><a href="https://mathpop.io/addition/">Addition</a></li>
+            <li><a href="https://mathpop.io/subtraction/">Subtraction</a></li>
+            <li><a href="https://mathpop.io/multiplication/">Multiplication</a></li>
+            <li><a href="https://mathpop.io/division/">Division</a></li>
+            <li><a href="https://mathpop.io/word-problems/">Word Problems</a></li>
+        </ul>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Free Addition Practice Online",
+        "url": "https://mathpop.io/addition/",
+        "description": "Master addition with free online practice games. Add numbers up to 10 digits with instant feedback.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Late Night Labs",
+            "url": "https://mathpop.io"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is addition practice?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Addition practice involves solving arithmetic problems to improve your ability to add numbers. Regular practice strengthens mental math skills, speeds up calculations, and builds confidence."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How can addition games help me improve?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Addition games make learning fun and engaging. Gamification elements like rank progression, quests, title unlocks, and leaderboards motivate consistent practice, leading to faster skill development."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is Mathpop's addition practice suitable for all ages?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! Our adaptive difficulty system works for beginners and advanced learners. You can start at your level and progress at your own pace."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I track my progress?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely! Your rank progression, quest completion, title unlocks, and performance metrics are tracked automatically so you can monitor improvement over time."
+                }
+            }
+        ]
+    }
+    </script>
+</body>
+</html>

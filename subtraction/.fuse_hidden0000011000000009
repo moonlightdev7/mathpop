@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Subtraction Practice Online | Subtract Numbers Up to 10 Digits | Mathpop</title>
+    <meta name="description" content="Practice subtraction online with instant feedback, rank progression, and leaderboards. Free subtraction games for numbers up to 10 digits. Join thousands of learners at Mathpop.io.">
+    <link rel="canonical" href="https://mathpop.io/subtraction/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free Subtraction Practice Online | Mathpop">
+    <meta property="og:description" content="Master subtraction with interactive practice games. Instant feedback, rank progression, and leaderboards.">
+    <meta property="og:url" content="https://mathpop.io/subtraction/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://mathpop.io/og-subtraction.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Subtraction Practice Online | Mathpop">
+    <meta name="twitter:description" content="Practice subtraction online with instant feedback and rank progression.">
+    <meta name="twitter:image" content="https://mathpop.io/og-subtraction.jpg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebPage",
+                "name": "Free Subtraction Practice Online",
+                "description": "Master subtraction with interactive practice games. Instant feedback, rank progression, and leaderboards.",
+                "url": "https://mathpop.io/subtraction/",
+                "isPartOf": {"@id": "https://mathpop.io"},
+                "publisher": {"@id": "https://mathpop.io"}
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How does subtraction practice work on Mathpop?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Mathpop provides interactive subtraction problems with instant feedback. Solve problems, unlock ranks with every 25 questions, complete quests to earn titles, and compete on global leaderboards."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What number ranges are covered in subtraction practice?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "We offer subtraction practice for numbers up to 10 digits, accommodating learners from beginners to advanced mathematicians."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I customize my subtraction practice difficulty?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes! Mathpop allows you to select your preferred difficulty level, number range, and practice duration for a personalized learning experience."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is Mathpop subtraction practice free?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, Mathpop offers free subtraction practice with core features. Start practicing immediately without any sign-up required."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #00101a;
+            color: #f0f9ff;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fredoka One', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        header {
+            background-color: #001c2d;
+            border-bottom: 2px solid #003050;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #63b3ed;
+            text-decoration: none;
+        }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+        nav a:hover { color: #63b3ed; }
+        @media (max-width: 768px) {
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #63b3ed;
+            margin-bottom: 1rem;
+        }
+
+        .intro {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #63b3ed;
+            color: #00101a;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Fredoka One', sans-serif;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .cta-button:hover {
+            background-color: #4a9bc9;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background-color: #001c2d;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #003050;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #63b3ed;
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background-color: #00101a;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border-left: 3px solid #63b3ed;
+        }
+
+        .feature-card h3 {
+            color: #63b3ed;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq {
+            background-color: #001c2d;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #003050;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            color: #63b3ed;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            color: #f0f9ff;
+            padding-left: 1rem;
+        }
+
+        footer {
+            background-color: #001c2d;
+            border-top: 2px solid #003050;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #a0d4f7;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Free Subtraction Practice Online</h1>
+            <p class="intro">Master subtraction with interactive practice games. Get instant feedback, climb through 41+ ranks, complete quests, and compete with learners worldwide. No sign-up required—start practicing now.</p>
+            <a href="https://mathpop.io/" class="cta-button">Start Practicing</a>
+        </section>
+
+        <section class="section">
+            <h2>Practice Subtraction Up to 10-Digit Numbers</h2>
+            <p>Whether you're learning basic subtraction or mastering complex multi-digit problems, Mathpop adapts to your skill level. Customize your practice sessions with adjustable difficulty, number ranges, and practice duration.</p>
+        </section>
+
+        <section class="section">
+            <h2>How It Works</h2>
+            <ol style="padding-left: 1.5rem; line-height: 2;">
+                <li>Select your difficulty level and preferred number range</li>
+                <li>Solve subtraction problems with instant feedback</li>
+                <li>Every 25 questions answered unlocks a new rank</li>
+                <li>Complete quests to unlock titles and compete on global leaderboards</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Instant Feedback</h3>
+                    <p>Know immediately if you're correct. Learn from mistakes with detailed explanations.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>41+ Ranks</h3>
+                    <p>Unlock new ranks with every 25 questions answered, climbing from Seedling to Mathpop Legend and beyond.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Global Leaderboards</h3>
+                    <p>Challenge learners worldwide and track your progress against the community.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Customizable Themes</h3>
+                    <p>Choose from multiple themes to personalize your learning experience.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question">How does subtraction practice work on Mathpop?</div>
+                <div class="faq-answer">Mathpop provides interactive subtraction problems with instant feedback. Solve problems, unlock ranks with every 25 questions, complete quests to earn titles, and compete on global leaderboards. Customize your sessions for optimal learning.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">What number ranges are covered in subtraction practice?</div>
+                <div class="faq-answer">We offer subtraction practice for numbers up to 10 digits, accommodating learners from beginners to advanced mathematicians. Start small and progress at your own pace.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Can I customize my subtraction practice difficulty?</div>
+                <div class="faq-answer">Yes! Mathpop allows you to select your preferred difficulty level, number range, and practice duration for a personalized learning experience tailored to your needs.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Is Mathpop subtraction practice free?</div>
+                <div class="faq-answer">Yes, Mathpop offers free subtraction practice with all core features. Start practicing immediately without any sign-up required.</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://mathpop.io/addition/">Addition</a>
+                <a href="https://mathpop.io/multiplication/">Multiplication</a>
+                <a href="https://mathpop.io/division/">Division</a>
+                <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            </div>
+            <p class="copyright">© 2026 Late Night Labs · Mathpop</p>
+        </div>
+    </footer>
+</body>
+</html>

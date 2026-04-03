@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Math Word Problems Practice Online | Realistic Scenarios | Mathpop</title>
+    <meta name="description" content="Practice math word problems online with realistic scenarios. Build confidence across all operations with instant feedback and engaging gameplay.">
+    <link rel="canonical" href="https://mathpop.io/word-problems/">
+    <meta property="og:title" content="Free Math Word Problems Practice Online | Mathpop">
+    <meta property="og:description" content="Master math word problems with realistic scenarios, instant feedback, and interactive learning.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mathpop.io/word-problems/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Math Word Problems Practice Online | Mathpop">
+    <meta name="twitter:description" content="Practice math word problems with realistic scenarios and instant feedback.">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Nunito', sans-serif; background: #00101a; color: #f0f9ff; line-height: 1.6; }
+        header { background: #001c2d; border-bottom: 2px solid #003050; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #63b3ed; text-decoration: none; }
+        nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        nav a { color: #e2e8f0; text-decoration: none; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+        nav a:hover { color: #63b3ed; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        h1 { font-family: 'Fredoka One', sans-serif; font-size: 2.5rem; margin: 2rem 0 1rem; color: #63b3ed; }
+        h2 { font-family: 'Fredoka One', sans-serif; font-size: 1.8rem; margin: 2rem 0 1rem; color: #63b3ed; }
+        .intro { font-size: 1.1rem; margin: 1.5rem 0; line-height: 1.8; }
+        .card { background: #001c2d; border: 1px solid #003050; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .feature-item { background: #00101a; border-left: 4px solid #63b3ed; padding: 1rem; }
+        .feature-item h3 { color: #63b3ed; margin-bottom: 0.5rem; }
+        .cta { background: #63b3ed; color: #00101a; padding: 1rem 2rem; text-decoration: none; border-radius: 6px; display: inline-block; margin: 2rem 0; font-weight: 700; }
+        .cta:hover { background: #4a9ad4; }
+        .faq { margin: 3rem 0; }
+        .faq-item { background: #001c2d; border: 1px solid #003050; border-radius: 6px; padding: 1.5rem; margin: 1rem 0; }
+        .faq-item h3 { color: #63b3ed; margin-bottom: 0.5rem; cursor: pointer; }
+        .faq-item p { display: none; margin-top: 1rem; }
+        .faq-item.active p { display: block; }
+        footer { background: #001c2d; border-top: 2px solid #003050; padding: 2rem; text-align: center; margin-top: 3rem; }
+        footer a { color: #63b3ed; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            header { justify-content: center; text-align: center; }
+            nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://mathpop.io/" class="logo">Mathpop</a>
+        <nav>
+            <a href="https://mathpop.io/">Home</a>
+            <a href="https://mathpop.io/addition/">Addition</a>
+            <a href="https://mathpop.io/subtraction/">Subtraction</a>
+            <a href="https://mathpop.io/multiplication/">Multiplication</a>
+            <a href="https://mathpop.io/division/">Division</a>
+            <a href="https://mathpop.io/fractions/">Fractions</a>
+            <a href="https://mathpop.io/decimals/">Decimals</a>
+            <a href="https://mathpop.io/percentages/">Percentages</a>
+            <a href="https://mathpop.io/geometry/">Geometry</a>
+            <a href="https://mathpop.io/algebra/">Algebra</a>
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+            <a href="https://mathpop.io/premium-pass/">Premium Pass</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Free Math Word Problems Practice</h1>
+        <p class="intro">Master real-world math scenarios with engaging word problems that cover addition, subtraction, multiplication, and division. Our interactive platform helps you understand how math applies to everyday situations with instant feedback and motivating rewards.</p>
+
+        <h2>Real-World Math Scenarios</h2>
+        <p>From budgeting groceries to planning trips, our word problems reflect authentic situations you'll encounter. Practice all four operations in context:</p>
+        <div class="card">
+            <p><strong>Addition & Subtraction:</strong> Money management, quantities, and measurements</p>
+            <p><strong>Multiplication & Division:</strong> Groups, rates, ratios, and scaling problems</p>
+        </div>
+
+        <h2>How It Works</h2>
+        <div class="card">
+            <p>1. Read realistic word problems tailored to your level</p>
+            <p>2. Solve using the scratch pad for working out</p>
+            <p>3. Get instant feedback on your answer</p>
+            <p>4. Unlock new ranks with every 25 questions answered, complete quests, and climb the leaderboards</p>
+        </div>
+
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature-item">
+                <h3>Instant Feedback</h3>
+                <p>Know immediately if you're correct and learn from mistakes</p>
+            </div>
+            <div class="feature-item">
+                <h3>41+ Ranks</h3>
+                <p>Unlock new ranks with every 25 questions answered, from Seedling to Mathpop Legend and beyond</p>
+            </div>
+            <div class="feature-item">
+                <h3>Leaderboards</h3>
+                <p>Compete with others and track your progress</p>
+            </div>
+            <div class="feature-item">
+                <h3>Scratch Pad</h3>
+                <p>Work through problems step-by-step before answering</p>
+            </div>
+        </div>
+
+        <a href="https://mathpop.io/" class="cta">Start Practicing Now</a>
+
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+            <div class="faq-item">
+                <h3>What types of word problems does Mathpop cover?</h3>
+                <p>Mathpop includes word problems across all four operations: addition, subtraction, multiplication, and division. Each category features realistic scenarios ranging from easy to challenging levels to match your skill development.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How is my progress tracked?</h3>
+                <p>Your progress is tracked through rank progression (every 25 questions unlocks a new rank), quest completion, title unlocks, and leaderboard standings. You'll see improvements as you solve more problems correctly and build consistency in your math skills.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is the scratch pad really helpful for learning?</h3>
+                <p>Yes! The scratch pad allows you to show your work and organize your thinking before submitting answers, helping you develop problem-solving strategies and catch calculation errors.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I practice specific operations?</h3>
+                <p>Absolutely. You can focus on addition, subtraction, multiplication, or division separately, or practice mixed operations. Choose what works best for your learning goals.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Late Night Labs &middot; Mathpop</p>
+        <nav style="margin-top: 1rem;">
+            <a href="https://mathpop.io/">Home</a> &middot;
+            <a href="https://mathpop.io/addition/">Addition</a> &middot;
+            <a href="https://mathpop.io/subtraction/">Subtraction</a> &middot;
+            <a href="https://mathpop.io/multiplication/">Multiplication</a> &middot;
+            <a href="https://mathpop.io/division/">Division</a> &middot;
+            <a href="https://mathpop.io/word-problems/">Word Problems</a>
+        </nav>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Free Math Word Problems Practice Online",
+        "description": "Practice math word problems online with realistic scenarios and instant feedback",
+        "url": "https://mathpop.io/word-problems/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Late Night Labs",
+            "logo": "https://mathpop.io/logo.png"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What types of word problems does Mathpop cover?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Mathpop includes word problems across all four operations: addition, subtraction, multiplication, and division. Each category features realistic scenarios ranging from easy to challenging levels."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How is my progress tracked?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Your progress is tracked through rank progression (every 25 questions unlocks a new rank), quest completion, title unlocks, and leaderboard standings."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is the scratch pad really helpful for learning?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! The scratch pad allows you to show your work and organize your thinking before submitting answers."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I practice specific operations?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely. You can focus on addition, subtraction, multiplication, or division separately, or practice mixed operations."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script>
+        document.querySelectorAll('.faq-item h3').forEach(item => {
+            item.addEventListener('click', () => {
+                item.parentElement.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
