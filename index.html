@@ -801,7 +801,7 @@
   .stop-btn:hover { border-color: var(--wrong); color: var(--wrong); }
 
   /* ── END ── */
-  #end-screen { display: none; max-width: 420px; margin: 0 auto; text-align: center; }
+  #end-screen { display: none; max-width: 420px; margin: 0 auto; text-align: center; padding-top: 60px; }
   .end-card {
     background: var(--card); border-radius: 24px; padding: 40px 28px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 20px; transition: background 0.3s;
@@ -1125,6 +1125,7 @@
   .ach-toast-icon { font-size: 1.6rem; flex-shrink: 0; }
   .ach-toast-text { font-weight: 800; font-size: 0.85rem; color: var(--text); }
   .ach-toast-sub  { font-size: 0.75rem; color: var(--muted); }
+  .ach-toast.warn { border-color: var(--primary); }
 
   /* Title chooser */
   .title-item { cursor: default; }
@@ -5326,7 +5327,7 @@ function selectTitle(questId) {
     } else if (userData.selectedTitles.length < 3) {
       userData.selectedTitles.push(questId);
     } else {
-      alert('You can equip up to 3 titles! Unequip one first.');
+      showQuestToast('🏷️', 'Max 3 titles equipped!', 'Unequip one first to swap.', 'warn');
       return;
     }
     userData.selectedTitle = userData.selectedTitles[0] || null;
@@ -5397,14 +5398,16 @@ function onWrongAnswer() {
 }
 
 let toastTimer = null;
-function showQuestToast(icon, text, sub) {
+function showQuestToast(icon, text, sub, variant) {
   const toast = document.getElementById('achToast');
   document.getElementById('achToastIcon').textContent = icon;
   document.getElementById('achToastText').textContent = text;
-  document.getElementById('achToastSub').textContent  = sub;
+  document.getElementById('achToastSub').textContent  = sub || '';
+  toast.classList.remove('warn');
+  if (variant === 'warn') toast.classList.add('warn');
   toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+  toastTimer = setTimeout(() => { toast.classList.remove('show', 'warn'); }, 3500);
 }
 
 let _cloudSaveTimer = null;
