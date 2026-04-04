@@ -1127,6 +1127,104 @@
   .ach-toast-sub  { font-size: 0.75rem; color: var(--muted); }
   .ach-toast.warn { border-color: var(--primary); }
 
+  /* ── Streak star in nav ── */
+  .streak-star-btn {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: none; cursor: default;
+    font-size: 1.1rem; font-family: 'Nunito', sans-serif;
+    font-weight: 800; color: var(--text);
+    padding: 4px 8px; border-radius: 20px;
+    margin-right: auto;
+    transition: background 0.15s;
+  }
+  .streak-star-btn .streak-count {
+    font-size: 0.88rem; font-weight: 800; color: var(--text);
+    min-width: 14px;
+  }
+  .streak-star-btn.streak-active {
+    background: color-mix(in srgb, #f59e0b 15%, transparent);
+  }
+  .streak-star-btn.streak-broken { opacity: 0.5; }
+
+  /* ── Daily check-in section ── */
+  .checkin-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 6px; margin-bottom: 14px;
+  }
+  .checkin-day {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+  }
+  .checkin-day-label {
+    font-size: 0.65rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .checkin-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--card); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.2s;
+  }
+  .checkin-circle.done {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    border-color: #f59e0b; box-shadow: 0 2px 8px rgba(245,158,11,0.35);
+  }
+  .checkin-circle.today-empty {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 8%, var(--card));
+    animation: pulse-ring 2s infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 35%, transparent); }
+    50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 0%, transparent); }
+  }
+  .checkin-circle.broken { opacity: 0.35; }
+  .checkin-btn {
+    width: 100%; padding: 10px; border-radius: 12px;
+    border: 2px solid var(--primary); background: transparent;
+    color: var(--primary); font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.88rem; cursor: pointer;
+    transition: all 0.18s;
+  }
+  .checkin-btn:hover { background: var(--primary); color: #fff; }
+  .checkin-btn:disabled { opacity: 0.5; cursor: default; background: transparent; color: var(--muted); border-color: var(--border); }
+  .checkin-streak-bar {
+    background: color-mix(in srgb, #f59e0b 10%, var(--card));
+    border: 1.5px solid color-mix(in srgb, #f59e0b 30%, transparent);
+    border-radius: 12px; padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .checkin-streak-bar .streak-num {
+    font-size: 1.3rem; font-weight: 900; color: #f59e0b;
+    font-family: 'Fredoka One', cursive;
+  }
+  .checkin-streak-bar .streak-label {
+    font-size: 0.78rem; font-weight: 700; color: var(--muted);
+  }
+  .checkin-broken-banner {
+    background: color-mix(in srgb, #ef4444 10%, var(--card));
+    border: 1.5px solid color-mix(in srgb, #ef4444 30%, transparent);
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 10px;
+    text-align: center; font-size: 0.85rem; font-weight: 700;
+    color: #ef4444;
+  }
+  .recover-btn {
+    width: 100%; padding: 10px; border-radius: 12px;
+    border: 2px solid #f59e0b; background: transparent;
+    color: #f59e0b; font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 0.85rem; cursor: pointer;
+    transition: all 0.18s; margin-top: 6px;
+  }
+  .recover-btn:hover { background: #f59e0b; color: #fff; }
+
+  /* ── Recovery bottle in gamepass shop ── */
+  .gp-bottle-count {
+    font-size: 0.8rem; font-weight: 700; color: var(--muted);
+    margin-top: 4px;
+  }
+
   /* Title chooser */
   .title-item { cursor: default; }
   .title-equipped { border-color: var(--primary) !important; background: color-mix(in srgb, var(--primary) 8%, var(--bg)) !important; }
@@ -1391,6 +1489,9 @@
   </div>
   <!-- Signed-in: account left, nav right -->
   <div id="signedIn">
+    <button class="streak-star-btn" id="streakStarBtn" onclick="showQuests()" title="Daily Streak — check in on the Achievements page!">
+      ⭐ <span class="streak-count" id="streakStarCount">0</span>
+    </button>
     <div class="settings-tap-area" id="settingsTapArea">
       <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
       <img class="user-avatar" id="userAvatar" src="" alt="avatar">
@@ -1686,6 +1787,32 @@
     <div class="quest-header-sub">Answer questions to rank up, complete quests, and equip titles for your homepage</div>
   </div>
 
+  <!-- Daily Check-In (collapsible) -->
+  <div class="ach-section">
+    <h3 class="ach-toggle" onclick="toggleSection('checkinSection')">🔥 Daily Check-In <span class="ach-toggle-arrow" id="checkinSection-arrow">▼</span></h3>
+    <div class="ach-toggle-body open" id="checkinSection">
+      <div id="checkinStreakBar" class="checkin-streak-bar">
+        <div>
+          <div class="streak-num" id="checkinStreakNum">0</div>
+          <div class="streak-label">day streak</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--muted);">Longest</div>
+          <div style="font-size:0.85rem;font-weight:800;color:var(--text);" id="checkinLongestNum">0 days</div>
+        </div>
+      </div>
+      <div id="checkinBrokenBanner" class="checkin-broken-banner" style="display:none">
+        😢 Your streak was broken! Use a Recovery Bottle to restore it, or start fresh.
+        <button class="recover-btn" id="recoverBtn" onclick="useRecoveryBottle()">🧪 Use Recovery Bottle (<span id="bottleCountInline">0</span> owned)</button>
+      </div>
+      <div class="checkin-grid" id="checkinGrid"></div>
+      <button class="checkin-btn" id="checkinBtn" onclick="doCheckIn()">✅ Check In Today!</button>
+      <p style="font-size:0.75rem;color:var(--muted);font-weight:600;text-align:center;margin:8px 0 0;">
+        Check in every day to build your streak and earn exclusive titles! Miss a day and your streak resets.
+      </p>
+    </div>
+  </div>
+
   <!-- Rank progression (collapsible) -->
   <div class="ach-section">
     <h3 class="ach-toggle" onclick="toggleSection('rankSection')">⭐ Rank Progression <span class="ach-toggle-arrow" id="rankSection-arrow">▼</span></h3>
@@ -1768,7 +1895,7 @@
       <div class="neon-pill" style="background:linear-gradient(90deg,#ff6b6b,#feca57,#ffd93d)"></div>
       <div class="neon-pill" style="background:linear-gradient(90deg,#a855f7,#ec4899,#f43f5e)"></div>
     </div>
-    <button class="gp-buy-btn" id="gpCustomizationBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <button class="gp-buy-btn" id="gpCustomizationBtn" onclick="unlockCustomization()">✨ Try for Free!</button>
     <div class="gp-owned" id="gpCustomizationOwned" style="display:none">✅ Owned — go to Account Settings to apply</div>
   </div>
 
@@ -1789,7 +1916,7 @@
       <div class="gp-perk">🔢 <strong>5 advanced math categories</strong> — Fractions, Decimals, Percentages, Geometry, and Algebra (with full sub-topics from basics to college-level)</div>
       <div class="gp-perk">🎨 <strong>Priority access</strong> to new features</div>
     </div>
-    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <button class="gp-buy-btn gp-premium-btn" id="gpPremiumBtn" onclick="unlockPremium()">✨ Try for Free!</button>
     <div class="gp-owned" id="gpPremiumOwned" style="display:none">✅ Active — thank you for supporting Mathpop!</div>
   </div>
 
@@ -1813,8 +1940,22 @@
       </div>
       <div class="gp-premium-plus-perk">⚡ <strong>Priority access</strong> to every new feature and category before anyone else</div>
     </div>
-    <button class="gp-buy-btn gp-premium-plus-btn" id="gpPremiumPlusBtn" disabled style="opacity:0.5;cursor:default;pointer-events:none;">🔒 Coming Soon</button>
+    <button class="gp-buy-btn gp-premium-plus-btn" id="gpPremiumPlusBtn" onclick="unlockPremiumPlus()">✨ Try for Free!</button>
     <div class="gp-owned" id="gpPremiumPlusOwned" style="display:none">✅ Active — thank you for being a Mathpop champion!</div>
+  </div>
+
+  <!-- Streak Recovery Bottle -->
+  <div class="gp-card" id="gpRecoveryBottle">
+    <div class="gp-card-header">
+      <span class="gp-emoji">🧪</span>
+      <div>
+        <div class="gp-name">Streak Recovery Bottle</div>
+        <div class="gp-price">$0.49 — free during beta!</div>
+      </div>
+    </div>
+    <div class="gp-desc">Lost your daily streak? Use a Recovery Bottle to restore it and keep all your streak titles! Perfect for when life gets busy. Stock up while they're free.</div>
+    <div class="gp-bottle-count" id="gpBottleCount">You own: 0 bottles</div>
+    <button class="gp-buy-btn" id="gpBottleBtn" onclick="claimRecoveryBottle()">✨ Claim Free Bottle!</button>
   </div>
 </div>
 
@@ -3060,6 +3201,27 @@ function hideCustomizationCongrats() {
   document.getElementById('themeToggleBtn').classList.add('open');
   goHome();
 }
+
+window.unlockPremiumPlus = function(silent = false) {
+  // Premium Plus includes everything in Premium
+  window.isPremiumPlus = true;
+  window.isPremium = true;
+  try { localStorage.setItem('mathpop_premium_plus', '1'); localStorage.setItem('mathpop_premium', '1'); } catch(e) {}
+  const btn = document.getElementById('gpPremiumPlusBtn');
+  const owned = document.getElementById('gpPremiumPlusOwned');
+  if (btn) btn.style.display = 'none';
+  if (owned) owned.style.display = 'block';
+  // Also activate premium perks
+  const crownEl = document.getElementById('crownBadge');
+  if (crownEl) crownEl.style.display = 'inline';
+  const lockedMsg = document.getElementById('premiumLockedMsg');
+  if (lockedMsg) lockedMsg.style.display = 'none';
+  if (!silent) {
+    closeModals();
+    showQuestToast('💎', 'Premium Plus activated!', 'All features are now unlocked. Enjoy!');
+    goHome();
+  }
+};
 
 function openWheel() {
   if (wheelUnlocked) {
@@ -5249,6 +5411,17 @@ const QUESTS = [
     check: d => d._solved67 },
   { id:'founders_romance', emoji:'💕', name:'Founder\'s Romance',    desc:'Solve a math problem at exactly 10:13 AM on October 13th. A secret date!', secret:true,
     check: d => { const n=new Date(); return d._justAnswered && n.getMonth()===9 && n.getDate()===13 && n.getHours()===10 && n.getMinutes()===13; } },
+  // ── Daily Streak titles (unlocked by streak system, not normal quest check) ──
+  { id:'streak_7',   emoji:'🌟', name:'Week Warrior',      desc:'Check in 7 days in a row.',   streakReq:7   },
+  { id:'streak_14',  emoji:'🔥', name:'Fortnight Fire',    desc:'Check in 14 days in a row.',  streakReq:14  },
+  { id:'streak_21',  emoji:'💫', name:'Three-Week Spark',  desc:'Check in 21 days in a row.',  streakReq:21  },
+  { id:'streak_30',  emoji:'🏅', name:'Monthly Maven',     desc:'Check in 30 days in a row.',  streakReq:30  },
+  { id:'streak_45',  emoji:'⚡', name:'Relentless',        desc:'Check in 45 days in a row.',  streakReq:45  },
+  { id:'streak_60',  emoji:'🥇', name:'Two-Month Titan',   desc:'Check in 60 days in a row.',  streakReq:60  },
+  { id:'streak_90',  emoji:'💎', name:'Diamond Habit',     desc:'Check in 90 days in a row.',  streakReq:90  },
+  { id:'streak_120', emoji:'🌈', name:'Rainbow Streak',    desc:'Check in 120 days in a row.', streakReq:120 },
+  { id:'streak_180', emoji:'🚀', name:'Half-Year Hero',    desc:'Check in 180 days in a row.', streakReq:180 },
+  { id:'streak_365', emoji:'👑', name:'Streak Legend',     desc:'Check in every day for a full year.', streakReq:365 },
 ];
 
 // ── USER DATA (quests + selected title, synced to Firestore) ──
@@ -5262,6 +5435,13 @@ function freshUserData() {
     _questCompletions: {},  // track repeatable quest completion counts
     selectedTitle: null, // quest ID of the title shown on homepage (legacy single)
     selectedTitles: [],  // array of quest IDs for multi-title (premium: up to 3)
+    // Daily streak
+    dailyStreak: 0,
+    longestDailyStreak: 0,
+    lastCheckIn: null,       // ISO date string 'YYYY-MM-DD' of last check-in
+    checkInHistory: {},      // { 'YYYY-MM-DD': true } for current/recent streak
+    streakBroken: false,     // true if streak was broken and not yet recovered
+    streakRecoveryBottles: 0,
   };
 }
 let userData = freshUserData();
@@ -5269,6 +5449,207 @@ let currentStreak = 0;
 let wrongStreak   = 0;
 let comingBack    = false;
 let comebackCount = 0;
+
+// ── DAILY STREAK HELPERS ──
+function getTodayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function getYesterdayStr() {
+  const d = new Date(); d.setDate(d.getDate()-1);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+// Returns the Mon–Sun week dates for the current week
+function getCurrentWeekDates() {
+  const today = new Date();
+  const day = today.getDay(); // 0=Sun
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+  const dates = [];
+  for (let i=0; i<7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate()+i);
+    dates.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'));
+  }
+  return dates;
+}
+
+function checkIfStreakBroken() {
+  if (!userData.lastCheckIn) return false; // never checked in
+  const today = getTodayStr();
+  const yesterday = getYesterdayStr();
+  // Already checked in today — not broken
+  if (userData.lastCheckIn === today) return false;
+  // Checked in yesterday — still going (just haven't checked in today yet)
+  if (userData.lastCheckIn === yesterday) return false;
+  // Last check-in was before yesterday — streak is broken
+  return userData.dailyStreak > 0;
+}
+
+function breakStreak() {
+  // Remove all streak titles from earnedQuests and selectedTitles
+  const streakIds = QUESTS.filter(q => q.streakReq).map(q => q.id);
+  userData.earnedQuests = userData.earnedQuests.filter(id => !streakIds.includes(id));
+  userData.selectedTitles = (userData.selectedTitles || []).filter(id => !streakIds.includes(id));
+  userData.selectedTitle = userData.selectedTitles[0] || null;
+  userData.dailyStreak = 0;
+  userData.streakBroken = true;
+  saveUserData();
+  updateTitleBanner();
+}
+
+function doCheckIn() {
+  if (!window.currentUserId) {
+    showQuestToast('⭐', 'Sign in first!', 'Log in to track your daily streak.', 'warn');
+    return;
+  }
+  const today = getTodayStr();
+  if (userData.lastCheckIn === today) return; // already checked in
+
+  // Check if broken first
+  if (checkIfStreakBroken() && !userData.streakBroken) {
+    breakStreak();
+  }
+
+  if (userData.streakBroken) {
+    // Can't check in until recovered or starting fresh
+    userData.dailyStreak = 1;
+    userData.streakBroken = false;
+  } else {
+    userData.dailyStreak = (userData.dailyStreak || 0) + 1;
+  }
+
+  userData.lastCheckIn = today;
+  userData.checkInHistory = userData.checkInHistory || {};
+  userData.checkInHistory[today] = true;
+  userData.longestDailyStreak = Math.max(userData.longestDailyStreak || 0, userData.dailyStreak);
+
+  saveUserData();
+  checkStreakTitles();
+  updateStreakStar();
+  renderCheckinSection();
+
+  showQuestToast('⭐', 'Checked in! ' + userData.dailyStreak + ' day streak!', userData.dailyStreak >= 7 ? 'Keep it up — titles await!' : 'Come back tomorrow!');
+}
+
+function useRecoveryBottle() {
+  if (!window.currentUserId) return;
+  if ((userData.streakRecoveryBottles || 0) < 1) {
+    showQuestToast('🧪', 'No bottles left!', 'Claim one from the Gamepasses shop.', 'warn');
+    return;
+  }
+  if (!userData.streakBroken && !checkIfStreakBroken()) {
+    showQuestToast('🧪', 'Streak is still intact!', 'No need to use a bottle.', 'warn');
+    return;
+  }
+  userData.streakRecoveryBottles -= 1;
+  userData.streakBroken = false;
+  // Restore checkInHistory to include yesterday so the streak looks continuous
+  userData.checkInHistory = userData.checkInHistory || {};
+  userData.checkInHistory[getYesterdayStr()] = true;
+  saveUserData();
+  renderCheckinSection();
+  updateStreakStar();
+  showQuestToast('🧪', 'Streak restored!', 'Your streak is safe. Check in today to continue!');
+}
+
+function claimRecoveryBottle() {
+  if (!window.currentUserId) {
+    showQuestToast('🧪', 'Sign in first!', 'Log in to claim items.', 'warn');
+    return;
+  }
+  userData.streakRecoveryBottles = (userData.streakRecoveryBottles || 0) + 1;
+  saveUserData();
+  // Update UI
+  const countEl = document.getElementById('gpBottleCount');
+  if (countEl) countEl.textContent = 'You own: ' + userData.streakRecoveryBottles + ' bottle' + (userData.streakRecoveryBottles !== 1 ? 's' : '');
+  showQuestToast('🧪', 'Recovery Bottle claimed!', 'You now have ' + userData.streakRecoveryBottles + ' bottle(s). Use them in Achievements.');
+}
+
+function checkStreakTitles() {
+  const streakQuests = QUESTS.filter(q => q.streakReq);
+  let newTitle = null;
+  for (const q of streakQuests) {
+    if (userData.dailyStreak >= q.streakReq && !userData.earnedQuests.includes(q.id)) {
+      userData.earnedQuests.push(q.id);
+      newTitle = q;
+    }
+  }
+  if (newTitle) {
+    saveUserData();
+    showQuestToast(newTitle.emoji, 'Title unlocked: ' + newTitle.name + '!', newTitle.desc);
+    updateTitleBanner();
+    const achScreen = document.getElementById('achievement-screen');
+    if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
+  }
+}
+
+function updateStreakStar() {
+  const btn = document.getElementById('streakStarBtn');
+  const count = document.getElementById('streakStarCount');
+  if (!btn || !count) return;
+  const n = userData.dailyStreak || 0;
+  count.textContent = n;
+  const broken = checkIfStreakBroken() || userData.streakBroken;
+  btn.classList.toggle('streak-active', n > 0 && !broken);
+  btn.classList.toggle('streak-broken', n > 0 && broken);
+  btn.title = broken ? 'Streak broken! Visit Achievements to recover.' : (n + '-day streak! Keep going!');
+}
+
+function renderCheckinSection() {
+  const today = getTodayStr();
+  const isBroken = checkIfStreakBroken() || !!userData.streakBroken;
+  const alreadyCheckedIn = userData.lastCheckIn === today;
+
+  // Streak bar
+  const streakNum = document.getElementById('checkinStreakNum');
+  const longestNum = document.getElementById('checkinLongestNum');
+  if (streakNum) streakNum.textContent = userData.dailyStreak || 0;
+  if (longestNum) longestNum.textContent = (userData.longestDailyStreak || 0) + ' days';
+
+  // Broken banner
+  const brokenBanner = document.getElementById('checkinBrokenBanner');
+  if (brokenBanner) {
+    brokenBanner.style.display = isBroken ? 'block' : 'none';
+    const inline = document.getElementById('bottleCountInline');
+    if (inline) inline.textContent = userData.streakRecoveryBottles || 0;
+  }
+
+  // Checkin button
+  const btn = document.getElementById('checkinBtn');
+  if (btn) {
+    if (alreadyCheckedIn) {
+      btn.disabled = true;
+      btn.textContent = '✅ Checked in today!';
+    } else if (isBroken) {
+      btn.disabled = false;
+      btn.textContent = '🆕 Start New Streak';
+    } else {
+      btn.disabled = false;
+      btn.textContent = '✅ Check In Today!';
+    }
+  }
+
+  // Week grid
+  const grid = document.getElementById('checkinGrid');
+  if (!grid) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weekDates = getCurrentWeekDates();
+  const history = userData.checkInHistory || {};
+  grid.innerHTML = weekDates.map((dateStr, i) => {
+    const isToday = dateStr === today;
+    const done = !!history[dateStr];
+    let circleClass = 'checkin-circle';
+    let icon = '';
+    if (done) { circleClass += ' done'; icon = '⭐'; }
+    else if (isToday && !isBroken) { circleClass += ' today-empty'; }
+    else if (!done && dateStr < today) { circleClass += ' broken'; }
+    return `<div class="checkin-day">
+      <div class="checkin-day-label">${days[i]}</div>
+      <div class="${circleClass}">${icon}</div>
+    </div>`;
+  }).join('');
+}
 
 function updateTitleBanner() {
   const banner = document.getElementById('titleBanner');
@@ -5352,6 +5733,8 @@ const QUEST_MODE_MAP = { mul_100:'multiply', longmul_100:'longmultiply', shortdi
 function checkQuests() {
   for (const q of QUESTS) {
     if (userData.earnedQuests.includes(q.id)) continue;
+    // Streak quests are handled by checkStreakTitles() — skip here
+    if (q.streakReq) continue;
     // For category quests, only check the one matching the current mode
     const questMode = QUEST_MODE_MAP[q.id];
     if (questMode && questMode !== currentMode) continue;
@@ -5444,6 +5827,18 @@ window.loadUserData = (data) => {
     userData.selectedTitles = [userData.selectedTitle];
   }
 
+  // Streak fields — trust remote as source of truth (more accurate than local)
+  if (data.dailyStreak !== undefined) userData.dailyStreak = data.dailyStreak;
+  if (data.longestDailyStreak !== undefined) userData.longestDailyStreak = Math.max(userData.longestDailyStreak || 0, data.longestDailyStreak || 0);
+  if (data.lastCheckIn) userData.lastCheckIn = data.lastCheckIn;
+  if (data.checkInHistory) userData.checkInHistory = Object.assign({}, data.checkInHistory, userData.checkInHistory);
+  if (data.streakBroken !== undefined) userData.streakBroken = data.streakBroken;
+  if (data.streakRecoveryBottles !== undefined) userData.streakRecoveryBottles = Math.max(userData.streakRecoveryBottles || 0, data.streakRecoveryBottles || 0);
+
+  // Detect broken streak on load
+  if (checkIfStreakBroken() && !userData.streakBroken) breakStreak();
+
+  updateStreakStar();
   updateTitleBanner();
   const achScreen = document.getElementById('achievement-screen');
   if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
@@ -5461,6 +5856,7 @@ window.saveThemeForUser = function(userId) {
 window.resetToGuest = function() {
   userData = freshUserData();
   currentStreak = 0; wrongStreak = 0; comingBack = false; comebackCount = 0;
+  updateStreakStar();
   updateTitleBanner();
   const achScreen = document.getElementById('achievement-screen');
   if (achScreen && achScreen.style.display !== 'none') renderQuestScreen();
@@ -5523,6 +5919,16 @@ function showGamepasses() {
     document.getElementById('gpPremiumBtn').style.display = '';
     document.getElementById('gpPremiumOwned').style.display = 'none';
   }
+  if (window.isPremiumPlus) {
+    document.getElementById('gpPremiumPlusBtn').style.display = 'none';
+    document.getElementById('gpPremiumPlusOwned').style.display = 'block';
+  } else {
+    document.getElementById('gpPremiumPlusBtn').style.display = '';
+    document.getElementById('gpPremiumPlusOwned').style.display = 'none';
+  }
+  // Recovery bottle count
+  const bottleCount = document.getElementById('gpBottleCount');
+  if (bottleCount) bottleCount.textContent = 'You own: ' + (userData.streakRecoveryBottles || 0) + ' bottle' + ((userData.streakRecoveryBottles || 0) !== 1 ? 's' : '');
 }
 
 function hideGamepasses() { goHome(); }
@@ -5784,6 +6190,9 @@ function toggleMoreMath() {
 function hideQuests() { goHome(); }
 
 function renderQuestScreen() {
+  // Daily check-in section
+  renderCheckinSection();
+
   // Rank progression card
   const rankCard = document.getElementById('rankProgressCard');
   if (rankCard) {
@@ -5813,8 +6222,9 @@ function renderQuestScreen() {
   }
 
   // Quest list — split into normal and hidden quests with tabs
-  const normalQuests = QUESTS.filter(q => !q.secret);
-  const hiddenQuests = QUESTS.filter(q => q.secret);
+  // Streak quests are shown in the check-in section, not here
+  const normalQuests = QUESTS.filter(q => !q.secret && !q.streakReq);
+  const hiddenQuests = QUESTS.filter(q => q.secret && !q.streakReq);
 
   const renderQuestList = (quests, elementId) => {
     const qList = document.getElementById(elementId);
