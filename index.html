@@ -1960,6 +1960,118 @@
         👑 These categories require the <strong>Premium Pass</strong>.
         <button class="gp-buy-btn gp-premium-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem;">👑 Get Premium Pass</button>
       </div>
+
+      <!-- ── PREMIUM PLUS EXCLUSIVE CATEGORIES ── -->
+      <div style="margin-top:18px;padding-top:14px;border-top:2px solid color-mix(in srgb, var(--primary) 20%, transparent)">
+        <p style="font-size:0.82rem;font-weight:800;color:var(--primary);margin:0 0 10px;text-align:center">💎 Premium Plus Exclusive</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="premiumPlusModeBtns">
+          <button class="mode-btn" id="modeBtn-trigonometry"  onclick="setPremiumPlusMode('trigonometry')">📐 Trigonometry 💎</button>
+          <button class="mode-btn" id="modeBtn-calculus"      onclick="setPremiumPlusMode('calculus')">∫ Calculus 💎</button>
+          <button class="mode-btn" id="modeBtn-statistics"    onclick="setPremiumPlusMode('statistics')">📊 Statistics 💎</button>
+          <button class="mode-btn" id="modeBtn-numbertheory"  onclick="setPremiumPlusMode('numbertheory')">🔢 Number Theory 💎</button>
+          <button class="mode-btn" id="modeBtn-matrices"      onclick="setPremiumPlusMode('matrices')">🔲 Matrices 💎</button>
+        </div>
+
+        <!-- ── TRIGONOMETRY SETUP ── -->
+        <div id="setup-trigonometry" style="display:none">
+          <p class="section-label">Choose Trig Topics</p>
+          <div class="quick-btns" style="margin-bottom:6px">
+            <button class="quick-btn" onclick="selectAllTrigOps()">All Topics</button>
+            <button class="quick-btn" onclick="clearAllTrigOps()">Clear</button>
+          </div>
+          <div class="mode-selector" id="trigOpsGrid" style="margin-top:8px">
+            <button class="mode-btn" id="trigBtn-trig_sin"       onclick="toggleTrigOp('trig_sin')">sin Basic Sine</button>
+            <button class="mode-btn" id="trigBtn-trig_cos"       onclick="toggleTrigOp('trig_cos')">cos Basic Cosine</button>
+            <button class="mode-btn" id="trigBtn-trig_tan"       onclick="toggleTrigOp('trig_tan')">tan Basic Tangent</button>
+            <button class="mode-btn" id="trigBtn-trig_inverse"   onclick="toggleTrigOp('trig_inverse')">⁻¹ Inverse Trig</button>
+            <button class="mode-btn" id="trigBtn-trig_identities" onclick="toggleTrigOp('trig_identities')">≡ Identities</button>
+            <button class="mode-btn" id="trigBtn-trig_law_sines" onclick="toggleTrigOp('trig_law_sines')">📐 Law of Sines</button>
+            <button class="mode-btn" id="trigBtn-trig_law_cosines" onclick="toggleTrigOp('trig_law_cosines')">📐 Law of Cosines</button>
+            <button class="mode-btn" id="trigBtn-trig_radians"   onclick="toggleTrigOp('trig_radians')">🔄 Radians ↔ Degrees</button>
+            <button class="mode-btn" id="trigBtn-trig_unit_circle" onclick="toggleTrigOp('trig_unit_circle')">⭕ Unit Circle</button>
+          </div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">💡 Round decimal answers to 2 decimal places</p>
+        </div>
+
+        <!-- ── CALCULUS SETUP ── -->
+        <div id="setup-calculus" style="display:none">
+          <p class="section-label">Choose Calculus Topics</p>
+          <div class="quick-btns" style="margin-bottom:6px">
+            <button class="quick-btn" onclick="selectAllCalcOps()">All Topics</button>
+            <button class="quick-btn" onclick="clearAllCalcOps()">Clear</button>
+          </div>
+          <div class="mode-selector" id="calcOpsGrid" style="margin-top:8px">
+            <button class="mode-btn" id="calcOpBtn-calc_limits"      onclick="toggleCalcOp('calc_limits')">→ Limits</button>
+            <button class="mode-btn" id="calcOpBtn-calc_power_rule"  onclick="toggleCalcOp('calc_power_rule')">d/dx Power Rule</button>
+            <button class="mode-btn" id="calcOpBtn-calc_chain_rule"  onclick="toggleCalcOp('calc_chain_rule')">🔗 Chain Rule</button>
+            <button class="mode-btn" id="calcOpBtn-calc_product_rule" onclick="toggleCalcOp('calc_product_rule')">✖️ Product Rule</button>
+            <button class="mode-btn" id="calcOpBtn-calc_integrals"   onclick="toggleCalcOp('calc_integrals')">∫ Basic Integrals</button>
+            <button class="mode-btn" id="calcOpBtn-calc_definite"    onclick="toggleCalcOp('calc_definite')">∫ab Definite Integrals</button>
+            <button class="mode-btn" id="calcOpBtn-calc_area_under"  onclick="toggleCalcOp('calc_area_under')">📐 Area Under Curve</button>
+            <button class="mode-btn" id="calcOpBtn-calc_trig_deriv"  onclick="toggleCalcOp('calc_trig_deriv')">sin' Trig Derivatives</button>
+          </div>
+        </div>
+
+        <!-- ── STATISTICS SETUP ── -->
+        <div id="setup-statistics" style="display:none">
+          <p class="section-label">Choose Statistics Topics</p>
+          <div class="quick-btns" style="margin-bottom:6px">
+            <button class="quick-btn" onclick="selectAllStatOps()">All Topics</button>
+            <button class="quick-btn" onclick="clearAllStatOps()">Clear</button>
+          </div>
+          <div class="mode-selector" id="statOpsGrid" style="margin-top:8px">
+            <button class="mode-btn" id="statBtn-stat_mean"        onclick="toggleStatOp('stat_mean')">x̄ Mean</button>
+            <button class="mode-btn" id="statBtn-stat_median"      onclick="toggleStatOp('stat_median')">📊 Median</button>
+            <button class="mode-btn" id="statBtn-stat_mode"        onclick="toggleStatOp('stat_mode')">🔢 Mode</button>
+            <button class="mode-btn" id="statBtn-stat_range"       onclick="toggleStatOp('stat_range')">↔️ Range</button>
+            <button class="mode-btn" id="statBtn-stat_probability" onclick="toggleStatOp('stat_probability')">🎲 Probability</button>
+            <button class="mode-btn" id="statBtn-stat_combinations" onclick="toggleStatOp('stat_combinations')">C(n,r) Combinations</button>
+            <button class="mode-btn" id="statBtn-stat_permutations" onclick="toggleStatOp('stat_permutations')">P(n,r) Permutations</button>
+            <button class="mode-btn" id="statBtn-stat_std_dev"     onclick="toggleStatOp('stat_std_dev')">σ Std Deviation</button>
+          </div>
+        </div>
+
+        <!-- ── NUMBER THEORY SETUP ── -->
+        <div id="setup-numbertheory" style="display:none">
+          <p class="section-label">Choose Number Theory Topics</p>
+          <div class="quick-btns" style="margin-bottom:6px">
+            <button class="quick-btn" onclick="selectAllNtOps()">All Topics</button>
+            <button class="quick-btn" onclick="clearAllNtOps()">Clear</button>
+          </div>
+          <div class="mode-selector" id="ntOpsGrid" style="margin-top:8px">
+            <button class="mode-btn" id="ntBtn-nt_prime"     onclick="toggleNtOp('nt_prime')">🔢 Primes</button>
+            <button class="mode-btn" id="ntBtn-nt_gcd"       onclick="toggleNtOp('nt_gcd')">GCD Greatest Common</button>
+            <button class="mode-btn" id="ntBtn-nt_lcm"       onclick="toggleNtOp('nt_lcm')">LCM Least Common</button>
+            <button class="mode-btn" id="ntBtn-nt_factorial"  onclick="toggleNtOp('nt_factorial')">n! Factorial</button>
+            <button class="mode-btn" id="ntBtn-nt_modular"    onclick="toggleNtOp('nt_modular')">mod Modular Arith</button>
+            <button class="mode-btn" id="ntBtn-nt_base_conv"  onclick="toggleNtOp('nt_base_conv')">🔄 Base Conversion</button>
+            <button class="mode-btn" id="ntBtn-nt_perfect_sq" onclick="toggleNtOp('nt_perfect_sq')">√ Perfect Squares</button>
+            <button class="mode-btn" id="ntBtn-nt_divisibility" onclick="toggleNtOp('nt_divisibility')">÷ Divisibility</button>
+          </div>
+        </div>
+
+        <!-- ── MATRICES SETUP ── -->
+        <div id="setup-matrices" style="display:none">
+          <p class="section-label">Choose Matrix Topics</p>
+          <div class="quick-btns" style="margin-bottom:6px">
+            <button class="quick-btn" onclick="selectAllMatOps()">All Topics</button>
+            <button class="quick-btn" onclick="clearAllMatOps()">Clear</button>
+          </div>
+          <div class="mode-selector" id="matOpsGrid" style="margin-top:8px">
+            <button class="mode-btn" id="matBtn-mat_add"        onclick="toggleMatOp('mat_add')">➕ Matrix Addition</button>
+            <button class="mode-btn" id="matBtn-mat_scalar"     onclick="toggleMatOp('mat_scalar')">×k Scalar Multiply</button>
+            <button class="mode-btn" id="matBtn-mat_multiply"   onclick="toggleMatOp('mat_multiply')">✖️ Matrix Multiply</button>
+            <button class="mode-btn" id="matBtn-mat_determinant" onclick="toggleMatOp('mat_determinant')">det Determinant</button>
+            <button class="mode-btn" id="matBtn-mat_transpose"  onclick="toggleMatOp('mat_transpose')">ᵀ Transpose</button>
+            <button class="mode-btn" id="matBtn-mat_inverse"    onclick="toggleMatOp('mat_inverse')">⁻¹ Inverse (2×2)</button>
+          </div>
+        </div>
+
+        <div id="premiumPlusLockedMsg" style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center;display:none">
+          💎 These categories require the <strong>Premium Plus Pass</strong>.
+          <button class="gp-buy-btn gp-premium-plus-btn" onclick="showGamepasses()" style="margin-top:10px;padding:8px 20px;font-size:0.85rem;">💎 Get Premium Plus</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3013,6 +3125,11 @@
           if (data.neonPack)    window.unlockNeon(true);
           if (data.diamondPass) window.unlockPremiumPlus(true);
           else if (data.premiumPass) window.unlockPremium(true);
+          // Backfill: if user has Premium Plus from localStorage but Firestore is missing diamondPass, sync it
+          if (window.isPremiumPlus && !data.diamondPass && window.savePurchase) {
+            window.savePurchase('diamondPass');
+            if (!data.premiumPass) window.savePurchase('premiumPass');
+          }
           if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
           if (data.userData && window.loadUserData) window.loadUserData(data.userData);
           // Restore custom display name / photo if user changed them in settings
@@ -7594,7 +7711,10 @@ function renderLbBoard() {
     const isYou = user.uid === currentUid;
     const youClass = isYou ? ' is-you' : '';
     const youTag = isYou ? ' <span style="color:var(--primary);font-weight:800;font-size:0.7rem">(YOU)</span>' : '';
-    const crownTag = user.diamondPass ? '👑💎 ' : (user.premiumPass ? '👑 ' : '');
+    // For the current user, also check runtime flags in case Firestore hasn't synced yet
+    const hasDiamond = user.diamondPass || (isYou && window.isPremiumPlus);
+    const hasPremium = user.premiumPass || (isYou && window.isPremium);
+    const crownTag = hasDiamond ? '👑💎 ' : (hasPremium ? '👑 ' : '');
 
     // Get their game rank
     const gameRank = getRank(user.totalCorrect || 0);
