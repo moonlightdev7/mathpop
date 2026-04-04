@@ -1850,6 +1850,9 @@
         <button class="mode-btn" id="modeBtn-percentages" onclick="setPremiumMode('percentages')">📈 Percentages 👑</button>
         <button class="mode-btn" id="modeBtn-geometry"    onclick="setPremiumMode('geometry')">📐 Geometry 👑</button>
         <button class="mode-btn" id="modeBtn-algebra"     onclick="setPremiumMode('algebra')">🔣 Algebra 👑</button>
+        <button class="mode-btn" id="modeBtn-ratios"      onclick="setPremiumMode('ratios')">⚖️ Ratios 👑</button>
+        <button class="mode-btn" id="modeBtn-money"       onclick="setPremiumMode('money')">💵 Money Math 👑</button>
+        <button class="mode-btn" id="modeBtn-orderops"    onclick="setPremiumMode('orderops')">🧮 PEMDAS 👑</button>
       </div>
       <!-- ── FRACTIONS SETUP ── -->
       <div id="setup-fractions" style="display:none">
@@ -1871,6 +1874,7 @@
           <button class="mode-btn" id="fracBtn-frac_of"         onclick="toggleFracOp('frac_of')">🔢 Fraction of #</button>
           <button class="mode-btn" id="fracBtn-frac_to_dec"     onclick="toggleFracOp('frac_to_dec')">🔄 Frac → Decimal</button>
           <button class="mode-btn" id="fracBtn-frac_complex"    onclick="toggleFracOp('frac_complex')">🔀 Complex Fractions</button>
+          <button class="mode-btn" id="fracBtn-frac_compare"    onclick="toggleFracOp('frac_compare')">⚖️ Compare Fractions</button>
         </div>
         <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">💡 Enter fraction answers using the ½ input that appears below the question</p>
       </div>
@@ -1929,6 +1933,7 @@
           <button class="mode-btn" id="geoBtn-geo_pythagoras"  onclick="toggleGeoOp('geo_pythagoras')">📐² Pythagorean Thm</button>
           <button class="mode-btn" id="geoBtn-geo_coordinate"  onclick="toggleGeoOp('geo_coordinate')">🗺️ Coordinate Geo</button>
           <button class="mode-btn" id="geoBtn-geo_circles"     onclick="toggleGeoOp('geo_circles')">⭕ Circles</button>
+          <button class="mode-btn" id="geoBtn-geo_transform"   onclick="toggleGeoOp('geo_transform')">🔄 Transformations</button>
         </div>
         <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">💡 Answers with π are rounded to 2 decimal places</p>
       </div>
@@ -1953,7 +1958,60 @@
           <button class="mode-btn" id="algBtn-alg_sequence"   onclick="toggleAlgOp('alg_sequence')">📈 Sequences</button>
           <button class="mode-btn" id="algBtn-alg_function"   onclick="toggleAlgOp('alg_function')">f(x) Functions</button>
           <button class="mode-btn" id="algBtn-alg_poly"       onclick="toggleAlgOp('alg_poly')">📊 Polynomials</button>
+          <button class="mode-btn" id="algBtn-alg_simplify"   onclick="toggleAlgOp('alg_simplify')">✏️ Simplify Expr</button>
+          <button class="mode-btn" id="algBtn-alg_distributive" onclick="toggleAlgOp('alg_distributive')">📦 Distributive</button>
+          <button class="mode-btn" id="algBtn-alg_combine"    onclick="toggleAlgOp('alg_combine')">🔗 Combine Like</button>
+          <button class="mode-btn" id="algBtn-alg_sqrt"       onclick="toggleAlgOp('alg_sqrt')">√ Roots</button>
+          <button class="mode-btn" id="algBtn-alg_negative"   onclick="toggleAlgOp('alg_negative')">➖ Negatives</button>
+          <button class="mode-btn" id="algBtn-alg_abs"        onclick="toggleAlgOp('alg_abs')">|x| Absolute Value</button>
         </div>
+      </div>
+
+      <!-- ── RATIOS & PROPORTIONS SETUP ── -->
+      <div id="setup-ratios" style="display:none">
+        <p class="section-label">Choose Ratio Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllRatioOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllRatioOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="ratioOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="ratioBtn-ratio_basic"      onclick="toggleRatioOp('ratio_basic')">⚖️ Simplify Ratios</button>
+          <button class="mode-btn" id="ratioBtn-ratio_unit_rate"  onclick="toggleRatioOp('ratio_unit_rate')">📏 Unit Rates</button>
+          <button class="mode-btn" id="ratioBtn-ratio_proportion" onclick="toggleRatioOp('ratio_proportion')">🔗 Proportions</button>
+          <button class="mode-btn" id="ratioBtn-ratio_scale"      onclick="toggleRatioOp('ratio_scale')">🗺️ Scale Factors</button>
+        </div>
+      </div>
+
+      <!-- ── MONEY & REAL-WORLD MATH SETUP ── -->
+      <div id="setup-money" style="display:none">
+        <p class="section-label">Choose Money Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllMoneyOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllMoneyOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="moneyOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="moneyBtn-money_change"      onclick="toggleMoneyOp('money_change')">💰 Making Change</button>
+          <button class="mode-btn" id="moneyBtn-money_tax"         onclick="toggleMoneyOp('money_tax')">🏷️ Sales Tax</button>
+          <button class="mode-btn" id="moneyBtn-money_discount"    onclick="toggleMoneyOp('money_discount')">🏪 Discounts</button>
+          <button class="mode-btn" id="moneyBtn-money_simple_interest" onclick="toggleMoneyOp('money_simple_interest')">📈 Simple Interest</button>
+          <button class="mode-btn" id="moneyBtn-money_compound_interest" onclick="toggleMoneyOp('money_compound_interest')">📈 Compound Interest</button>
+          <button class="mode-btn" id="moneyBtn-money_unit_price"  onclick="toggleMoneyOp('money_unit_price')">🛒 Unit Pricing</button>
+          <button class="mode-btn" id="moneyBtn-money_currency"    onclick="toggleMoneyOp('money_currency')">💱 Currency Convert</button>
+          <button class="mode-btn" id="moneyBtn-money_tip"         onclick="toggleMoneyOp('money_tip')">🍽️ Tipping</button>
+        </div>
+      </div>
+
+      <!-- ── ORDER OF OPERATIONS SETUP ── -->
+      <div id="setup-orderops" style="display:none">
+        <p class="section-label">Choose PEMDAS Topics</p>
+        <div class="quick-btns" style="margin-bottom:6px">
+          <button class="quick-btn" onclick="selectAllOrderOps()">All Topics</button>
+          <button class="quick-btn" onclick="clearAllOrderOps()">Clear</button>
+        </div>
+        <div class="mode-selector" id="orderOpsGrid" style="margin-top:8px">
+          <button class="mode-btn" id="orderBtn-order_pemdas" onclick="toggleOrderOp('order_pemdas')">🧮 PEMDAS / BODMAS</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">Parentheses, Exponents, Multiply/Divide, Add/Subtract</p>
       </div>
 
       <div id="premiumLockedMsg" style="padding:8px 4px;color:var(--muted);font-size:0.82rem;text-align:center;display:none">
@@ -3848,7 +3906,8 @@ function genRemainderDiv(cfg) {
 function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
 const ALL_MODES = ['multiply','longmultiply','shortdivide','longdivide','remainderdiv','add','subtract','wordproblems'];
-const PREMIUM_MODES = ['fractions','decimals','percentages','geometry','algebra'];
+const PREMIUM_MODES = ['fractions','decimals','percentages','geometry','algebra','ratios','money','orderops'];
+const PREMIUM_PLUS_MODES = ['trigonometry','calculus','statistics','numbertheory','matrices'];
 
 // Answer type tracking for premium modes
 let currentAnswerType = 'integer'; // 'integer' | 'fraction' | 'float'
@@ -3956,7 +4015,17 @@ function setPremiumMode(mode) {
     return;
   }
   setMode(mode);
-  // Scroll setup panel into view
+  const setupEl = document.getElementById('setup-' + mode);
+  if (setupEl) setupEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function setPremiumPlusMode(mode) {
+  if (!window.isPremiumPlus) {
+    document.getElementById('premiumPlusLockedMsg').style.display = 'block';
+    document.getElementById('premiumPlusLockedMsg').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+  setMode(mode);
   const setupEl = document.getElementById('setup-' + mode);
   if (setupEl) setupEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -3973,14 +4042,16 @@ function setMode(mode) {
   if (mode !== 'percentages')  { selectedPctOps.clear();  document.querySelectorAll('#pctOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
   if (mode !== 'geometry')     { selectedGeoOps.clear();  document.querySelectorAll('#geoOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
   if (mode !== 'algebra')      { selectedAlgOps.clear();  document.querySelectorAll('#algOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'ratios')       { selectedRatioOps.clear(); document.querySelectorAll('#ratioOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'money')        { selectedMoneyOps.clear(); document.querySelectorAll('#moneyOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'orderops')     { selectedOrderOps.clear(); document.querySelectorAll('#orderOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'trigonometry') { selectedTrigOps.clear();  document.querySelectorAll('#trigOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'calculus')     { selectedCalcOps.clear();  document.querySelectorAll('#calcOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'statistics')   { selectedStatOps.clear();  document.querySelectorAll('#statOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'numbertheory') { selectedNtOps.clear();    document.querySelectorAll('#ntOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
+  if (mode !== 'matrices')     { selectedMatOps.clear();   document.querySelectorAll('#matOpsGrid .mode-btn').forEach(b => b.classList.remove('active')); }
 
-  ALL_MODES.forEach(m => {
-    const btn = document.getElementById('modeBtn-' + m);
-    if (btn) btn.classList.toggle('active', m === mode);
-    const setup = document.getElementById('setup-' + m);
-    if (setup) setup.style.display = m === mode ? 'block' : 'none';
-  });
-  PREMIUM_MODES.forEach(m => {
+  [...ALL_MODES, ...PREMIUM_MODES, ...PREMIUM_PLUS_MODES].forEach(m => {
     const btn = document.getElementById('modeBtn-' + m);
     if (btn) btn.classList.toggle('active', m === mode);
     const setup = document.getElementById('setup-' + m);
@@ -4010,10 +4081,19 @@ function setMode(mode) {
     percentages:  { emoji:'📈',  sub:'Master percentages — from basics to reverse percentage!' },
     geometry:     { emoji:'📐',  sub:'Area, perimeter, volume, angles, Pythagorean theorem and more!' },
     algebra:      { emoji:'🔣',  sub:'From one-step equations to logarithms and polynomial functions!' },
+    ratios:       { emoji:'⚖️',  sub:'Ratios, unit rates, proportions, and scale factors!' },
+    money:        { emoji:'💵',  sub:'Making change, taxes, discounts, interest, tipping and more!' },
+    orderops:     { emoji:'🧮',  sub:'Master the order of operations — PEMDAS / BODMAS!' },
+    trigonometry: { emoji:'📐',  sub:'SOH-CAH-TOA, law of sines/cosines, unit circle and more!' },
+    calculus:     { emoji:'∫',   sub:'Limits, derivatives, integrals — the foundations of calculus!' },
+    statistics:   { emoji:'📊',  sub:'Mean, median, mode, probability, combinations and more!' },
+    numbertheory: { emoji:'🔢',  sub:'Primes, GCD, LCM, factorials, modular arithmetic!' },
+    matrices:     { emoji:'🔲',  sub:'Matrix operations — add, multiply, determinants, inverses!' },
   };
-  document.getElementById('modeEmoji').textContent = info[mode].emoji;
-  document.getElementById('modeEmoji2').textContent = info[mode].emoji;
-  document.getElementById('modeSubtitle').textContent = info[mode].sub;
+  const modeInfo = info[mode] || { emoji:'🔢', sub:'Select topics and start practicing!' };
+  document.getElementById('modeEmoji').textContent = modeInfo.emoji;
+  document.getElementById('modeEmoji2').textContent = modeInfo.emoji;
+  document.getElementById('modeSubtitle').textContent = modeInfo.sub;
   updateStartBtn();
 }
 
@@ -4131,12 +4211,29 @@ const selectedDecOps  = new Set();
 const selectedPctOps  = new Set();
 const selectedGeoOps  = new Set();
 const selectedAlgOps  = new Set();
+const selectedRatioOps = new Set();
+const selectedMoneyOps = new Set();
+const selectedOrderOps = new Set();
+// ── PREMIUM PLUS MODE OP SETS ──
+const selectedTrigOps  = new Set();
+const selectedCalcOps  = new Set();
+const selectedStatOps  = new Set();
+const selectedNtOps    = new Set();
+const selectedMatOps   = new Set();
 
-const FRAC_OPS = ['frac_simplify','frac_add','frac_sub','frac_mul','frac_div','frac_mixed_add','frac_mixed_sub','frac_mixed_mul','frac_mixed_div','frac_of','frac_to_dec','frac_complex'];
+const FRAC_OPS = ['frac_simplify','frac_add','frac_sub','frac_mul','frac_div','frac_mixed_add','frac_mixed_sub','frac_mixed_mul','frac_mixed_div','frac_of','frac_to_dec','frac_complex','frac_compare'];
 const DEC_OPS  = ['dec_add','dec_sub','dec_mul','dec_div','dec_round','dec_frac_to_dec','dec_percent_to_dec','dec_place_value'];
 const PCT_OPS  = ['pct_of','pct_what','pct_increase','pct_decrease','pct_change','pct_reverse','pct_interest','pct_tax'];
-const GEO_OPS  = ['geo_area','geo_perimeter','geo_volume','geo_surface','geo_angles','geo_pythagoras','geo_coordinate','geo_circles'];
-const ALG_OPS  = ['alg_one_step','alg_two_step','alg_multi_step','alg_quadratic','alg_factor','alg_exponent','alg_log','alg_system','alg_inequality','alg_sequence','alg_function','alg_poly'];
+const GEO_OPS  = ['geo_area','geo_perimeter','geo_volume','geo_surface','geo_angles','geo_pythagoras','geo_coordinate','geo_circles','geo_transform'];
+const ALG_OPS  = ['alg_one_step','alg_two_step','alg_multi_step','alg_quadratic','alg_factor','alg_exponent','alg_log','alg_system','alg_inequality','alg_sequence','alg_function','alg_poly','alg_simplify','alg_distributive','alg_combine','alg_sqrt','alg_negative','alg_abs'];
+const RATIO_OPS = ['ratio_basic','ratio_unit_rate','ratio_proportion','ratio_scale'];
+const MONEY_OPS = ['money_change','money_tax','money_discount','money_simple_interest','money_compound_interest','money_unit_price','money_currency','money_tip'];
+const ORDER_OPS = ['order_pemdas'];
+const TRIG_OPS  = ['trig_sin','trig_cos','trig_tan','trig_inverse','trig_identities','trig_law_sines','trig_law_cosines','trig_radians','trig_unit_circle'];
+const CALC_OPS  = ['calc_limits','calc_power_rule','calc_chain_rule','calc_product_rule','calc_integrals','calc_definite','calc_area_under','calc_trig_deriv'];
+const STAT_OPS  = ['stat_mean','stat_median','stat_mode','stat_range','stat_probability','stat_combinations','stat_permutations','stat_std_dev'];
+const NT_OPS    = ['nt_prime','nt_gcd','nt_lcm','nt_factorial','nt_modular','nt_base_conv','nt_perfect_sq','nt_divisibility'];
+const MAT_OPS   = ['mat_add','mat_scalar','mat_multiply','mat_determinant','mat_transpose','mat_inverse'];
 
 function makeToggle(set, prefix, allOps, updateFn) {
   return function(op) {
@@ -4172,6 +4269,38 @@ const clearAllGeoOps   = makeClearAll(selectedGeoOps, 'geoOpsGrid');
 const toggleAlgOp   = makeToggle(selectedAlgOps,  'algBtn-',  ALG_OPS);
 const selectAllAlgOps  = makeSelectAll(selectedAlgOps, 'algBtn-', ALG_OPS);
 const clearAllAlgOps   = makeClearAll(selectedAlgOps, 'algOpsGrid');
+
+const toggleRatioOp    = makeToggle(selectedRatioOps, 'ratioBtn-', RATIO_OPS);
+const selectAllRatioOps = makeSelectAll(selectedRatioOps, 'ratioBtn-', RATIO_OPS);
+const clearAllRatioOps  = makeClearAll(selectedRatioOps, 'ratioOpsGrid');
+
+const toggleMoneyOp    = makeToggle(selectedMoneyOps, 'moneyBtn-', MONEY_OPS);
+const selectAllMoneyOps = makeSelectAll(selectedMoneyOps, 'moneyBtn-', MONEY_OPS);
+const clearAllMoneyOps  = makeClearAll(selectedMoneyOps, 'moneyOpsGrid');
+
+const toggleOrderOp    = makeToggle(selectedOrderOps, 'orderBtn-', ORDER_OPS);
+const selectAllOrderOps = makeSelectAll(selectedOrderOps, 'orderBtn-', ORDER_OPS);
+const clearAllOrderOps  = makeClearAll(selectedOrderOps, 'orderOpsGrid');
+
+const toggleTrigOp     = makeToggle(selectedTrigOps, 'trigBtn-', TRIG_OPS);
+const selectAllTrigOps  = makeSelectAll(selectedTrigOps, 'trigBtn-', TRIG_OPS);
+const clearAllTrigOps   = makeClearAll(selectedTrigOps, 'trigOpsGrid');
+
+const toggleCalcOp     = makeToggle(selectedCalcOps, 'calcOpBtn-', CALC_OPS);
+const selectAllCalcOps  = makeSelectAll(selectedCalcOps, 'calcOpBtn-', CALC_OPS);
+const clearAllCalcOps   = makeClearAll(selectedCalcOps, 'calcOpsGrid');
+
+const toggleStatOp     = makeToggle(selectedStatOps, 'statBtn-', STAT_OPS);
+const selectAllStatOps  = makeSelectAll(selectedStatOps, 'statBtn-', STAT_OPS);
+const clearAllStatOps   = makeClearAll(selectedStatOps, 'statOpsGrid');
+
+const toggleNtOp       = makeToggle(selectedNtOps, 'ntBtn-', NT_OPS);
+const selectAllNtOps    = makeSelectAll(selectedNtOps, 'ntBtn-', NT_OPS);
+const clearAllNtOps     = makeClearAll(selectedNtOps, 'ntOpsGrid');
+
+const toggleMatOp      = makeToggle(selectedMatOps, 'matBtn-', MAT_OPS);
+const selectAllMatOps   = makeSelectAll(selectedMatOps, 'matBtn-', MAT_OPS);
+const clearAllMatOps    = makeClearAll(selectedMatOps, 'matOpsGrid');
 
 function handleFracKey(e) {
   if (e.key === 'Enter') {
@@ -4405,15 +4534,24 @@ function generateFractionQuestion() {
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
     _currentQuestionData = { mode:'fractions', op, w1, w2, n1, d1, n2, d2, imp1, imp2, rn, rd };
     setQuestion(`${w1} ${n1}/${d1} ÷ ${w2} ${n2}/${d2} = ?`);
-  } else { // frac_complex: nested fraction
+  } else if (op === 'frac_complex') {
     d1=randSmallDenom(); n1=rnd(1,d1-1);
     d2=randSmallDenom(); n2=rnd(1,d2-1);
     d1=d1||2; n1=n1||1;
-    // (n1/d1) / (n2/d2) effectively
     [rn,rd]=reduceFrac(n1*d2,d1*n2);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
     _currentQuestionData = { mode:'fractions', op:'frac_complex', n1, d1, n2, d2, rn, rd };
     setQuestion(`Evaluate the complex fraction: (${n1}/${d1}) ÷ (${n2}/${d2}) = ?`);
+  } else if (op === 'frac_compare') {
+    setAnswerMode('integer');
+    d1=randSmallDenom(); n1=rnd(1,d1-1);
+    d2=randSmallDenom(); n2=rnd(1,d2-1);
+    while(n1/d1 === n2/d2) { d2=randSmallDenom(); n2=rnd(1,d2-1); }
+    currentAnswer = (n1/d1 > n2/d2) ? 1 : 2;
+    _currentQuestionData = { mode:'fractions', op:'frac_compare', n1, d1, n2, d2, ans:currentAnswer };
+    setQuestion(`Which is larger: ${n1}/${d1} or ${n2}/${d2}? (1 = first, 2 = second)`);
+    document.getElementById('answerInput').focus();
+    return;
   }
   // Focus the appropriate input based on current toggle mode
   if (fracInputMode === 'mixed') {
@@ -4776,7 +4914,7 @@ function generateGeometryQuestion() {
         setQuestion(`Find the slope of the line through (${x1},${y1}) and (${x2},${y2}).`);
       }
     }
-  } else { // geo_circles
+  } else if (op === 'geo_circles') {
     const types=['area','circumference','arc_length','sector_area'];
     const type=types[rnd(0,types.length-1)];
     const r=rnd(1,12);
@@ -4802,6 +4940,29 @@ function generateGeometryQuestion() {
       setAnswerMode('float');
       _currentQuestionData = { mode:'geometry', op, type, r, deg, ans:currentAnswer, formula:'Sector A = (θ/360)×πr²' };
       setQuestion(`Area of a ${deg}° sector in a circle with radius ${r}. Round to 2dp. (answer in units²)`);
+    }
+  } else if (op === 'geo_transform') {
+    setAnswerMode('integer');
+    const ttype = ['reflect_x','reflect_y','translate','rotate90'][rnd(0,3)];
+    const x = rnd(-8,8), y = rnd(-8,8);
+    if (ttype === 'reflect_x') {
+      currentAnswer = -y;
+      _currentQuestionData = { mode:'geometry', op, ttype, x, y, ans:currentAnswer };
+      setQuestion(`Reflect (${x}, ${y}) over the x-axis. New y-coordinate?`);
+    } else if (ttype === 'reflect_y') {
+      currentAnswer = -x;
+      _currentQuestionData = { mode:'geometry', op, ttype, x, y, ans:currentAnswer };
+      setQuestion(`Reflect (${x}, ${y}) over the y-axis. New x-coordinate?`);
+    } else if (ttype === 'translate') {
+      const dx = rnd(-6,6), dy = rnd(-6,6);
+      currentAnswer = x + dx;
+      _currentQuestionData = { mode:'geometry', op, ttype, x, y, dx, dy, ans:currentAnswer };
+      setQuestion(`Translate (${x}, ${y}) by (${dx}, ${dy}). New x-coordinate?`);
+    } else {
+      // 90° clockwise: (x,y) → (y, -x)
+      currentAnswer = y;
+      _currentQuestionData = { mode:'geometry', op, ttype, x, y, ans:currentAnswer };
+      setQuestion(`Rotate (${x}, ${y}) 90° clockwise around origin. New x-coordinate?`);
     }
   }
   document.getElementById('answerInput').focus();
@@ -4933,7 +5094,7 @@ function generateAlgebraQuestion() {
       _currentQuestionData = { mode:'algebra', op, t, a, b, c, d, xv, gx, ans:fgx };
       setQuestion(`f(x)=${a}x${b>=0?'+'+b:b}, g(x)=${c}x${d>=0?'+'+d:d}. Find f(g(${xv})).`);
     }
-  } else { // alg_poly
+  } else if (op === 'alg_poly') {
     const types=['add','eval','multiply_term'];
     const t=types[rnd(0,2)];
     if(t==='add') {
@@ -4956,6 +5117,57 @@ function generateAlgebraQuestion() {
       _currentQuestionData = { mode:'algebra', op, t, a, b, xv, ans:currentAnswer };
       setQuestion(`Expand and evaluate: ${a}x · ${b} at x=${xv}.`);
     }
+  } else if (op === 'alg_simplify') {
+    const a=rnd(1,10), b=rnd(1,10), c=rnd(1,Math.min(a+b-1,10));
+    currentAnswer = a+b-c;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'algebra', op, a, b, c, ans:currentAnswer };
+    setQuestion(`Simplify: ${a}x + ${b}x − ${c}x. Coefficient of x?`);
+  } else if (op === 'alg_distributive') {
+    const a=rnd(2,8), b=rnd(1,8), c=rnd(1,8);
+    currentAnswer = a*b;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'algebra', op, a, b, c, ans:currentAnswer };
+    setQuestion(`Expand: ${a}(${b}x + ${c}). Coefficient of x?`);
+  } else if (op === 'alg_combine') {
+    const a=rnd(1,8), b=rnd(1,8), c=rnd(1,8), d=rnd(1,8);
+    currentAnswer = a+c;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'algebra', op, a, b, c, d, ans:currentAnswer };
+    setQuestion(`Simplify: ${a}x² + ${b}x + ${c}x² + ${d}x. Coefficient of x²?`);
+  } else if (op === 'alg_sqrt') {
+    if (rnd(0,1)===0) {
+      const base=rnd(2,15), n=base*base;
+      currentAnswer=base;
+      _currentQuestionData = { mode:'algebra', op, type:'square', base, n, ans:base };
+      setQuestion(`What is √${n}?`);
+    } else {
+      const base=rnd(2,8), n=base*base*base;
+      currentAnswer=base;
+      _currentQuestionData = { mode:'algebra', op, type:'cube', base, n, ans:base };
+      setQuestion(`What is ³√${n}?`);
+    }
+    setAnswerMode('integer');
+  } else if (op === 'alg_negative') {
+    if (rnd(0,1)===0) {
+      const a=rnd(1,15), b=rnd(a+1,a+20);
+      currentAnswer=a-b;
+      setAnswerMode('integer');
+      _currentQuestionData = { mode:'algebra', op, type:'sub', a, b, ans:currentAnswer };
+      setQuestion(`What is ${a} − ${b}?`);
+    } else {
+      const a=rnd(1,12), b=rnd(1,12);
+      currentAnswer = -(a*b);
+      setAnswerMode('integer');
+      _currentQuestionData = { mode:'algebra', op, type:'mul', a, b, ans:currentAnswer };
+      setQuestion(`What is ${a} × (−${b})?`);
+    }
+  } else if (op === 'alg_abs') {
+    const a=rnd(1,30), b=rnd(1,30);
+    currentAnswer = Math.abs(a-b);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'algebra', op, a, b, ans:currentAnswer };
+    setQuestion(`What is |${a} − ${b}|?`);
   }
   document.getElementById('answerInput').focus();
 }
@@ -4998,6 +5210,444 @@ function generateWordProblem() {
     text = tmpl(a, b, q, r);
   }
   return { text, answer, remainder, op };
+}
+
+// ── TRIG LOOKUP TABLE ──
+const _trigLookup = {
+  sin: { 0:0, 30:0.5, 45:0.71, 60:0.87, 90:1, 120:0.87, 135:0.71, 150:0.5, 180:0, 270:-1, 360:0 },
+  cos: { 0:1, 30:0.87, 45:0.71, 60:0.5, 90:0, 120:-0.5, 135:-0.71, 150:-0.87, 180:-1, 270:0, 360:1 },
+  tan: { 0:0, 30:0.58, 45:1, 60:1.73, 120:-1.73, 135:-1, 150:-0.58, 180:0 }
+};
+
+// ── NEW PREMIUM GENERATORS ──
+
+function generateRatioQuestion() {
+  const op = pickOp(selectedRatioOps);
+  if (op === 'ratio_basic') {
+    const factor = rnd(2, 5);
+    const a = rnd(2, 10) * factor, b = rnd(2, 10) * factor;
+    const g = gcd(a, b), sa = a/g, sb = b/g;
+    const first = rnd(0,1) === 0;
+    currentAnswer = first ? sa : sb;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'ratios', op, a, b, sa, sb, first, ans:currentAnswer };
+    setQuestion(first ? `Simplify ${a}:${b}. What is the first number?` : `Simplify ${a}:${b}. What is the second number?`);
+  } else if (op === 'ratio_unit_rate') {
+    if (rnd(0,1) === 0) {
+      const items = rnd(3,12), cost = r2(rnd(200,3000)/100);
+      currentAnswer = r2(cost/items);
+      setAnswerMode('float');
+      _currentQuestionData = { mode:'ratios', op, type:'cost', items, cost, ans:currentAnswer };
+      setQuestion(`If ${items} items cost $${cost.toFixed(2)}, what is the cost per item?`);
+    } else {
+      const miles = rnd(50,400), hours = rnd(2,8);
+      currentAnswer = r2(miles/hours);
+      setAnswerMode('float');
+      _currentQuestionData = { mode:'ratios', op, type:'speed', miles, hours, ans:currentAnswer };
+      setQuestion(`A car travels ${miles} miles in ${hours} hours. What is the speed in mph?`);
+    }
+  } else if (op === 'ratio_proportion') {
+    const a = rnd(2,6), mult = rnd(2,6), b = a*mult, c = rnd(2,8), x = mult*c;
+    currentAnswer = x;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'ratios', op, a, b, c, x:currentAnswer };
+    setQuestion(`If ${a}/${b} = ${c}/x, find x.`);
+  } else if (op === 'ratio_scale') {
+    const scale = rnd(10,100), mapDist = rnd(2,15);
+    currentAnswer = mapDist * scale;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'ratios', op, scale, mapDist, ans:currentAnswer };
+    setQuestion(`A map has a scale of 1:${scale}. If the map distance is ${mapDist} cm, what is the real distance in cm?`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateMoneyQuestion() {
+  const op = pickOp(selectedMoneyOps);
+  if (op === 'money_change') {
+    const cost = r2(rnd(100,4000)/100), bill = Math.ceil(cost) + rnd(1,20);
+    currentAnswer = r2(bill - cost);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, cost, bill, ans:currentAnswer };
+    setQuestion(`You buy an item for $${cost.toFixed(2)} and pay with a $${bill} bill. How much change?`);
+  } else if (op === 'money_tax') {
+    const price = r2(rnd(500,8000)/100), rate = rnd(5,10);
+    currentAnswer = r2(price * (1 + rate/100));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, price, rate, ans:currentAnswer };
+    setQuestion(`An item costs $${price.toFixed(2)}. With ${rate}% sales tax, what is the total?`);
+  } else if (op === 'money_discount') {
+    const price = r2(rnd(500,8000)/100), pct = rnd(10,50);
+    currentAnswer = r2(price * (1 - pct/100));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, price, pct, ans:currentAnswer };
+    setQuestion(`A $${price.toFixed(2)} item is ${pct}% off. What is the sale price?`);
+  } else if (op === 'money_simple_interest') {
+    const P = rnd(100,1000), R = rnd(3,12), T = rnd(1,5);
+    currentAnswer = r2(P*R*T/100);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, P, R, T, ans:currentAnswer };
+    setQuestion(`Find the simple interest on $${P} at ${R}% for ${T} year${T>1?'s':''}.`);
+  } else if (op === 'money_compound_interest') {
+    const P = rnd(1,10)*100, R = rnd(5,15), T = rnd(1,3);
+    currentAnswer = r2(P * Math.pow(1+R/100, T));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, P, R, T, ans:currentAnswer };
+    setQuestion(`$${P} at ${R}% compounded annually for ${T} year${T>1?'s':''}. What is the final amount?`);
+  } else if (op === 'money_unit_price') {
+    const qA = rnd(3,15), pA = r2(rnd(200,4000)/100), qB = rnd(3,15), pB = r2(rnd(200,4000)/100);
+    const ppA = r2(pA/qA), ppB = r2(pB/qB);
+    currentAnswer = Math.min(ppA, ppB);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, qA, pA, qB, pB, ppA, ppB, ans:currentAnswer };
+    setQuestion(`Pack A: ${qA} items for $${pA.toFixed(2)}. Pack B: ${qB} items for $${pB.toFixed(2)}. Enter the price per item of the cheaper pack.`);
+  } else if (op === 'money_currency') {
+    const usd = rnd(10,300), rates = [0.85,0.92,1.1,1.35], rate = rates[rnd(0,3)];
+    currentAnswer = r2(usd * rate);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, usd, rate, ans:currentAnswer };
+    setQuestion(`Convert $${usd} USD to EUR at rate 1 USD = ${rate} EUR.`);
+  } else if (op === 'money_tip') {
+    const meal = r2(rnd(800,8000)/100), pct = rnd(10,25);
+    currentAnswer = r2(meal * pct/100);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'money', op, meal, pct, ans:currentAnswer };
+    setQuestion(`Your meal costs $${meal.toFixed(2)}. You leave a ${pct}% tip. What is the tip amount?`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateOrderOpsQuestion() {
+  const level = rnd(1,4);
+  let expr, ans;
+  if (level === 1) {
+    const a=rnd(1,12), b=rnd(1,12), c=rnd(1,12);
+    ans = a + b*c;
+    expr = `${a} + ${b} × ${c}`;
+    _currentQuestionData = { mode:'orderops', op:'order_pemdas', level, a, b, c, ans };
+  } else if (level === 2) {
+    const a=rnd(2,8), b=rnd(1,10), c=rnd(1,10), d=rnd(1,10);
+    ans = a*(b+c) - d;
+    expr = `${a} × (${b} + ${c}) − ${d}`;
+    _currentQuestionData = { mode:'orderops', op:'order_pemdas', level, a, b, c, d, ans };
+  } else if (level === 3) {
+    const a=rnd(1,6), b=rnd(1,6), c=rnd(1,8), d=rnd(1,8);
+    ans = (a+b)*(a+b) - c*d;
+    expr = `(${a} + ${b})² − ${c} × ${d}`;
+    _currentQuestionData = { mode:'orderops', op:'order_pemdas', level, a, b, c, d, ans };
+  } else {
+    const a=rnd(1,10), b=rnd(1,8), c=rnd(1,8), e=rnd(2,6), d=e*rnd(1,4);
+    ans = a + b*c - d/e;
+    expr = `${a} + ${b} × ${c} − ${d} ÷ ${e}`;
+    _currentQuestionData = { mode:'orderops', op:'order_pemdas', level, a, b, c, d, e, ans };
+  }
+  currentAnswer = ans;
+  setAnswerMode('integer');
+  setQuestion(`${expr} = ?`);
+  document.getElementById('answerInput').focus();
+}
+
+// ── PREMIUM PLUS GENERATORS ──
+
+function generateTrigQuestion() {
+  const op = pickOp(selectedTrigOps);
+  const angles = [30,45,60];
+  if (op === 'trig_sin') {
+    const angle = angles[rnd(0,2)], hyp = rnd(5,15);
+    const sinVal = _trigLookup.sin[angle];
+    currentAnswer = r2(hyp * sinVal);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, angle, hyp, sinVal, ans:currentAnswer };
+    setQuestion(`Right triangle: hypotenuse = ${hyp}, angle = ${angle}°. Find the opposite side. (2dp)`);
+  } else if (op === 'trig_cos') {
+    const angle = angles[rnd(0,2)], hyp = rnd(5,15);
+    const cosVal = _trigLookup.cos[angle];
+    currentAnswer = r2(hyp * cosVal);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, angle, hyp, cosVal, ans:currentAnswer };
+    setQuestion(`Right triangle: hypotenuse = ${hyp}, angle = ${angle}°. Find the adjacent side. (2dp)`);
+  } else if (op === 'trig_tan') {
+    const angle = angles[rnd(0,2)], adj = rnd(3,12);
+    const tanVal = _trigLookup.tan[angle];
+    currentAnswer = r2(adj * tanVal);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, angle, adj, tanVal, ans:currentAnswer };
+    setQuestion(`Right triangle: adjacent = ${adj}, angle = ${angle}°. Find the opposite side. (2dp)`);
+  } else if (op === 'trig_inverse') {
+    const angle = angles[rnd(0,2)], hyp = rnd(6,14);
+    const opp = Math.round(hyp * _trigLookup.sin[angle]);
+    currentAnswer = angle;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'trigonometry', op, angle, hyp, opp, ans:angle };
+    setQuestion(`Right triangle: opposite = ${opp}, hypotenuse = ${hyp}. Find the angle in degrees.`);
+  } else if (op === 'trig_identities') {
+    const angle = [0,30,45,60,90][rnd(0,4)];
+    currentAnswer = 1;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'trigonometry', op, angle, ans:1 };
+    setQuestion(`What is sin²(${angle}°) + cos²(${angle}°)?`);
+  } else if (op === 'trig_law_sines') {
+    const aA = angles[rnd(0,2)], aB = angles[rnd(0,2)], a = rnd(5,12);
+    const b = r2(a * _trigLookup.sin[aB] / _trigLookup.sin[aA]);
+    currentAnswer = b;
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, aA, aB, a, ans:b };
+    setQuestion(`Triangle: angle A=${aA}°, side a=${a}, angle B=${aB}°. Find side b. (2dp)`);
+  } else if (op === 'trig_law_cosines') {
+    const a = rnd(5,10), b = rnd(5,10), angle = angles[rnd(0,2)];
+    const c2 = a*a + b*b - 2*a*b*_trigLookup.cos[angle];
+    currentAnswer = r2(Math.sqrt(c2));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, a, b, angle, c2, ans:currentAnswer };
+    setQuestion(`Triangle: a=${a}, b=${b}, angle C=${angle}°. Find side c. (2dp)`);
+  } else if (op === 'trig_radians') {
+    const degs = [30,45,60,90,180,360][rnd(0,5)];
+    currentAnswer = r2(degs * Math.PI / 180);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, degs, ans:currentAnswer };
+    setQuestion(`Convert ${degs}° to radians. (2dp)`);
+  } else if (op === 'trig_unit_circle') {
+    const opts = [{a:0,f:'sin',v:0},{a:90,f:'sin',v:1},{a:0,f:'cos',v:1},{a:90,f:'cos',v:0},{a:30,f:'sin',v:0.5},{a:60,f:'cos',v:0.5},{a:45,f:'sin',v:0.71},{a:45,f:'cos',v:0.71}];
+    const pick = opts[rnd(0,opts.length-1)];
+    currentAnswer = pick.v;
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'trigonometry', op, angle:pick.a, func:pick.f, ans:pick.v };
+    setQuestion(`What is ${pick.f}(${pick.a}°)?`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateCalculusQuestion() {
+  const op = pickOp(selectedCalcOps);
+  if (op === 'calc_limits') {
+    const a = rnd(1,5), ans = 2*a;
+    currentAnswer = ans;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'calculus', op, a, ans };
+    setQuestion(`Find lim(x→${a}) of (x² − ${a*a})/(x − ${a}).`);
+  } else if (op === 'calc_power_rule') {
+    const a=rnd(1,6), n=rnd(2,5), x=rnd(1,4);
+    currentAnswer = a*n*Math.pow(x, n-1);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'calculus', op, a, n, x, ans:currentAnswer };
+    setQuestion(`Find d/dx of ${a}x^${n} evaluated at x = ${x}.`);
+  } else if (op === 'calc_chain_rule') {
+    const a=rnd(1,4), b=rnd(1,5), n=rnd(2,3), c=rnd(1,3);
+    const inner = a*c+b;
+    currentAnswer = n*a*Math.pow(inner, n-1);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'calculus', op, a, b, n, c, inner, ans:currentAnswer };
+    setQuestion(`Find d/dx of (${a}x + ${b})^${n} at x = ${c}.`);
+  } else if (op === 'calc_product_rule') {
+    const a=rnd(1,3), b=rnd(1,3), c=rnd(1,3);
+    // f=ax, g=bx², f'=a, g'=2bx → f'g+fg' = a·bx² + ax·2bx = 3abx²
+    currentAnswer = 3*a*b*c*c;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'calculus', op, a, b, c, ans:currentAnswer };
+    setQuestion(`Find d/dx of (${a}x)(${b}x²) at x = ${c}.`);
+  } else if (op === 'calc_integrals') {
+    const a=rnd(2,6), n=rnd(1,4);
+    currentAnswer = r2(a/(n+1));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'calculus', op, a, n, ans:currentAnswer };
+    setQuestion(`What is the coefficient of x^${n+1} in ∫${a}x^${n} dx?`);
+  } else if (op === 'calc_definite') {
+    const c=rnd(1,4), lo=rnd(0,3), hi=lo+rnd(1,4);
+    currentAnswer = r2(c*(hi*hi - lo*lo)/2);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'calculus', op, c, lo, hi, ans:currentAnswer };
+    setQuestion(`Evaluate ∫ from ${lo} to ${hi} of ${c}x dx.`);
+  } else if (op === 'calc_area_under') {
+    const c=rnd(2,5), lo=rnd(0,2), hi=lo+rnd(2,4);
+    currentAnswer = r2(c*(hi*hi - lo*lo)/2);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'calculus', op, c, lo, hi, ans:currentAnswer };
+    setQuestion(`Find the area under f(x) = ${c}x from x = ${lo} to x = ${hi}.`);
+  } else if (op === 'calc_trig_deriv') {
+    const a = [0,90][rnd(0,1)];
+    currentAnswer = _trigLookup.cos[a];
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'calculus', op, angle:a, ans:currentAnswer };
+    setQuestion(`d/dx sin(x) at x = ${a}° equals cos(${a}°). What is cos(${a}°)?`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateStatisticsQuestion() {
+  const op = pickOp(selectedStatOps);
+  const _fact = n => { let r=1; for(let i=2;i<=n;i++) r*=i; return r; };
+  if (op === 'stat_mean') {
+    const cnt = rnd(4,6), nums = [];
+    for(let i=0;i<cnt;i++) nums.push(rnd(2,20));
+    currentAnswer = r2(nums.reduce((s,v)=>s+v,0)/cnt);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'statistics', op, nums, ans:currentAnswer };
+    setQuestion(`Find the mean of: ${nums.join(', ')}. (2dp)`);
+  } else if (op === 'stat_median') {
+    const cnt = rnd(0,1) ? 5 : 7, nums = [];
+    for(let i=0;i<cnt;i++) nums.push(rnd(1,20));
+    const sorted = [...nums].sort((a,b)=>a-b);
+    currentAnswer = sorted[Math.floor(cnt/2)];
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'statistics', op, nums, sorted, ans:currentAnswer };
+    setQuestion(`Find the median of: ${nums.join(', ')}.`);
+  } else if (op === 'stat_mode') {
+    const base = rnd(3,15), nums = [base,base,base,rnd(1,20),rnd(1,20),rnd(1,20)].sort(()=>Math.random()-0.5);
+    currentAnswer = base;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'statistics', op, nums, ans:base };
+    setQuestion(`Find the mode of: ${nums.join(', ')}.`);
+  } else if (op === 'stat_range') {
+    const nums = [];
+    for(let i=0;i<rnd(4,6);i++) nums.push(rnd(1,50));
+    currentAnswer = Math.max(...nums) - Math.min(...nums);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'statistics', op, nums, max:Math.max(...nums), min:Math.min(...nums), ans:currentAnswer };
+    setQuestion(`Find the range of: ${nums.join(', ')}.`);
+  } else if (op === 'stat_probability') {
+    const red = rnd(2,8), blue = rnd(2,8), total = red+blue;
+    currentAnswer = r2(red/total);
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'statistics', op, red, blue, total, ans:currentAnswer };
+    setQuestion(`A bag has ${red} red and ${blue} blue balls. P(red) = ? (2dp)`);
+  } else if (op === 'stat_combinations') {
+    const n = rnd(4,8), r = rnd(2, Math.min(3,n-1));
+    currentAnswer = _fact(n)/(_fact(r)*_fact(n-r));
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'statistics', op, n, r, ans:currentAnswer };
+    setQuestion(`Calculate C(${n},${r}).`);
+  } else if (op === 'stat_permutations') {
+    const n = rnd(4,7), r = rnd(2,3);
+    currentAnswer = _fact(n)/_fact(n-r);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'statistics', op, n, r, ans:currentAnswer };
+    setQuestion(`Calculate P(${n},${r}).`);
+  } else if (op === 'stat_std_dev') {
+    const cnt = rnd(4,5), nums = [];
+    for(let i=0;i<cnt;i++) nums.push(rnd(2,15));
+    const mean = nums.reduce((s,v)=>s+v,0)/cnt;
+    const variance = nums.reduce((s,v)=>s+Math.pow(v-mean,2),0)/cnt;
+    currentAnswer = r2(Math.sqrt(variance));
+    setAnswerMode('float');
+    _currentQuestionData = { mode:'statistics', op, nums, mean:r2(mean), variance:r2(variance), ans:currentAnswer };
+    setQuestion(`Find the population std deviation of: ${nums.join(', ')}. (2dp)`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateNumberTheoryQuestion() {
+  const op = pickOp(selectedNtOps);
+  if (op === 'nt_prime') {
+    const primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97];
+    const n = rnd(2,97);
+    currentAnswer = primes.includes(n) ? 1 : 0;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, n, ans:currentAnswer };
+    setQuestion(`Is ${n} prime? (1 = yes, 0 = no)`);
+  } else if (op === 'nt_gcd') {
+    const a = rnd(12,60), b = rnd(12,60);
+    currentAnswer = gcd(a,b);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, a, b, ans:currentAnswer };
+    setQuestion(`Find the GCD of ${a} and ${b}.`);
+  } else if (op === 'nt_lcm') {
+    const a = rnd(3,15), b = rnd(3,15);
+    currentAnswer = lcm(a,b);
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, a, b, ans:currentAnswer };
+    setQuestion(`Find the LCM of ${a} and ${b}.`);
+  } else if (op === 'nt_factorial') {
+    const n = rnd(3,8);
+    let f=1; for(let i=2;i<=n;i++) f*=i;
+    currentAnswer = f;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, n, ans:f };
+    setQuestion(`What is ${n}! (${n} factorial)?`);
+  } else if (op === 'nt_modular') {
+    const a = rnd(10,100), b = rnd(3,12);
+    currentAnswer = a % b;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, a, b, ans:currentAnswer };
+    setQuestion(`What is ${a} mod ${b}?`);
+  } else if (op === 'nt_base_conv') {
+    const n = rnd(1,31);
+    currentAnswer = parseInt(n.toString(2));
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, n, binary:n.toString(2), ans:currentAnswer };
+    setQuestion(`Convert ${n} (decimal) to binary. Enter the binary digits as a number.`);
+  } else if (op === 'nt_perfect_sq') {
+    const base = rnd(2,12), n = base*base;
+    currentAnswer = base;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, n, base, ans:base };
+    setQuestion(`What is √${n}?`);
+  } else if (op === 'nt_divisibility') {
+    const n = rnd(12,60);
+    let cnt = 0; for(let i=1;i<=n;i++) if(n%i===0) cnt++;
+    currentAnswer = cnt;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'numbertheory', op, n, ans:cnt };
+    setQuestion(`How many factors does ${n} have?`);
+  }
+  document.getElementById('answerInput').focus();
+}
+
+function generateMatricesQuestion() {
+  const op = pickOp(selectedMatOps);
+  if (op === 'mat_add') {
+    const a=rnd(1,9),b=rnd(1,9),c=rnd(1,9),d=rnd(1,9),e=rnd(1,9),f=rnd(1,9),g=rnd(1,9),h=rnd(1,9);
+    const pos = rnd(0,3), labels = ['[0][0]','[0][1]','[1][0]','[1][1]'];
+    const results = [a+e, b+f, c+g, d+h];
+    currentAnswer = results[pos];
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, m1:[a,b,c,d], m2:[e,f,g,h], pos, ans:currentAnswer };
+    setQuestion(`[[${a},${b}],[${c},${d}]] + [[${e},${f}],[${g},${h}]]. Element ${labels[pos]}?`);
+  } else if (op === 'mat_scalar') {
+    const a=rnd(1,6),b=rnd(1,6),c=rnd(1,6),d=rnd(1,6),k=rnd(2,5);
+    const pos = rnd(0,3), labels = ['[0][0]','[0][1]','[1][0]','[1][1]'];
+    const vals = [a,b,c,d];
+    currentAnswer = vals[pos]*k;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, m:[a,b,c,d], k, pos, ans:currentAnswer };
+    setQuestion(`${k} × [[${a},${b}],[${c},${d}]]. Element ${labels[pos]}?`);
+  } else if (op === 'mat_multiply') {
+    const a=rnd(1,4),b=rnd(1,4),c=rnd(1,4),d=rnd(1,4),e=rnd(1,4),f=rnd(1,4),g=rnd(1,4),h=rnd(1,4);
+    // Result: [[ae+bg, af+bh],[ce+dg, cf+dh]]
+    const r = [a*e+b*g, a*f+b*h, c*e+d*g, c*f+d*h];
+    const pos = rnd(0,3), labels = ['[0][0]','[0][1]','[1][0]','[1][1]'];
+    currentAnswer = r[pos];
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, m1:[a,b,c,d], m2:[e,f,g,h], pos, ans:currentAnswer };
+    setQuestion(`[[${a},${b}],[${c},${d}]] × [[${e},${f}],[${g},${h}]]. Element ${labels[pos]}?`);
+  } else if (op === 'mat_determinant') {
+    const a=rnd(1,8),b=rnd(1,8),c=rnd(1,8),d=rnd(1,8);
+    currentAnswer = a*d - b*c;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, a, b, c, d, ans:currentAnswer };
+    setQuestion(`Find det([[${a},${b}],[${c},${d}]]). (ad − bc)`);
+  } else if (op === 'mat_transpose') {
+    const a=rnd(1,9),b=rnd(1,9),c=rnd(1,9),d=rnd(1,9);
+    // Transpose: [[a,c],[b,d]], ask for [1][0] = b
+    currentAnswer = b;
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, a, b, c, d, ans:b };
+    setQuestion(`Transpose [[${a},${b}],[${c},${d}]]. Element [1][0] of the transpose?`);
+  } else if (op === 'mat_inverse') {
+    // Use det=1 matrices for integer answers
+    const mats = [
+      {m:[2,1,1,1], inv:[1,-1,-1,2]},
+      {m:[3,2,1,1], inv:[1,-2,-1,3]},
+      {m:[1,0,0,1], inv:[1,0,0,1]},
+      {m:[1,1,0,1], inv:[1,-1,0,1]}
+    ];
+    const pick = mats[rnd(0,mats.length-1)];
+    const pos = rnd(0,3), labels = ['[0][0]','[0][1]','[1][0]','[1][1]'];
+    currentAnswer = pick.inv[pos];
+    setAnswerMode('integer');
+    _currentQuestionData = { mode:'matrices', op, m:pick.m, inv:pick.inv, pos, ans:currentAnswer };
+    setQuestion(`Inverse of [[${pick.m[0]},${pick.m[1]}],[${pick.m[2]},${pick.m[3]}]]. Element ${labels[pos]}?`);
+  }
+  document.getElementById('answerInput').focus();
 }
 
 function setQuestion(text) {
@@ -5051,6 +5701,14 @@ function updateStartBtn() {
               : currentMode === 'percentages'   ? selectedPctOps.size > 0
               : currentMode === 'geometry'      ? selectedGeoOps.size > 0
               : currentMode === 'algebra'       ? selectedAlgOps.size > 0
+              : currentMode === 'ratios'       ? selectedRatioOps.size > 0
+              : currentMode === 'money'        ? selectedMoneyOps.size > 0
+              : currentMode === 'orderops'     ? selectedOrderOps.size > 0
+              : currentMode === 'trigonometry' ? selectedTrigOps.size > 0
+              : currentMode === 'calculus'     ? selectedCalcOps.size > 0
+              : currentMode === 'statistics'   ? selectedStatOps.size > 0
+              : currentMode === 'numbertheory' ? selectedNtOps.size > 0
+              : currentMode === 'matrices'     ? selectedMatOps.size > 0
               : selectedDigits.size > 0;
   btn.disabled = !ready;
   if (!ready) {
@@ -5351,6 +6009,10 @@ function buildSolution() {
       steps.push({ label: 'Flip and multiply', text: `<code>${n1}/${d1} × ${d2}/${n2} = ${n1*d2}/${d1*n2}</code>` });
       if (rn !== n1*d2 || rd !== d1*n2) steps.push({ label: 'Simplify', text: `= <code>${rn}/${rd}</code>` });
       spoiler = `(${n1}/${d1}) ÷ (${n2}/${d2}) = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_compare') {
+      steps.push({ label: 'Cross multiply', text: `<code>${q.n1} × ${q.d2} = ${q.n1*q.d2}</code> vs <code>${q.n2} × ${q.d1} = ${q.n2*q.d1}</code>` });
+      steps.push({ label: 'Compare', text: q.n1*q.d2 > q.n2*q.d1 ? `${q.n1}/${q.d1} is larger (answer: 1)` : `${q.n2}/${q.d2} is larger (answer: 2)` });
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
     } else {
       steps.push({ label: 'Read the question', text: `Identify the operation and work through it step by step.` });
       spoiler = `Answer: <strong>${currentAnswerNumerator}/${currentAnswerDenominator}</strong>`;
@@ -5625,6 +6287,21 @@ function buildSolution() {
         steps.push({ label: 'Calculate', text: `<code>${r2(q.deg/360)} × π × ${q.r}² = ${r2(q.deg/360)} × π × ${q.r*q.r} = ${q.ans} units²</code>` });
       }
       spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (gop === 'geo_transform') {
+      if (q.ttype === 'reflect_x') {
+        steps.push({ label: 'X-axis reflection rule', text: `<code>(x, y) → (x, −y)</code>` });
+        steps.push({ label: 'Apply', text: `<code>(${q.x}, ${q.y}) → (${q.x}, ${-q.y})</code>` });
+      } else if (q.ttype === 'reflect_y') {
+        steps.push({ label: 'Y-axis reflection rule', text: `<code>(x, y) → (−x, y)</code>` });
+        steps.push({ label: 'Apply', text: `<code>(${q.x}, ${q.y}) → (${-q.x}, ${q.y})</code>` });
+      } else if (q.ttype === 'translate') {
+        steps.push({ label: 'Translation rule', text: `<code>(x+dx, y+dy)</code>` });
+        steps.push({ label: 'Apply', text: `<code>(${q.x}+${q.dx}, ${q.y}+${q.dy}) = (${q.x+q.dx}, ${q.y+q.dy})</code>` });
+      } else {
+        steps.push({ label: '90° clockwise rule', text: `<code>(x, y) → (y, −x)</code>` });
+        steps.push({ label: 'Apply', text: `<code>(${q.x}, ${q.y}) → (${q.y}, ${-q.x})</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
     } else {
       steps.push({ label: 'Work through the problem', text: `Identify the shape and formula, then plug in the values.` });
       spoiler = `Answer: <strong>${currentAnswer}</strong>`;
@@ -5741,10 +6418,276 @@ function buildSolution() {
         steps.push({ label: 'Evaluate at x=${q.xv}', text: `<code>${q.a*q.b} × ${q.xv} = ${q.ans}</code>` });
       }
       spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_simplify') {
+      steps.push({ label: 'Collect like terms', text: `<code>${q.a}x + ${q.b}x − ${q.c}x</code>` });
+      steps.push({ label: 'Add/subtract coefficients', text: `<code>(${q.a} + ${q.b} − ${q.c})x = ${q.ans}x</code>` });
+      spoiler = `Coefficient = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_distributive') {
+      steps.push({ label: 'Apply distributive property', text: `<code>${q.a}(${q.b}x + ${q.c}) = ${q.a}·${q.b}x + ${q.a}·${q.c}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>= ${q.a*q.b}x + ${q.a*q.c}</code>` });
+      spoiler = `Coefficient of x = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_combine') {
+      steps.push({ label: 'Group like terms', text: `<code>(${q.a}x² + ${q.c}x²) + (${q.b}x + ${q.d}x)</code>` });
+      steps.push({ label: 'Combine', text: `<code>${q.a+q.c}x² + ${q.b+q.d}x</code>` });
+      spoiler = `Coefficient of x² = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_sqrt') {
+      if (q.type==='square') {
+        steps.push({ label: 'Find square root', text: `<code>√${q.n}</code> — what number times itself = ${q.n}?` });
+        steps.push({ label: 'Check', text: `<code>${q.base} × ${q.base} = ${q.n}</code> ✓` });
+      } else {
+        steps.push({ label: 'Find cube root', text: `<code>³√${q.n}</code> — what number cubed = ${q.n}?` });
+        steps.push({ label: 'Check', text: `<code>${q.base} × ${q.base} × ${q.base} = ${q.n}</code> ✓` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_negative') {
+      if (q.type==='sub') {
+        steps.push({ label: 'Subtract', text: `<code>${q.a} − ${q.b}</code>. Since ${q.b} > ${q.a}, result is negative.` });
+        steps.push({ label: 'Calculate', text: `<code>= −(${q.b} − ${q.a}) = −${q.b-q.a} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Multiply', text: `Positive × Negative = Negative` });
+        steps.push({ label: 'Calculate', text: `<code>${q.a} × (−${q.b}) = −${q.a*q.b} = ${q.ans}</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_abs') {
+      steps.push({ label: 'Calculate inside', text: `<code>${q.a} − ${q.b} = ${q.a-q.b}</code>` });
+      steps.push({ label: 'Take absolute value', text: `<code>|${q.a-q.b}| = ${q.ans}</code> (distance from zero, always positive)` });
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
     } else {
       steps.push({ label: 'Work through the problem', text: `Isolate the variable step by step.` });
       spoiler = `Answer: <strong>${currentAnswer}</strong>`;
     }
+
+  // ── RATIOS ──
+  } else if (mode === 'ratios') {
+    if (q.op === 'ratio_basic') {
+      const g = gcd(q.a, q.b);
+      steps.push({ label: 'Find GCD', text: `GCD of ${q.a} and ${q.b} = <code>${g}</code>` });
+      steps.push({ label: 'Divide both', text: `<code>${q.a}÷${g} : ${q.b}÷${g} = ${q.sa}:${q.sb}</code>` });
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (q.op === 'ratio_unit_rate') {
+      if (q.type==='cost') {
+        steps.push({ label: 'Divide', text: `<code>$${q.cost.toFixed(2)} ÷ ${q.items} items</code>` });
+      } else {
+        steps.push({ label: 'Divide', text: `<code>${q.miles} miles ÷ ${q.hours} hours</code>` });
+      }
+      steps.push({ label: 'Calculate', text: `<code>= ${q.ans}</code>` });
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (q.op === 'ratio_proportion') {
+      steps.push({ label: 'Cross multiply', text: `<code>${q.a} × x = ${q.b} × ${q.c}</code>` });
+      steps.push({ label: 'Solve', text: `<code>x = ${q.b*q.c} ÷ ${q.a} = ${q.x}</code>` });
+      spoiler = `x = <strong>${q.x}</strong>`;
+    } else {
+      steps.push({ label: 'Scale formula', text: `Real distance = map distance × scale` });
+      steps.push({ label: 'Calculate', text: `<code>${q.mapDist} × ${q.scale} = ${q.ans}</code>` });
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    }
+
+  // ── MONEY ──
+  } else if (mode === 'money') {
+    if (q.op === 'money_change') {
+      steps.push({ label: 'Subtract', text: `<code>$${q.bill} − $${q.cost.toFixed(2)} = $${q.ans.toFixed(2)}</code>` });
+      spoiler = `Change = <strong>$${q.ans.toFixed(2)}</strong>`;
+    } else if (q.op === 'money_tax') {
+      steps.push({ label: 'Calculate tax', text: `<code>$${q.price.toFixed(2)} × ${q.rate}% = $${r2(q.price*q.rate/100).toFixed(2)}</code>` });
+      steps.push({ label: 'Add to price', text: `<code>$${q.price.toFixed(2)} + $${r2(q.price*q.rate/100).toFixed(2)} = $${q.ans.toFixed(2)}</code>` });
+      spoiler = `Total = <strong>$${q.ans.toFixed(2)}</strong>`;
+    } else if (q.op === 'money_discount') {
+      steps.push({ label: 'Calculate discount', text: `<code>$${q.price.toFixed(2)} × ${q.pct}% = $${r2(q.price*q.pct/100).toFixed(2)}</code>` });
+      steps.push({ label: 'Subtract', text: `<code>$${q.price.toFixed(2)} − $${r2(q.price*q.pct/100).toFixed(2)} = $${q.ans.toFixed(2)}</code>` });
+      spoiler = `Sale price = <strong>$${q.ans.toFixed(2)}</strong>`;
+    } else if (q.op === 'money_simple_interest') {
+      steps.push({ label: 'Formula', text: `<code>I = P × R × T / 100</code>` });
+      steps.push({ label: 'Plug in', text: `<code>I = ${q.P} × ${q.R} × ${q.T} / 100 = ${q.ans}</code>` });
+      spoiler = `Interest = <strong>$${q.ans}</strong>`;
+    } else if (q.op === 'money_compound_interest') {
+      steps.push({ label: 'Formula', text: `<code>A = P × (1 + R/100)^T</code>` });
+      steps.push({ label: 'Plug in', text: `<code>A = ${q.P} × (1 + ${q.R}/100)^${q.T}</code>` });
+      steps.push({ label: 'Calculate', text: `<code>= ${q.P} × ${r2(Math.pow(1+q.R/100,q.T))} = ${q.ans}</code>` });
+      spoiler = `Final amount = <strong>$${q.ans}</strong>`;
+    } else if (q.op === 'money_unit_price') {
+      steps.push({ label: 'Pack A price per item', text: `<code>$${q.pA.toFixed(2)} ÷ ${q.qA} = $${q.ppA.toFixed(2)}</code>` });
+      steps.push({ label: 'Pack B price per item', text: `<code>$${q.pB.toFixed(2)} ÷ ${q.qB} = $${q.ppB.toFixed(2)}</code>` });
+      steps.push({ label: 'Compare', text: `The cheaper is <code>$${q.ans.toFixed(2)}</code> per item` });
+      spoiler = `Cheaper = <strong>$${q.ans.toFixed(2)}</strong>`;
+    } else if (q.op === 'money_currency') {
+      steps.push({ label: 'Multiply', text: `<code>$${q.usd} × ${q.rate} = ${q.ans}</code> EUR` });
+      spoiler = `Answer = <strong>${q.ans} EUR</strong>`;
+    } else if (q.op === 'money_tip') {
+      steps.push({ label: 'Calculate tip', text: `<code>$${q.meal.toFixed(2)} × ${q.pct}% = $${q.meal.toFixed(2)} × ${q.pct}/100</code>` });
+      steps.push({ label: 'Result', text: `<code>= $${q.ans.toFixed(2)}</code>` });
+      spoiler = `Tip = <strong>$${q.ans.toFixed(2)}</strong>`;
+    }
+
+  // ── ORDER OF OPERATIONS ──
+  } else if (mode === 'orderops') {
+    const qd = q;
+    if (qd.level === 1) {
+      steps.push({ label: 'PEMDAS: Multiply first', text: `<code>${qd.b} × ${qd.c} = ${qd.b*qd.c}</code>` });
+      steps.push({ label: 'Then add', text: `<code>${qd.a} + ${qd.b*qd.c} = ${qd.ans}</code>` });
+    } else if (qd.level === 2) {
+      steps.push({ label: 'Parentheses first', text: `<code>(${qd.b} + ${qd.c}) = ${qd.b+qd.c}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>${qd.a} × ${qd.b+qd.c} = ${qd.a*(qd.b+qd.c)}</code>` });
+      steps.push({ label: 'Subtract', text: `<code>${qd.a*(qd.b+qd.c)} − ${qd.d} = ${qd.ans}</code>` });
+    } else if (qd.level === 3) {
+      steps.push({ label: 'Parentheses', text: `<code>(${qd.a} + ${qd.b}) = ${qd.a+qd.b}</code>` });
+      steps.push({ label: 'Exponent', text: `<code>${qd.a+qd.b}² = ${(qd.a+qd.b)*(qd.a+qd.b)}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>${qd.c} × ${qd.d} = ${qd.c*qd.d}</code>` });
+      steps.push({ label: 'Subtract', text: `<code>${(qd.a+qd.b)*(qd.a+qd.b)} − ${qd.c*qd.d} = ${qd.ans}</code>` });
+    } else {
+      steps.push({ label: 'Multiply first', text: `<code>${qd.b} × ${qd.c} = ${qd.b*qd.c}</code>` });
+      steps.push({ label: 'Divide', text: `<code>${qd.d} ÷ ${qd.e} = ${qd.d/qd.e}</code>` });
+      steps.push({ label: 'Add/Subtract left to right', text: `<code>${qd.a} + ${qd.b*qd.c} − ${qd.d/qd.e} = ${qd.ans}</code>` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
+
+  // ── TRIGONOMETRY ──
+  } else if (mode === 'trigonometry') {
+    if (q.op === 'trig_sin') {
+      steps.push({ label: 'SOH: sin = opp/hyp', text: `<code>sin(${q.angle}°) = ${q.sinVal}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>opposite = ${q.hyp} × ${q.sinVal} = ${q.ans}</code>` });
+    } else if (q.op === 'trig_cos') {
+      steps.push({ label: 'CAH: cos = adj/hyp', text: `<code>cos(${q.angle}°) = ${q.cosVal}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>adjacent = ${q.hyp} × ${q.cosVal} = ${q.ans}</code>` });
+    } else if (q.op === 'trig_tan') {
+      steps.push({ label: 'TOA: tan = opp/adj', text: `<code>tan(${q.angle}°) = ${q.tanVal}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>opposite = ${q.adj} × ${q.tanVal} = ${q.ans}</code>` });
+    } else if (q.op === 'trig_inverse') {
+      steps.push({ label: 'Find the ratio', text: `<code>opp/hyp = ${q.opp}/${q.hyp} = ${r2(q.opp/q.hyp)}</code>` });
+      steps.push({ label: 'Inverse sin', text: `<code>sin⁻¹(${r2(q.opp/q.hyp)}) = ${q.angle}°</code>` });
+    } else if (q.op === 'trig_identities') {
+      steps.push({ label: 'Pythagorean identity', text: `<code>sin²(θ) + cos²(θ) = 1</code> for ALL angles` });
+    } else if (q.op === 'trig_law_sines') {
+      steps.push({ label: 'Law of Sines', text: `<code>a/sin(A) = b/sin(B)</code>` });
+      steps.push({ label: 'Solve for b', text: `<code>b = ${q.a} × sin(${q.aB}°) / sin(${q.aA}°) = ${q.a} × ${_trigLookup.sin[q.aB]} / ${_trigLookup.sin[q.aA]} = ${q.ans}</code>` });
+    } else if (q.op === 'trig_law_cosines') {
+      steps.push({ label: 'Formula', text: `<code>c² = a² + b² − 2ab·cos(C)</code>` });
+      steps.push({ label: 'Plug in', text: `<code>c² = ${q.a}² + ${q.b}² − 2(${q.a})(${q.b})cos(${q.angle}°) = ${q.c2}</code>` });
+      steps.push({ label: 'Square root', text: `<code>c = √${q.c2} = ${q.ans}</code>` });
+    } else if (q.op === 'trig_radians') {
+      steps.push({ label: 'Formula', text: `<code>radians = degrees × π/180</code>` });
+      steps.push({ label: 'Calculate', text: `<code>${q.degs} × π/180 = ${q.ans}</code>` });
+    } else {
+      steps.push({ label: 'Unit circle value', text: `<code>${q.func}(${q.angle}°) = ${q.ans}</code>` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
+
+  // ── CALCULUS ──
+  } else if (mode === 'calculus') {
+    if (q.op === 'calc_limits') {
+      steps.push({ label: 'Factor numerator', text: `<code>x² − ${q.a*q.a} = (x − ${q.a})(x + ${q.a})</code>` });
+      steps.push({ label: 'Cancel', text: `<code>(x − ${q.a})(x + ${q.a}) / (x − ${q.a}) = x + ${q.a}</code>` });
+      steps.push({ label: 'Substitute', text: `<code>${q.a} + ${q.a} = ${q.ans}</code>` });
+    } else if (q.op === 'calc_power_rule') {
+      steps.push({ label: 'Power rule', text: `<code>d/dx(${q.a}x^${q.n}) = ${q.a}·${q.n}·x^${q.n-1} = ${q.a*q.n}x^${q.n-1}</code>` });
+      steps.push({ label: 'Evaluate at x=${q.x}', text: `<code>${q.a*q.n} × ${q.x}^${q.n-1} = ${q.a*q.n} × ${Math.pow(q.x,q.n-1)} = ${q.ans}</code>` });
+    } else if (q.op === 'calc_chain_rule') {
+      steps.push({ label: 'Chain rule', text: `<code>d/dx[f(g(x))] = f\'(g(x)) · g\'(x)</code>` });
+      steps.push({ label: 'Apply', text: `Outer: <code>${q.n}(${q.a}x+${q.b})^${q.n-1}</code>, Inner derivative: <code>${q.a}</code>` });
+      steps.push({ label: 'At x=${q.c}', text: `<code>${q.n} × ${q.a} × (${q.inner})^${q.n-1} = ${q.ans}</code>` });
+    } else if (q.op === 'calc_product_rule') {
+      steps.push({ label: 'Product rule', text: `<code>(fg)\' = f\'g + fg\'</code>` });
+      steps.push({ label: 'f=${q.a}x, g=${q.b}x²', text: `<code>f\'=${q.a}, g\'=${2*q.b}x</code>` });
+      steps.push({ label: 'At x=${q.c}', text: `<code>${q.a}·${q.b}·${q.c*q.c} + ${q.a}·${q.c}·${2*q.b}·${q.c} = ${q.ans}</code>` });
+    } else if (q.op === 'calc_integrals') {
+      steps.push({ label: 'Power rule for integrals', text: `<code>∫ax^n dx = a·x^(n+1)/(n+1) + C</code>` });
+      steps.push({ label: 'Apply', text: `<code>∫${q.a}x^${q.n} dx = ${q.a}/(${q.n+1}) · x^${q.n+1} = ${q.ans}x^${q.n+1}</code>` });
+    } else if (q.op === 'calc_definite' || q.op === 'calc_area_under') {
+      const anti = `${q.c}/2 · x²`;
+      steps.push({ label: 'Find antiderivative', text: `<code>∫${q.c}x dx = ${q.c}/2 · x²</code>` });
+      steps.push({ label: 'Evaluate F(${q.hi}) − F(${q.lo})', text: `<code>${q.c}/2 · ${q.hi}² − ${q.c}/2 · ${q.lo}² = ${q.c}/2 · (${q.hi*q.hi} − ${q.lo*q.lo}) = ${q.ans}</code>` });
+    } else {
+      steps.push({ label: 'd/dx sin(x) = cos(x)', text: `<code>cos(${q.angle}°) = ${q.ans}</code>` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
+
+  // ── STATISTICS ──
+  } else if (mode === 'statistics') {
+    if (q.op === 'stat_mean') {
+      const sum = q.nums.reduce((s,v)=>s+v,0);
+      steps.push({ label: 'Sum all values', text: `<code>${q.nums.join(' + ')} = ${sum}</code>` });
+      steps.push({ label: 'Divide by count', text: `<code>${sum} ÷ ${q.nums.length} = ${q.ans}</code>` });
+    } else if (q.op === 'stat_median') {
+      steps.push({ label: 'Sort the values', text: `<code>${q.sorted.join(', ')}</code>` });
+      steps.push({ label: 'Find middle', text: `Middle value (position ${Math.floor(q.sorted.length/2)+1}) = <code>${q.ans}</code>` });
+    } else if (q.op === 'stat_mode') {
+      steps.push({ label: 'Count frequencies', text: `Count how many times each number appears` });
+      steps.push({ label: 'Most frequent', text: `<code>${q.ans}</code> appears most often` });
+    } else if (q.op === 'stat_range') {
+      steps.push({ label: 'Find max and min', text: `Max = <code>${q.max}</code>, Min = <code>${q.min}</code>` });
+      steps.push({ label: 'Subtract', text: `<code>${q.max} − ${q.min} = ${q.ans}</code>` });
+    } else if (q.op === 'stat_probability') {
+      steps.push({ label: 'Formula', text: `<code>P = favorable / total</code>` });
+      steps.push({ label: 'Calculate', text: `<code>P(red) = ${q.red} / ${q.total} = ${q.ans}</code>` });
+    } else if (q.op === 'stat_combinations') {
+      steps.push({ label: 'Formula', text: `<code>C(n,r) = n! / (r!(n−r)!)</code>` });
+      steps.push({ label: 'Calculate', text: `<code>C(${q.n},${q.r}) = ${q.n}! / (${q.r}! × ${q.n-q.r}!) = ${q.ans}</code>` });
+    } else if (q.op === 'stat_permutations') {
+      steps.push({ label: 'Formula', text: `<code>P(n,r) = n! / (n−r)!</code>` });
+      steps.push({ label: 'Calculate', text: `<code>P(${q.n},${q.r}) = ${q.n}! / ${q.n-q.r}! = ${q.ans}</code>` });
+    } else {
+      steps.push({ label: 'Find mean', text: `<code>mean = ${q.mean}</code>` });
+      steps.push({ label: 'Find variance', text: `Sum of (xᵢ − mean)² / n = <code>${q.variance}</code>` });
+      steps.push({ label: 'Square root', text: `<code>σ = √${q.variance} = ${q.ans}</code>` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
+
+  // ── NUMBER THEORY ──
+  } else if (mode === 'numbertheory') {
+    if (q.op === 'nt_prime') {
+      if (q.ans === 1) {
+        steps.push({ label: 'Test divisibility', text: `Check if ${q.n} is divisible by 2, 3, 5, 7...` });
+        steps.push({ label: 'Result', text: `${q.n} has no divisors other than 1 and itself → <strong>Prime</strong>` });
+      } else {
+        const d = [2,3,5,7].find(d => q.n % d === 0 && q.n !== d);
+        steps.push({ label: 'Test divisibility', text: `<code>${q.n} ÷ ${d||2} = ${q.n/(d||2)}</code> — it divides evenly` });
+        steps.push({ label: 'Result', text: `${q.n} is <strong>not prime</strong>` });
+      }
+    } else if (q.op === 'nt_gcd') {
+      steps.push({ label: 'Euclidean algorithm', text: `Repeatedly divide: <code>gcd(${q.a}, ${q.b})</code>` });
+      steps.push({ label: 'Result', text: `<code>GCD = ${q.ans}</code>` });
+    } else if (q.op === 'nt_lcm') {
+      steps.push({ label: 'Formula', text: `<code>LCM = (a × b) / GCD(a,b)</code>` });
+      steps.push({ label: 'Calculate', text: `<code>LCM = (${q.a} × ${q.b}) / ${gcd(q.a,q.b)} = ${q.ans}</code>` });
+    } else if (q.op === 'nt_factorial') {
+      const parts = []; for(let i=q.n;i>=1;i--) parts.push(i);
+      steps.push({ label: 'Expand', text: `<code>${q.n}! = ${parts.join(' × ')}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>= ${q.ans}</code>` });
+    } else if (q.op === 'nt_modular') {
+      const quot = Math.floor(q.a/q.b);
+      steps.push({ label: 'Divide', text: `<code>${q.a} ÷ ${q.b} = ${quot} remainder ${q.ans}</code>` });
+      steps.push({ label: 'Check', text: `<code>${quot} × ${q.b} + ${q.ans} = ${quot*q.b+q.ans}</code> ✓` });
+    } else if (q.op === 'nt_base_conv') {
+      steps.push({ label: 'Divide by 2 repeatedly', text: `Write remainders: <code>${q.n} → ${q.binary}</code>` });
+    } else if (q.op === 'nt_perfect_sq') {
+      steps.push({ label: 'Find root', text: `<code>${q.base} × ${q.base} = ${q.n}</code>` });
+    } else {
+      steps.push({ label: 'List factor pairs', text: `Find all numbers that divide evenly into ${q.n}` });
+      steps.push({ label: 'Count', text: `<code>${q.n}</code> has <code>${q.ans}</code> factors` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
+
+  // ── MATRICES ──
+  } else if (mode === 'matrices') {
+    const labels = ['[0][0]','[0][1]','[1][0]','[1][1]'];
+    if (q.op === 'mat_add') {
+      steps.push({ label: 'Add element-wise', text: `Element ${labels[q.pos]}: <code>${q.m1[q.pos]} + ${q.m2[q.pos]} = ${q.ans}</code>` });
+    } else if (q.op === 'mat_scalar') {
+      steps.push({ label: 'Multiply each element by scalar', text: `<code>${q.k} × ${q.m[q.pos]} = ${q.ans}</code>` });
+    } else if (q.op === 'mat_multiply') {
+      const [a,b,c,d] = q.m1, [e,f,g,h] = q.m2;
+      if (q.pos===0) steps.push({ label: 'Row 0 × Col 0', text: `<code>${a}×${e} + ${b}×${g} = ${a*e} + ${b*g} = ${q.ans}</code>` });
+      else if (q.pos===1) steps.push({ label: 'Row 0 × Col 1', text: `<code>${a}×${f} + ${b}×${h} = ${a*f} + ${b*h} = ${q.ans}</code>` });
+      else if (q.pos===2) steps.push({ label: 'Row 1 × Col 0', text: `<code>${c}×${e} + ${d}×${g} = ${c*e} + ${d*g} = ${q.ans}</code>` });
+      else steps.push({ label: 'Row 1 × Col 1', text: `<code>${c}×${f} + ${d}×${h} = ${c*f} + ${d*h} = ${q.ans}</code>` });
+    } else if (q.op === 'mat_determinant') {
+      steps.push({ label: 'Formula: ad − bc', text: `<code>${q.a}×${q.d} − ${q.b}×${q.c} = ${q.a*q.d} − ${q.b*q.c} = ${q.ans}</code>` });
+    } else if (q.op === 'mat_transpose') {
+      steps.push({ label: 'Swap rows ↔ columns', text: `Original [0][1] becomes transpose [1][0] = <code>${q.ans}</code>` });
+    } else if (q.op === 'mat_inverse') {
+      steps.push({ label: 'For 2×2 inverse', text: `<code>(1/det) × [[d,−b],[−c,a]]</code>` });
+      steps.push({ label: 'Result', text: `Element ${labels[q.pos]} = <code>${q.ans}</code>` });
+    }
+    spoiler = `Answer = <strong>${q.ans}</strong>`;
 
   } else {
     const qText3 = document.getElementById('questionText')?.textContent || '';
@@ -5919,6 +6862,22 @@ function nextQuestion() {
     generateGeometryQuestion(); return;
   } else if (currentMode === 'algebra') {
     generateAlgebraQuestion(); return;
+  } else if (currentMode === 'ratios') {
+    generateRatioQuestion(); return;
+  } else if (currentMode === 'money') {
+    generateMoneyQuestion(); return;
+  } else if (currentMode === 'orderops') {
+    generateOrderOpsQuestion(); return;
+  } else if (currentMode === 'trigonometry') {
+    generateTrigQuestion(); return;
+  } else if (currentMode === 'calculus') {
+    generateCalculusQuestion(); return;
+  } else if (currentMode === 'statistics') {
+    generateStatisticsQuestion(); return;
+  } else if (currentMode === 'numbertheory') {
+    generateNumberTheoryQuestion(); return;
+  } else if (currentMode === 'matrices') {
+    generateMatricesQuestion(); return;
   } else {
     const cfgIds = Array.from(selectedDigits);
     const cfgId = cfgIds[Math.floor(Math.random() * cfgIds.length)];
