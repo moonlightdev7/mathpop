@@ -3470,18 +3470,6 @@ function hideCustomizationCongrats() {
   goHome();
 }
 
-// Update the crown/diamond badge on the 5 Premium Plus math category buttons
-function updatePremiumModeButtons() {
-  const badge = window.isPremiumPlus ? '💎' : '👑';
-  const premiumModes = ['fractions', 'decimals', 'percentages', 'geometry', 'algebra'];
-  premiumModes.forEach(mode => {
-    const btn = document.getElementById('modeBtn-' + mode);
-    if (!btn) return;
-    // Replace the trailing badge (👑 or 💎)
-    btn.textContent = btn.textContent.replace(/[👑💎]\s*$/, '').trimEnd() + ' ' + badge;
-  });
-}
-
 window.unlockPremiumPlus = function(silent = false) {
   // Premium Plus includes everything in Premium
   window.isPremiumPlus = true;
@@ -3517,9 +3505,6 @@ window.unlockPremiumPlus = function(silent = false) {
   const subStatus = document.getElementById('subStatus');
   if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Plus Active</span>';
 
-  // Update category buttons to show 💎
-  updatePremiumModeButtons();
-
   // Auto-grant Diamond Champion exclusive title
   if (userData && !userData.earnedQuests.includes('diamond_champion')) {
     userData.earnedQuests.push('diamond_champion');
@@ -3553,9 +3538,6 @@ window.lockPremiumPlus = function() {
   // Hide diamond badge in nav
   const diamondEl = document.getElementById('diamondBadge');
   if (diamondEl) diamondEl.style.display = 'none';
-
-  // Revert category buttons back to 👑
-  updatePremiumModeButtons();
 
   // Revoke Diamond Champion title from earned quests + selected titles
   if (userData) {
@@ -4205,6 +4187,7 @@ function generateFractionQuestion() {
     const whole = d * mult;
     currentAnswer = n * mult;
     setAnswerMode('integer');
+    _currentQuestionData = { mode:'fractions', op:'frac_of', n, d, whole, ans:currentAnswer };
     setQuestion(`What is ${n}/${d} of ${whole}?`);
     document.getElementById('answerInput').focus();
     return;
@@ -4215,6 +4198,7 @@ function generateFractionQuestion() {
     const [n,d,val] = pairs[Math.floor(Math.random()*pairs.length)];
     currentAnswer = val;
     setAnswerMode('float');
+    _currentQuestionData = { mode:'fractions', op:'frac_to_dec', n, d, ans:val };
     setQuestion(`Convert ${n}/${d} to a decimal (round to 2dp if needed)`);
     document.getElementById('answerInput').focus();
     return;
@@ -4231,6 +4215,7 @@ function generateFractionQuestion() {
     n2 = n1*factor; d2 = d1*factor;
     [rn,rd] = reduceFrac(n2,d2);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    _currentQuestionData = { mode:'fractions', op, origN:n2, origD:d2, factor, rn, rd };
     setQuestion(`Simplify: ${n2}/${d2}`);
   } else if (op === 'frac_add') {
     d1 = randSmallDenom(); n1 = rnd(1,d1-1);
@@ -4238,6 +4223,7 @@ function generateFractionQuestion() {
     const L = lcm(d1,d2);
     [rn,rd] = reduceFrac(n1*(L/d1)+n2*(L/d2), L);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    _currentQuestionData = { mode:'fractions', op, n1, d1, n2, d2, L, rn, rd };
     setQuestion(`${n1}/${d1} + ${n2}/${d2} = ?`);
   } else if (op === 'frac_sub') {
     d1 = randSmallDenom(); d2 = randSmallDenom();
@@ -4247,18 +4233,21 @@ function generateFractionQuestion() {
     if (num < 0) { const tmp=n1; n1=n2; n2=tmp; const tmpd=d1; d1=d2; d2=tmpd; num = Math.abs(num); }
     [rn,rd] = reduceFrac(num, L);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    _currentQuestionData = { mode:'fractions', op, n1, d1, n2, d2, L, rn, rd };
     setQuestion(`${n1}/${d1} − ${n2}/${d2} = ?`);
   } else if (op === 'frac_mul') {
     d1 = randSmallDenom(); n1 = rnd(1,d1);
     d2 = randSmallDenom(); n2 = rnd(1,d2);
     [rn,rd] = reduceFrac(n1*n2, d1*d2);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    _currentQuestionData = { mode:'fractions', op, n1, d1, n2, d2, rn, rd };
     setQuestion(`${n1}/${d1} × ${n2}/${d2} = ?`);
   } else if (op === 'frac_div') {
     d1 = randSmallDenom(); n1 = rnd(1,d1);
     d2 = randSmallDenom(); n2 = rnd(1,d2);
     [rn,rd] = reduceFrac(n1*d2, d1*n2);
     currentAnswerNumerator = rn; currentAnswerDenominator = rd;
+    _currentQuestionData = { mode:'fractions', op, n1, d1, n2, d2, rn, rd };
     setQuestion(`${n1}/${d1} ÷ ${n2}/${d2} = ?`);
   } else if (op === 'frac_mixed_add') {
     const w1=rnd(1,5), w2=rnd(1,5);
@@ -4268,6 +4257,7 @@ function generateFractionQuestion() {
     let totalNum=(w1+w2)*L + n1*(L/d1)+n2*(L/d2);
     [rn,rd]=reduceFrac(totalNum,L);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    _currentQuestionData = { mode:'fractions', op, w1, w2, n1, d1, n2, d2, L, rn, rd };
     setQuestion(`${w1} ${n1}/${d1} + ${w2} ${n2}/${d2} = ?`);
   } else if (op === 'frac_mixed_sub') {
     let w1=rnd(2,8),w2=rnd(1,4);
@@ -4278,6 +4268,7 @@ function generateFractionQuestion() {
     if(totalNum<=0){w1=w2+3; totalNum=(w1-w2)*L+n1*(L/d1)-n2*(L/d2);}
     [rn,rd]=reduceFrac(Math.abs(totalNum),L);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    _currentQuestionData = { mode:'fractions', op, w1, w2, n1, d1, n2, d2, L, rn, rd };
     setQuestion(`${w1} ${n1}/${d1} − ${w2} ${n2}/${d2} = ?`);
   } else if (op === 'frac_mixed_mul') {
     const w1=rnd(1,4), w2=rnd(1,4);
@@ -4286,6 +4277,7 @@ function generateFractionQuestion() {
     const imp1=w1*d1+n1, imp2=w2*d2+n2;
     [rn,rd]=reduceFrac(imp1*imp2,d1*d2);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    _currentQuestionData = { mode:'fractions', op, w1, w2, n1, d1, n2, d2, imp1, imp2, rn, rd };
     setQuestion(`${w1} ${n1}/${d1} × ${w2} ${n2}/${d2} = ?`);
   } else if (op === 'frac_mixed_div') {
     const w1=rnd(1,4), w2=rnd(1,3);
@@ -4294,6 +4286,7 @@ function generateFractionQuestion() {
     const imp1=w1*d1+n1, imp2=w2*d2+n2;
     [rn,rd]=reduceFrac(imp1*d2,d1*imp2);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    _currentQuestionData = { mode:'fractions', op, w1, w2, n1, d1, n2, d2, imp1, imp2, rn, rd };
     setQuestion(`${w1} ${n1}/${d1} ÷ ${w2} ${n2}/${d2} = ?`);
   } else { // frac_complex: nested fraction
     d1=randSmallDenom(); n1=rnd(1,d1-1);
@@ -4302,6 +4295,7 @@ function generateFractionQuestion() {
     // (n1/d1) / (n2/d2) effectively
     [rn,rd]=reduceFrac(n1*d2,d1*n2);
     currentAnswerNumerator=rn; currentAnswerDenominator=rd;
+    _currentQuestionData = { mode:'fractions', op:'frac_complex', n1, d1, n2, d2, rn, rd };
     setQuestion(`Evaluate the complex fraction: (${n1}/${d1}) ÷ (${n2}/${d2}) = ?`);
   }
   // Focus the appropriate input based on current toggle mode
@@ -4323,24 +4317,30 @@ function generateDecimalQuestion() {
   if (op === 'dec_add') {
     const a=r1(rnd(10,999)/10), b=r1(rnd(10,999)/10);
     currentAnswer=r2(a+b);
+    _currentQuestionData = { mode:'decimals', op, a, b, ans:currentAnswer };
     setQuestion(`${a} + ${b} = ?`);
   } else if (op === 'dec_sub') {
     let a=r1(rnd(100,999)/10), b=r1(rnd(10,a*10-1)/10);
     currentAnswer=r2(a-b);
+    _currentQuestionData = { mode:'decimals', op, a, b, ans:currentAnswer };
     setQuestion(`${a} − ${b} = ?`);
   } else if (op === 'dec_mul') {
     const a=r1(rnd(11,99)/10), b=rnd(2,9);
     currentAnswer=r2(a*b);
+    _currentQuestionData = { mode:'decimals', op, a, b, ans:currentAnswer };
     setQuestion(`${a} × ${b} = ?`);
   } else if (op === 'dec_div') {
     const b=rnd(2,9), q=r1(rnd(11,99)/10);
     const a=r2(b*q);
     currentAnswer=q;
+    _currentQuestionData = { mode:'decimals', op, a, b, ans:q };
     setQuestion(`${a} ÷ ${b} = ?`);
   } else if (op === 'dec_round') {
     const dp = rnd(0,2);
     const raw = r2(rnd(100,9999)/100);
     currentAnswer = parseFloat(raw.toFixed(dp));
+    if (dp === 0) { currentAnswer = Math.round(raw); setAnswerMode('integer'); }
+    _currentQuestionData = { mode:'decimals', op, raw, dp, ans:currentAnswer };
     setQuestion(`Round ${raw} to ${dp===0?'the nearest whole number':dp===1?'1 decimal place':'2 decimal places'}`);
     setAnswerMode(dp === 0 ? 'integer' : 'float');
     if (dp === 0) { currentAnswer = Math.round(raw); setAnswerMode('integer'); }
@@ -4348,11 +4348,13 @@ function generateDecimalQuestion() {
     const pairs=[[1,2,0.5],[1,4,0.25],[3,4,0.75],[1,5,0.2],[2,5,0.4],[3,5,0.6],[4,5,0.8],[1,8,0.125],[3,8,0.375],[1,10,0.1],[3,10,0.3],[7,10,0.7]];
     const [n,d,val]=pairs[Math.floor(Math.random()*pairs.length)];
     currentAnswer=val;
+    _currentQuestionData = { mode:'decimals', op, n, d, ans:val };
     setQuestion(`Convert ${n}/${d} to a decimal`);
   } else if (op === 'dec_percent_to_dec') {
     const pcts=[5,10,15,20,25,30,40,50,60,75,80,90,125,150];
     const p=pcts[Math.floor(Math.random()*pcts.length)];
     currentAnswer=r2(p/100);
+    _currentQuestionData = { mode:'decimals', op, p, ans:currentAnswer };
     setQuestion(`Convert ${p}% to a decimal`);
   } else { // dec_place_value
     const val=r2(rnd(100,9999)/100);
@@ -4363,6 +4365,7 @@ function generateDecimalQuestion() {
     const hundredths=parseInt(str.split('.')[1][1]);
     currentAnswer=pl==='tenths'?tenths:hundredths;
     setAnswerMode('integer');
+    _currentQuestionData = { mode:'decimals', op:'dec_place_value', val, pl, tenths, hundredths, ans:currentAnswer };
     setQuestion(`What digit is in the ${pl} place in ${val}?`);
   }
   if (currentAnswerType !== 'integer') {
@@ -4383,6 +4386,7 @@ function generatePercentageQuestion() {
     const whole=rnd(2,200)*5;
     currentAnswer=r2(p/100*whole);
     if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, whole, ans:currentAnswer };
     setQuestion(`What is ${p}% of ${whole}?`);
   } else if (op === 'pct_what') {
     const pcts=[10,20,25,40,50,75,80];
@@ -4391,20 +4395,25 @@ function generatePercentageQuestion() {
     const part=p/100*whole;
     currentAnswer=p;
     setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, whole, part, ans:p };
     setQuestion(`${part} is what percent of ${whole}? (enter the number only)`);
   } else if (op === 'pct_increase') {
     const pcts=[5,10,15,20,25,50];
     const p=pcts[rnd(0,pcts.length-1)];
     const orig=rnd(2,100)*10;
+    const increase=r2(orig*p/100);
     currentAnswer=r2(orig*(1+p/100));
     if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, orig, increase, ans:currentAnswer };
     setQuestion(`A value of ${orig} increases by ${p}%. What is the new value?`);
   } else if (op === 'pct_decrease') {
     const pcts=[5,10,20,25,30,50];
     const p=pcts[rnd(0,pcts.length-1)];
     const orig=rnd(2,100)*10;
+    const decrease=r2(orig*p/100);
     currentAnswer=r2(orig*(1-p/100));
     if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, orig, decrease, ans:currentAnswer };
     setQuestion(`A value of ${orig} decreases by ${p}%. What is the new value?`);
   } else if (op === 'pct_change') {
     const pcts=[10,20,25,50,100];
@@ -4412,8 +4421,10 @@ function generatePercentageQuestion() {
     const orig=rnd(2,40)*10;
     const isUp=rnd(0,1)===1;
     const newVal=isUp?orig*(1+p/100):orig*(1-p/100);
+    const diff=Math.abs(newVal-orig);
     currentAnswer=p;
     setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, orig, newVal, isUp, diff, ans:p };
     setQuestion(`A value changes from ${orig} to ${newVal}. What is the percentage ${isUp?'increase':'decrease'}? (enter number only)`);
   } else if (op === 'pct_reverse') {
     const pcts=[10,20,25,50];
@@ -4423,11 +4434,13 @@ function generatePercentageQuestion() {
     const newVal=orig*(isUp?1+p/100:1-p/100);
     currentAnswer=orig;
     setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, p, orig, newVal, isUp, ans:orig };
     setQuestion(`After a ${p}% ${isUp?'increase':'decrease'}, a value is ${newVal}. What was the original value?`);
   } else if (op === 'pct_interest') {
     const P=rnd(1,20)*100, R=rnd(1,10)*5, T=rnd(1,5);
     currentAnswer=r2(P*R*T/100);
     if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
+    _currentQuestionData = { mode:'percentages', op, P, R, T, ans:currentAnswer };
     setQuestion(`Simple Interest: P=$${P}, R=${R}%, T=${T} years. Find I (I = PRT/100)`);
   } else { // pct_tax
     const pcts=[5,8,10,15,20];
@@ -4437,9 +4450,11 @@ function generatePercentageQuestion() {
     const type=types[rnd(0,2)];
     if(type==='discount') {
       currentAnswer=r2(price*(1-p/100));
+      _currentQuestionData = { mode:'percentages', op:'pct_tax', p, price, type, ans:currentAnswer };
       setQuestion(`An item costs $${price}. With a ${p}% discount, what is the final price?`);
     } else {
       currentAnswer=r2(price*(1+p/100));
+      _currentQuestionData = { mode:'percentages', op:'pct_tax', p, price, type, ans:currentAnswer };
       setQuestion(`An item costs $${price}. With ${p}% ${type}, what is the total?`);
     }
     if(Number.isInteger(currentAnswer)) setAnswerMode('integer');
@@ -4459,23 +4474,28 @@ function generateGeometryQuestion() {
     if(shape==='rectangle') {
       const l=rnd(2,20),w=rnd(2,20);
       currentAnswer=l*w;
-      setQuestion(`Find the area of a rectangle with length ${l} and width ${w}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, l, w, ans:currentAnswer, formula:'A = l × w' };
+      setQuestion(`Find the area of a rectangle with length ${l} and width ${w}. (answer in units²)`);
     } else if(shape==='triangle') {
       const b=rnd(2,20)*2,h=rnd(2,20);
       currentAnswer=(b*h)/2;
-      setQuestion(`Find the area of a triangle with base ${b} and height ${h}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, b, h, ans:currentAnswer, formula:'A = ½ × b × h' };
+      setQuestion(`Find the area of a triangle with base ${b} and height ${h}. (answer in units²)`);
     } else if(shape==='trapezoid') {
       const a=rnd(2,15),b=rnd(2,15),h=rnd(2,10)*2;
       currentAnswer=(a+b)*h/2;
-      setQuestion(`Find the area of a trapezoid with parallel sides ${a} and ${b}, height ${h}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, a, b, h, ans:currentAnswer, formula:'A = ½ × (a+b) × h' };
+      setQuestion(`Find the area of a trapezoid with parallel sides ${a} and ${b}, height ${h}. (answer in units²)`);
     } else if(shape==='parallelogram') {
       const b=rnd(2,20),h=rnd(2,20);
       currentAnswer=b*h;
-      setQuestion(`Find the area of a parallelogram with base ${b} and height ${h}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, b, h, ans:currentAnswer, formula:'A = b × h' };
+      setQuestion(`Find the area of a parallelogram with base ${b} and height ${h}. (answer in units²)`);
     } else {
       const s=rnd(2,20);
       currentAnswer=s*s;
-      setQuestion(`Find the area of a square with side length ${s}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, s, ans:currentAnswer, formula:'A = s²' };
+      setQuestion(`Find the area of a square with side length ${s}. (answer in units²)`);
     }
   } else if (op === 'geo_perimeter') {
     const shapes=['rectangle','triangle','square','regular polygon'];
@@ -4483,18 +4503,22 @@ function generateGeometryQuestion() {
     if(shape==='rectangle') {
       const l=rnd(2,30),w=rnd(2,30);
       currentAnswer=2*(l+w);
+      _currentQuestionData = { mode:'geometry', op, shape, l, w, ans:currentAnswer, formula:'P = 2(l+w)' };
       setQuestion(`Find the perimeter of a rectangle with length ${l} and width ${w}.`);
     } else if(shape==='triangle') {
       const a=rnd(3,20),b=rnd(3,20),c=rnd(3,20);
       currentAnswer=a+b+c;
+      _currentQuestionData = { mode:'geometry', op, shape, a, b, c, ans:currentAnswer, formula:'P = a+b+c' };
       setQuestion(`Find the perimeter of a triangle with sides ${a}, ${b}, and ${c}.`);
     } else if(shape==='square') {
       const s=rnd(2,30);
       currentAnswer=4*s;
+      _currentQuestionData = { mode:'geometry', op, shape, s, ans:currentAnswer, formula:'P = 4×s' };
       setQuestion(`Find the perimeter of a square with side length ${s}.`);
     } else {
       const n=rnd(3,8),s=rnd(2,20);
       currentAnswer=n*s;
+      _currentQuestionData = { mode:'geometry', op, shape, n, s, ans:currentAnswer, formula:'P = n×s' };
       setQuestion(`Find the perimeter of a regular ${n}-sided polygon with each side = ${s}.`);
     }
   } else if (op === 'geo_volume') {
@@ -4503,26 +4527,31 @@ function generateGeometryQuestion() {
     if(shape==='cube') {
       const s=rnd(2,12);
       currentAnswer=s*s*s;
-      setQuestion(`Find the volume of a cube with side ${s}. (V = s³)`);
+      _currentQuestionData = { mode:'geometry', op, shape, s, ans:currentAnswer, formula:'V = s³' };
+      setQuestion(`Find the volume of a cube with side ${s}. (V = s³, answer in units³)`);
     } else if(shape==='cuboid') {
       const l=rnd(2,12),w=rnd(2,12),h=rnd(2,12);
       currentAnswer=l*w*h;
-      setQuestion(`Find the volume of a cuboid: l=${l}, w=${w}, h=${h}.`);
+      _currentQuestionData = { mode:'geometry', op, shape, l, w, h, ans:currentAnswer, formula:'V = l×w×h' };
+      setQuestion(`Find the volume of a cuboid: l=${l}, w=${w}, h=${h}. (answer in units³)`);
     } else if(shape==='cylinder') {
       const r=rnd(1,8),h=rnd(2,12);
       currentAnswer=r2(PI*r*r*h);
       setAnswerMode('float');
-      setQuestion(`Find the volume of a cylinder: r=${r}, h=${h}. (V = πr²h, use π≈3.14159, round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, shape, r, h, ans:currentAnswer, formula:'V = πr²h' };
+      setQuestion(`Find the volume of a cylinder: r=${r}, h=${h}. (V = πr²h, round to 2dp, answer in units³)`);
     } else if(shape==='cone') {
       const r=rnd(1,8),h=rnd(2,12);
       currentAnswer=r2((1/3)*PI*r*r*h);
       setAnswerMode('float');
-      setQuestion(`Find the volume of a cone: r=${r}, h=${h}. (V = ⅓πr²h, round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, shape, r, h, ans:currentAnswer, formula:'V = ⅓πr²h' };
+      setQuestion(`Find the volume of a cone: r=${r}, h=${h}. (V = ⅓πr²h, round to 2dp, answer in units³)`);
     } else {
       const r=rnd(1,6);
       currentAnswer=r2((4/3)*PI*r*r*r);
       setAnswerMode('float');
-      setQuestion(`Find the volume of a sphere: r=${r}. (V = 4/3·πr³, round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, shape, r, ans:currentAnswer, formula:'V = ⁴⁄₃πr³' };
+      setQuestion(`Find the volume of a sphere: r=${r}. (V = 4/3·πr³, round to 2dp, answer in units³)`);
     }
   } else if (op === 'geo_surface') {
     const shapes=['cube','cuboid','cylinder','sphere'];
@@ -4530,21 +4559,25 @@ function generateGeometryQuestion() {
     if(shape==='cube') {
       const s=rnd(2,12);
       currentAnswer=6*s*s;
-      setQuestion(`Find the surface area of a cube with side ${s}. (SA = 6s²)`);
+      _currentQuestionData = { mode:'geometry', op, shape, s, ans:currentAnswer, formula:'SA = 6s²' };
+      setQuestion(`Find the surface area of a cube with side ${s}. (SA = 6s², answer in units²)`);
     } else if(shape==='cuboid') {
       const l=rnd(2,10),w=rnd(2,10),h=rnd(2,10);
       currentAnswer=2*(l*w+w*h+l*h);
-      setQuestion(`Find the surface area of a cuboid: l=${l}, w=${w}, h=${h}. (SA = 2(lw+wh+lh))`);
+      _currentQuestionData = { mode:'geometry', op, shape, l, w, h, ans:currentAnswer, formula:'SA = 2(lw+wh+lh)' };
+      setQuestion(`Find the surface area of a cuboid: l=${l}, w=${w}, h=${h}. (SA = 2(lw+wh+lh), answer in units²)`);
     } else if(shape==='cylinder') {
       const r=rnd(1,8),h=rnd(2,12);
       currentAnswer=r2(2*PI*r*(r+h));
       setAnswerMode('float');
-      setQuestion(`Surface area of a cylinder: r=${r}, h=${h}. (SA = 2πr(r+h), round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, shape, r, h, ans:currentAnswer, formula:'SA = 2πr(r+h)' };
+      setQuestion(`Surface area of a cylinder: r=${r}, h=${h}. (SA = 2πr(r+h), round to 2dp, answer in units²)`);
     } else {
       const r=rnd(1,8);
       currentAnswer=r2(4*PI*r*r);
       setAnswerMode('float');
-      setQuestion(`Surface area of a sphere: r=${r}. (SA = 4πr², round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, shape, r, ans:currentAnswer, formula:'SA = 4πr²' };
+      setQuestion(`Surface area of a sphere: r=${r}. (SA = 4πr², round to 2dp, answer in units²)`);
     }
   } else if (op === 'geo_angles') {
     const types=['supplementary','complementary','triangle','polygon','vertically opposite'];
@@ -4552,46 +4585,50 @@ function generateGeometryQuestion() {
     if(type==='supplementary') {
       const a=rnd(10,170);
       currentAnswer=180-a;
+      _currentQuestionData = { mode:'geometry', op, type, a, ans:currentAnswer };
       setQuestion(`Two angles are supplementary. One angle is ${a}°. Find the other angle.`);
     } else if(type==='complementary') {
       const a=rnd(5,85);
       currentAnswer=90-a;
+      _currentQuestionData = { mode:'geometry', op, type, a, ans:currentAnswer };
       setQuestion(`Two angles are complementary. One angle is ${a}°. Find the other angle.`);
     } else if(type==='triangle') {
       const a=rnd(20,80),b=rnd(20,80);
       currentAnswer=180-a-b;
-      if(currentAnswer>0) setQuestion(`A triangle has angles ${a}° and ${b}°. Find the third angle.`);
-      else { currentAnswer=60; setQuestion(`A triangle has angles 60° and 60°. Find the third angle.`); }
+      if(currentAnswer<=0) { currentAnswer=60; _currentQuestionData = { mode:'geometry', op, type, a:60, b:60, ans:60 }; setQuestion(`A triangle has angles 60° and 60°. Find the third angle.`); }
+      else { _currentQuestionData = { mode:'geometry', op, type, a, b, ans:currentAnswer }; setQuestion(`A triangle has angles ${a}° and ${b}°. Find the third angle.`); }
     } else if(type==='polygon') {
       const n=rnd(3,8);
       currentAnswer=(n-2)*180;
+      _currentQuestionData = { mode:'geometry', op, type, n, ans:currentAnswer };
       setQuestion(`Find the sum of interior angles of a ${n}-sided polygon. (Formula: (n−2)×180°)`);
     } else {
       const a=rnd(20,160);
       currentAnswer=a;
+      _currentQuestionData = { mode:'geometry', op, type, a, ans:a };
       setQuestion(`Two lines cross. One angle is ${a}°. What is the vertically opposite angle?`);
     }
   } else if (op === 'geo_pythagoras') {
     const type=rnd(0,2);
     if(type===0) {
-      // find hypotenuse (use Pythagorean triples for clean answers)
       const triples=[[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10],[9,12,15],[12,16,20]];
       const [a,b,c]=triples[rnd(0,triples.length-1)];
       const k=rnd(1,3);
       currentAnswer=c*k;
+      _currentQuestionData = { mode:'geometry', op, type:'find_hyp', a:a*k, b:b*k, c:c*k, ans:c*k };
       setQuestion(`Right triangle: legs = ${a*k} and ${b*k}. Find the hypotenuse c.`);
     } else if(type===1) {
-      // find a leg
       const triples=[[3,4,5],[5,12,13],[8,15,17],[7,24,25]];
       const [a,b,c]=triples[rnd(0,triples.length-1)];
       const k=rnd(1,3);
       currentAnswer=a*k;
+      _currentQuestionData = { mode:'geometry', op, type:'find_leg', a:a*k, b:b*k, c:c*k, ans:a*k };
       setQuestion(`Right triangle: hypotenuse = ${c*k}, one leg = ${b*k}. Find the other leg.`);
     } else {
-      // float hypotenuse
       const a=rnd(3,12),b=rnd(3,12);
       currentAnswer=r2(Math.sqrt(a*a+b*b));
       setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type:'find_hyp_float', a, b, ans:currentAnswer };
       setQuestion(`Right triangle: legs = ${a} and ${b}. Find the hypotenuse (round to 2dp).`);
     }
   } else if (op === 'geo_coordinate') {
@@ -4601,20 +4638,24 @@ function generateGeometryQuestion() {
     if(type==='distance') {
       currentAnswer=r2(Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2)));
       setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type, x1, y1, x2, y2, ans:currentAnswer };
       setQuestion(`Distance between (${x1},${y1}) and (${x2},${y2})? Round to 2dp.`);
     } else if(type==='midpoint_x') {
       currentAnswer=r2((x1+x2)/2);
       if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type, x1, y1, x2, y2, ans:currentAnswer };
       setQuestion(`Midpoint of (${x1},${y1}) and (${x2},${y2}). What is the x-coordinate?`);
     } else if(type==='midpoint_y') {
       currentAnswer=r2((y1+y2)/2);
       if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type, x1, y1, x2, y2, ans:currentAnswer };
       setQuestion(`Midpoint of (${x1},${y1}) and (${x2},${y2}). What is the y-coordinate?`);
     } else {
-      if(x2===x1){ currentAnswer=999; setAnswerMode('integer'); setQuestion(`Slope of line through (${x1},${y1}) and (${x2},${y2})? (enter 999 for undefined)`); }
+      if(x2===x1){ currentAnswer=999; setAnswerMode('integer'); _currentQuestionData = { mode:'geometry', op, type, x1, y1, x2, y2, ans:999, undefined:true }; setQuestion(`Slope of line through (${x1},${y1}) and (${x2},${y2})? (enter 999 for undefined)`); }
       else {
         currentAnswer=r2((y2-y1)/(x2-x1));
         if(Number.isInteger(currentAnswer)) setAnswerMode('integer'); else setAnswerMode('float');
+        _currentQuestionData = { mode:'geometry', op, type, x1, y1, x2, y2, ans:currentAnswer };
         setQuestion(`Find the slope of the line through (${x1},${y1}) and (${x2},${y2}).`);
       }
     }
@@ -4625,21 +4666,25 @@ function generateGeometryQuestion() {
     if(type==='area') {
       currentAnswer=r2(PI*r*r);
       setAnswerMode('float');
-      setQuestion(`Area of a circle with radius ${r}. (A = πr², round to 2dp)`);
+      _currentQuestionData = { mode:'geometry', op, type, r, ans:currentAnswer, formula:'A = πr²' };
+      setQuestion(`Area of a circle with radius ${r}. (A = πr², round to 2dp, answer in units²)`);
     } else if(type==='circumference') {
       currentAnswer=r2(2*PI*r);
       setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type, r, ans:currentAnswer, formula:'C = 2πr' };
       setQuestion(`Circumference of a circle with radius ${r}. (C = 2πr, round to 2dp)`);
     } else if(type==='arc_length') {
       const deg=[30,45,60,90,120,180][rnd(0,5)];
       currentAnswer=r2(2*PI*r*deg/360);
       setAnswerMode('float');
+      _currentQuestionData = { mode:'geometry', op, type, r, deg, ans:currentAnswer, formula:'Arc = (θ/360)×2πr' };
       setQuestion(`Arc length of a ${deg}° sector in a circle with radius ${r}. Round to 2dp.`);
     } else {
       const deg=[30,45,60,90,120,180][rnd(0,5)];
       currentAnswer=r2(PI*r*r*deg/360);
       setAnswerMode('float');
-      setQuestion(`Area of a ${deg}° sector in a circle with radius ${r}. Round to 2dp.`);
+      _currentQuestionData = { mode:'geometry', op, type, r, deg, ans:currentAnswer, formula:'Sector A = (θ/360)×πr²' };
+      setQuestion(`Area of a ${deg}° sector in a circle with radius ${r}. Round to 2dp. (answer in units²)`);
     }
   }
   document.getElementById('answerInput').focus();
@@ -4654,10 +4699,10 @@ function generateAlgebraQuestion() {
     const types=['add','sub','mul','div'];
     const t=types[rnd(0,3)];
     const x=rnd(1,20);
-    if(t==='add') { const a=rnd(1,30); currentAnswer=x; setQuestion(`Solve for x: x + ${a} = ${x+a}`); }
-    else if(t==='sub') { const a=rnd(1,30); currentAnswer=x; setQuestion(`Solve for x: x − ${a} = ${x-a}`); }
-    else if(t==='mul') { const a=rnd(2,12); currentAnswer=x; setQuestion(`Solve for x: ${a}x = ${a*x}`); }
-    else { const a=rnd(2,12); currentAnswer=x; setQuestion(`Solve for x: x / ${a} = ${x} (so x/${a} = ${x})`); currentAnswer=x*a; setQuestion(`Solve for x: x ÷ ${a} = ${x}`); }
+    if(t==='add') { const a=rnd(1,30); currentAnswer=x; _currentQuestionData={mode:'algebra',op,t,x,a,rhs:x+a,ans:x}; setQuestion(`Solve for x: x + ${a} = ${x+a}`); }
+    else if(t==='sub') { const a=rnd(1,30); currentAnswer=x; _currentQuestionData={mode:'algebra',op,t,x,a,rhs:x-a,ans:x}; setQuestion(`Solve for x: x − ${a} = ${x-a}`); }
+    else if(t==='mul') { const a=rnd(2,12); currentAnswer=x; _currentQuestionData={mode:'algebra',op,t,x,a,rhs:a*x,ans:x}; setQuestion(`Solve for x: ${a}x = ${a*x}`); }
+    else { const a=rnd(2,12); currentAnswer=x*a; _currentQuestionData={mode:'algebra',op,t:'div',x:x*a,a,rhs:x,ans:x*a}; setQuestion(`Solve for x: x ÷ ${a} = ${x}`); }
   } else if (op === 'alg_two_step') {
     const x=rnd(1,15);
     const a=rnd(2,8),b=rnd(1,20);
@@ -4665,30 +4710,32 @@ function generateAlgebraQuestion() {
     const op2=ops2[rnd(0,1)];
     const rhs=op2==='+'?a*x+b:a*x-b;
     currentAnswer=x;
+    _currentQuestionData = { mode:'algebra', op, x, a, b, op2, rhs, ans:x };
     setQuestion(`Solve for x: ${a}x ${op2} ${b} = ${rhs}`);
   } else if (op === 'alg_multi_step') {
     const x=rnd(1,10);
     const a=rnd(2,6),b=rnd(1,10),c=rnd(1,8);
     const rhs=a*(x+b)+c;
     currentAnswer=x;
+    _currentQuestionData = { mode:'algebra', op, x, a, b, c, rhs, ans:x };
     setQuestion(`Solve for x: ${a}(x + ${b}) + ${c} = ${rhs}`);
   } else if (op === 'alg_quadratic') {
-    // ax²+bx+c=0 with integer roots
     const r1v=rnd(-8,8), r2v=rnd(-8,8);
-    if(r1v===0&&r2v===0){currentAnswer=1;setQuestion(`Solve: x² − 2x + 1 = 0 (give the larger root)`);return;}
+    if(r1v===0&&r2v===0){currentAnswer=1;_currentQuestionData={mode:'algebra',op,r1:1,r2:1,b2:-2,c2:1,ans:1};setQuestion(`Solve: x² − 2x + 1 = 0 (give the larger root)`);return;}
     const b2=-(r1v+r2v), c2=r1v*r2v;
     const larger=Math.max(r1v,r2v);
     currentAnswer=larger;
     const bStr=b2>=0?`+ ${b2}`:`− ${Math.abs(b2)}`;
     const cStr=c2>=0?`+ ${c2}`:`− ${Math.abs(c2)}`;
+    _currentQuestionData = { mode:'algebra', op, r1:r1v, r2:r2v, b2, c2, ans:larger };
     setQuestion(`Solve x² ${bStr}x ${cStr} = 0. Give the larger root.`);
   } else if (op === 'alg_factor') {
-    // Factor x²+bx+c into (x+p)(x+q), find p and q
     const p=rnd(1,10), q=rnd(1,10);
     const b2=p+q, c2=p*q;
     currentAnswer=Math.max(p,q);
     const bStr=b2>0?`+ ${b2}`:`− ${Math.abs(b2)}`;
     const cStr=c2>0?`+ ${c2}`:`− ${Math.abs(c2)}`;
+    _currentQuestionData = { mode:'algebra', op, p, q, b2, c2, ans:Math.max(p,q) };
     setQuestion(`Factor x² ${bStr}x ${cStr} = (x+a)(x+b). Give the larger of a and b.`);
   } else if (op === 'alg_exponent') {
     const types=['solve_x','simplify_power','negative_exp'];
@@ -4697,20 +4744,21 @@ function generateAlgebraQuestion() {
       const base=[2,3,4,5][rnd(0,3)];
       const exp=rnd(2,5);
       currentAnswer=exp;
+      _currentQuestionData = { mode:'algebra', op, t, base, exp, val:Math.pow(base,exp), ans:exp };
       setQuestion(`Solve for x: ${base}^x = ${Math.pow(base,exp)}`);
     } else if(t==='simplify_power') {
       const base=rnd(2,6);
       const e1=rnd(1,5),e2=rnd(1,4);
       currentAnswer=e1+e2;
+      _currentQuestionData = { mode:'algebra', op, t, base, e1, e2, ans:e1+e2 };
       setQuestion(`Simplify: ${base}^${e1} × ${base}^${e2} = ${base}^? (give the exponent)`);
     } else {
       const base=[2,3,4,5][rnd(0,3)];
       const exp=rnd(1,4);
-      currentAnswer=1; // result = 1/(base^exp), but show as fraction... use float
       setAnswerMode('float');
-      currentAnswer=r2(1/Math.pow(base,exp));
-      setQuestion(`Evaluate: ${base}^(−${exp}) (round to 4dp if needed)`);
       currentAnswer=parseFloat((1/Math.pow(base,exp)).toFixed(4));
+      _currentQuestionData = { mode:'algebra', op, t, base, exp, val:Math.pow(base,exp), ans:currentAnswer };
+      setQuestion(`Evaluate: ${base}^(−${exp}) (round to 4dp if needed)`);
     }
   } else if (op === 'alg_log') {
     const bases=[2,3,4,5,10];
@@ -4718,21 +4766,20 @@ function generateAlgebraQuestion() {
     const exp=rnd(1,5);
     const val=Math.pow(base,exp);
     currentAnswer=exp;
+    _currentQuestionData = { mode:'algebra', op, base, exp, val, ans:exp };
     setQuestion(`log${base}(${val}) = ? (log base ${base} of ${val})`);
   } else if (op === 'alg_system') {
-    // x+y=a, x-y=b → x=(a+b)/2, y=(a-b)/2
     const x=rnd(1,15),y=rnd(1,15);
     const a=x+y,b=x-y;
     currentAnswer=x;
+    _currentQuestionData = { mode:'algebra', op, x, y, sumEq:a, diffEq:b, ans:x };
     setQuestion(`Solve the system: x + y = ${a} and x − y = ${b}. Find x.`);
   } else if (op === 'alg_inequality') {
     const x=rnd(2,15);
     const a=rnd(2,8),b=rnd(1,20);
-    const rhs=a*x+b;
-    currentAnswer=x+1; // minimum integer where ax+b > rhs doesn't work; solve ax>rhs-b → x>...
-    // Actually: ax + b > C means x > (C-b)/a
-    const C=a*(x-1)+b; // so x > x-1, min integer is x
+    const C=a*(x-1)+b;
     currentAnswer=x;
+    _currentQuestionData = { mode:'algebra', op, x, a, b, C, ans:x };
     setQuestion(`Solve: ${a}x + ${b} > ${C}. What is the smallest integer value of x?`);
   } else if (op === 'alg_sequence') {
     const isArith=rnd(0,1)===1;
@@ -4740,13 +4787,16 @@ function generateAlgebraQuestion() {
       const a1=rnd(1,20),d=rnd(1,10);
       const n=rnd(4,8);
       currentAnswer=a1+(n-1)*d;
+      _currentQuestionData = { mode:'algebra', op, seqType:'arith', a1, d, n, ans:currentAnswer };
       setQuestion(`Arithmetic sequence: first term = ${a1}, common difference = ${d}. Find the ${n}th term.`);
     } else {
       const bases=[2,3][rnd(0,1)];
       const a1=rnd(1,5);
-      const n=rnd(3,6);
+      let n=rnd(3,6);
       currentAnswer=a1*Math.pow(bases,n-1);
-      if(currentAnswer>99999){currentAnswer=a1*Math.pow(2,3);setQuestion(`Geometric sequence: a₁=${a1}, r=2. Find the 4th term.`);}
+      if(currentAnswer>99999){n=4;currentAnswer=a1*Math.pow(2,3);}
+      _currentQuestionData = { mode:'algebra', op, seqType:'geo', a1, r:bases, n, ans:currentAnswer };
+      if(currentAnswer===a1*Math.pow(2,3)&&n===4) setQuestion(`Geometric sequence: a₁=${a1}, r=2. Find the 4th term.`);
       else setQuestion(`Geometric sequence: a₁=${a1}, common ratio r=${bases}. Find the ${n}th term.`);
     }
   } else if (op === 'alg_function') {
@@ -4755,14 +4805,15 @@ function generateAlgebraQuestion() {
     if(t==='eval') {
       const a=rnd(1,6),b=rnd(-10,10),xv=rnd(-5,5);
       currentAnswer=a*xv*xv+b;
+      _currentQuestionData = { mode:'algebra', op, t, a, b, xv, ans:currentAnswer };
       setQuestion(`f(x) = ${a}x² + ${b<0?b:'+'+b}. Find f(${xv}).`);
     } else {
-      // f(g(x)) where f(x)=ax+b, g(x)=cx+d
       const a=rnd(1,5),b=rnd(-5,5),c=rnd(1,5),d=rnd(-5,5);
       const xv=rnd(-4,4);
       const gx=c*xv+d;
       const fgx=a*gx+b;
       currentAnswer=fgx;
+      _currentQuestionData = { mode:'algebra', op, t, a, b, c, d, xv, gx, ans:fgx };
       setQuestion(`f(x)=${a}x${b>=0?'+'+b:b}, g(x)=${c}x${d>=0?'+'+d:d}. Find f(g(${xv})).`);
     }
   } else { // alg_poly
@@ -4772,6 +4823,7 @@ function generateAlgebraQuestion() {
       const a1=rnd(1,8),b1=rnd(-10,10),a2=rnd(1,8),b2=rnd(-10,10);
       const xv=rnd(1,5);
       currentAnswer=(a1+a2)*xv+(b1+b2);
+      _currentQuestionData = { mode:'algebra', op, t, a1, b1, a2, b2, xv, ans:currentAnswer };
       setQuestion(`Add: (${a1}x + ${b1}) + (${a2}x + ${b2}). Evaluate at x=${xv}.`);
     } else if(t==='eval') {
       const a=rnd(1,5),b=rnd(-8,8),c=rnd(-10,10);
@@ -4779,10 +4831,12 @@ function generateAlgebraQuestion() {
       currentAnswer=a*xv*xv+b*xv+c;
       const bStr=b>=0?`+${b}x`:`${b}x`;
       const cStr=c>=0?`+${c}`:String(c);
+      _currentQuestionData = { mode:'algebra', op, t, a, b, c, xv, ans:currentAnswer };
       setQuestion(`Evaluate ${a}x²${bStr}${cStr} at x=${xv}.`);
     } else {
       const a=rnd(1,6),b=rnd(1,8),xv=rnd(1,5);
       currentAnswer=(a*xv)*b;
+      _currentQuestionData = { mode:'algebra', op, t, a, b, xv, ans:currentAnswer };
       setQuestion(`Expand and evaluate: ${a}x · ${b} at x=${xv}.`);
     }
   }
@@ -5101,29 +5155,206 @@ function buildSolution() {
     spoiler = `${a} − ${b} = <strong>${ans}</strong>`;
 
   } else if (mode === 'fractions') {
-    const qText2 = document.getElementById('questionText')?.textContent || '';
-    steps.push({ label: 'Read the question', text: `Look at the two fractions and identify the operation (add, subtract, multiply, or divide).` });
-    steps.push({ label: 'Adding or subtracting?', text: `You need a <em>common denominator</em> first. Find the LCM of the two bottom numbers, then scale each fraction so they match.` });
-    steps.push({ label: 'Multiplying?', text: `Multiply the top numbers together and the bottom numbers together. Then simplify by dividing by the GCF.` });
-    steps.push({ label: 'Dividing?', text: `Flip the second fraction upside-down (take its reciprocal), then multiply. For example: <code>a/b ÷ c/d = a/b × d/c</code>` });
-    steps.push({ label: 'Simplify', text: `Divide the top and bottom of your result by their greatest common factor (GCF) to get the simplest form.` });
-    spoiler = `Answer: <strong>${currentAnswerNumerator}/${currentAnswerDenominator}</strong>`;
+    const fop = q.op || '';
+    if (fop === 'frac_of') {
+      const {n,d,whole,ans} = q;
+      steps.push({ label: 'Understand the question', text: `We need to find <code>${n}/${d}</code> of <code>${whole}</code>. "Of" means multiply.` });
+      steps.push({ label: 'Divide first', text: `Divide <code>${whole}</code> by the denominator: <code>${whole} ÷ ${d} = ${whole/d}</code>` });
+      steps.push({ label: 'Multiply by numerator', text: `Now multiply by the numerator: <code>${whole/d} × ${n} = ${ans}</code>` });
+      spoiler = `${n}/${d} of ${whole} = <strong>${ans}</strong>`;
+    } else if (fop === 'frac_to_dec') {
+      const {n,d,ans} = q;
+      steps.push({ label: 'Set up the division', text: `To convert <code>${n}/${d}</code> to a decimal, divide <code>${n} ÷ ${d}</code>.` });
+      steps.push({ label: 'Perform the division', text: `<code>${n} ÷ ${d} = ${ans}</code>` });
+      steps.push({ label: 'Check', text: `Verify: <code>${ans} × ${d} ≈ ${n}</code>. If the question says round, round to 2 decimal places.` });
+      spoiler = `${n}/${d} = <strong>${ans}</strong>`;
+    } else if (fop === 'frac_simplify') {
+      const {origN,origD,rn,rd} = q;
+      const g = gcd(origN,origD);
+      steps.push({ label: 'Find the GCF', text: `Find the greatest common factor of <code>${origN}</code> and <code>${origD}</code>. GCF = <code>${g}</code>` });
+      steps.push({ label: 'Divide both parts', text: `Numerator: <code>${origN} ÷ ${g} = ${rn}</code><br>Denominator: <code>${origD} ÷ ${g} = ${rd}</code>` });
+      steps.push({ label: 'Simplified', text: `<code>${origN}/${origD} = ${rn}/${rd}</code>` });
+      spoiler = `${origN}/${origD} simplified = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_add') {
+      const {n1,d1,n2,d2,L,rn,rd} = q;
+      steps.push({ label: 'Find common denominator', text: `LCM of <code>${d1}</code> and <code>${d2}</code> is <code>${L}</code>.` });
+      const sc1=L/d1, sc2=L/d2;
+      steps.push({ label: 'Scale each fraction', text: `<code>${n1}/${d1} = ${n1*sc1}/${L}</code><br><code>${n2}/${d2} = ${n2*sc2}/${L}</code>` });
+      steps.push({ label: 'Add the numerators', text: `<code>${n1*sc1} + ${n2*sc2} = ${n1*sc1+n2*sc2}</code>, over <code>${L}</code>` });
+      if (rn !== n1*sc1+n2*sc2 || rd !== L) steps.push({ label: 'Simplify', text: `<code>${n1*sc1+n2*sc2}/${L}</code> simplifies to <code>${rn}/${rd}</code>` });
+      spoiler = `${n1}/${d1} + ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_sub') {
+      const {n1,d1,n2,d2,L,rn,rd} = q;
+      const sc1=L/d1, sc2=L/d2;
+      steps.push({ label: 'Find common denominator', text: `LCM of <code>${d1}</code> and <code>${d2}</code> is <code>${L}</code>.` });
+      steps.push({ label: 'Scale each fraction', text: `<code>${n1}/${d1} = ${n1*sc1}/${L}</code><br><code>${n2}/${d2} = ${n2*sc2}/${L}</code>` });
+      steps.push({ label: 'Subtract the numerators', text: `<code>${n1*sc1} − ${n2*sc2} = ${n1*sc1-n2*sc2}</code>, over <code>${L}</code>` });
+      if (rn !== n1*sc1-n2*sc2 || rd !== L) steps.push({ label: 'Simplify', text: `<code>${Math.abs(n1*sc1-n2*sc2)}/${L}</code> simplifies to <code>${rn}/${rd}</code>` });
+      spoiler = `${n1}/${d1} − ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_mul') {
+      const {n1,d1,n2,d2,rn,rd} = q;
+      steps.push({ label: 'Multiply numerators', text: `<code>${n1} × ${n2} = ${n1*n2}</code>` });
+      steps.push({ label: 'Multiply denominators', text: `<code>${d1} × ${d2} = ${d1*d2}</code>` });
+      steps.push({ label: 'Result', text: `<code>${n1*n2}/${d1*d2}</code>` });
+      if (rn !== n1*n2 || rd !== d1*d2) steps.push({ label: 'Simplify', text: `Simplifies to <code>${rn}/${rd}</code>` });
+      spoiler = `${n1}/${d1} × ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_div') {
+      const {n1,d1,n2,d2,rn,rd} = q;
+      steps.push({ label: 'Flip the second fraction', text: `<code>${n2}/${d2}</code> becomes <code>${d2}/${n2}</code> (reciprocal).` });
+      steps.push({ label: 'Multiply', text: `<code>${n1}/${d1} × ${d2}/${n2}</code><br>= <code>${n1*d2}/${d1*n2}</code>` });
+      if (rn !== n1*d2 || rd !== d1*n2) steps.push({ label: 'Simplify', text: `Simplifies to <code>${rn}/${rd}</code>` });
+      spoiler = `${n1}/${d1} ÷ ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_mixed_add' || fop === 'frac_mixed_sub') {
+      const {w1,w2,n1,d1,n2,d2,L,rn,rd} = q;
+      const isSub = fop === 'frac_mixed_sub';
+      const imp1=w1*d1+n1, imp2=w2*d2+n2;
+      steps.push({ label: 'Convert to improper fractions', text: `<code>${w1} ${n1}/${d1} = ${imp1}/${d1}</code><br><code>${w2} ${n2}/${d2} = ${imp2}/${d2}</code>` });
+      const sc1=L/d1,sc2=L/d2;
+      steps.push({ label: 'Common denominator', text: `LCM of <code>${d1}</code> and <code>${d2}</code> is <code>${L}</code>.<br><code>${imp1*sc1}/${L} ${isSub?'−':'+'} ${imp2*sc2}/${L}</code>` });
+      const rawNum = isSub ? imp1*sc1 - imp2*sc2 : imp1*sc1 + imp2*sc2;
+      steps.push({ label: isSub?'Subtract':'Add', text: `<code>${Math.abs(rawNum)}/${L}</code>` });
+      if (rn !== Math.abs(rawNum) || rd !== L) steps.push({ label: 'Simplify', text: `= <code>${rn}/${rd}</code>` });
+      const opSym = isSub ? '−' : '+';
+      spoiler = `${w1} ${n1}/${d1} ${opSym} ${w2} ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_mixed_mul' || fop === 'frac_mixed_div') {
+      const {w1,w2,n1,d1,n2,d2,imp1,imp2,rn,rd} = q;
+      const isDiv = fop === 'frac_mixed_div';
+      steps.push({ label: 'Convert to improper fractions', text: `<code>${w1} ${n1}/${d1} = ${imp1}/${d1}</code><br><code>${w2} ${n2}/${d2} = ${imp2}/${d2}</code>` });
+      if (isDiv) {
+        steps.push({ label: 'Flip and multiply', text: `<code>${imp1}/${d1} × ${d2}/${imp2} = ${imp1*d2}/${d1*imp2}</code>` });
+      } else {
+        steps.push({ label: 'Multiply', text: `<code>${imp1}/${d1} × ${imp2}/${d2} = ${imp1*imp2}/${d1*d2}</code>` });
+      }
+      if (rn !== (isDiv?imp1*d2:imp1*imp2) || rd !== (isDiv?d1*imp2:d1*d2)) steps.push({ label: 'Simplify', text: `= <code>${rn}/${rd}</code>` });
+      const opSym = isDiv ? '÷' : '×';
+      spoiler = `${w1} ${n1}/${d1} ${opSym} ${w2} ${n2}/${d2} = <strong>${rn}/${rd}</strong>`;
+    } else if (fop === 'frac_complex') {
+      const {n1,d1,n2,d2,rn,rd} = q;
+      steps.push({ label: 'Complex fraction = division', text: `<code>(${n1}/${d1}) ÷ (${n2}/${d2})</code> is the same as dividing the two fractions.` });
+      steps.push({ label: 'Flip and multiply', text: `<code>${n1}/${d1} × ${d2}/${n2} = ${n1*d2}/${d1*n2}</code>` });
+      if (rn !== n1*d2 || rd !== d1*n2) steps.push({ label: 'Simplify', text: `= <code>${rn}/${rd}</code>` });
+      spoiler = `(${n1}/${d1}) ÷ (${n2}/${d2}) = <strong>${rn}/${rd}</strong>`;
+    } else {
+      steps.push({ label: 'Read the question', text: `Identify the operation and work through it step by step.` });
+      spoiler = `Answer: <strong>${currentAnswerNumerator}/${currentAnswerDenominator}</strong>`;
+    }
 
   } else if (mode === 'decimals') {
-    const qText2 = document.getElementById('questionText')?.textContent || '';
-    steps.push({ label: 'Identify the operation', text: `Look at the question and decide: are you adding, subtracting, multiplying, or dividing decimals?` });
-    steps.push({ label: 'Adding / subtracting', text: `Line up the decimal points vertically. Add or subtract column by column, keeping the decimal in the same position.` });
-    steps.push({ label: 'Multiplying', text: `Ignore the decimals and multiply the whole numbers. Count total decimal places in both numbers, then place the decimal in your answer.` });
-    steps.push({ label: 'Dividing', text: `Move the decimal point in the divisor until it's a whole number. Move the dividend's decimal the same number of places. Then divide normally.` });
-    steps.push({ label: 'Double-check', text: `Does your answer make sense? If you divided 5.6 by 2, the answer should be around 2–3. Use estimation to verify.` });
-    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    const dop = q.op || '';
+    if (dop === 'dec_add') {
+      const {a,b,ans} = q;
+      steps.push({ label: 'Line up the decimals', text: `Write <code>${a}</code> and <code>${b}</code> vertically, lining up the decimal points.` });
+      steps.push({ label: 'Add column by column', text: `Add from right to left, carrying over if a column exceeds 9.` });
+      steps.push({ label: 'Place the decimal', text: `The decimal stays in the same column. <code>${a} + ${b} = ${ans}</code>` });
+      spoiler = `${a} + ${b} = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_sub') {
+      const {a,b,ans} = q;
+      steps.push({ label: 'Line up the decimals', text: `Write <code>${a}</code> above <code>${b}</code>, aligning the decimal points.` });
+      steps.push({ label: 'Subtract column by column', text: `Subtract from right to left. Borrow from the next column if needed.` });
+      steps.push({ label: 'Result', text: `<code>${a} − ${b} = ${ans}</code>` });
+      spoiler = `${a} − ${b} = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_mul') {
+      const {a,b,ans} = q;
+      const dps = (String(a).split('.')[1]||'').length;
+      const wholeProduct = Math.round(a * Math.pow(10,dps)) * b;
+      steps.push({ label: 'Ignore the decimal temporarily', text: `Treat <code>${a}</code> as <code>${Math.round(a*Math.pow(10,dps))}</code> (move decimal ${dps} place${dps>1?'s':''} right).` });
+      steps.push({ label: 'Multiply', text: `<code>${Math.round(a*Math.pow(10,dps))} × ${b} = ${wholeProduct}</code>` });
+      steps.push({ label: 'Restore the decimal', text: `Move the decimal back ${dps} place${dps>1?'s':''}: <code>${ans}</code>` });
+      spoiler = `${a} × ${b} = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_div') {
+      const {a,b,ans} = q;
+      steps.push({ label: 'Set up the division', text: `<code>${a} ÷ ${b}</code>` });
+      steps.push({ label: 'Divide', text: `Ask: how many times does <code>${b}</code> fit into <code>${a}</code>?<br><code>${a} ÷ ${b} = ${ans}</code>` });
+      steps.push({ label: 'Verify', text: `Check: <code>${ans} × ${b} = ${r2(ans*b)}</code> ✓` });
+      spoiler = `${a} ÷ ${b} = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_round') {
+      const {raw,dp,ans} = q;
+      const dpLabel = dp===0?'nearest whole number':dp===1?'1 decimal place':'2 decimal places';
+      const str = raw.toFixed(dp+1 > 4 ? 4 : dp+1);
+      const decideDigit = dp === 0 ? String(raw).split('.')[1]?.[0] : String(raw.toFixed(dp+1)).split('.')[1]?.[dp];
+      steps.push({ label: 'Find the rounding digit', text: `We want to round <code>${raw}</code> to the ${dpLabel}.` });
+      steps.push({ label: 'Look at the next digit', text: `The digit after the rounding place is <code>${decideDigit||'0'}</code>.${parseInt(decideDigit||'0')>=5?' Since it\'s 5 or more, round up.':' Since it\'s less than 5, round down.'}` });
+      steps.push({ label: 'Result', text: `<code>${raw}</code> rounded to ${dpLabel} = <code>${ans}</code>` });
+      spoiler = `${raw} rounded = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_frac_to_dec') {
+      const {n,d,ans} = q;
+      steps.push({ label: 'Divide numerator by denominator', text: `<code>${n} ÷ ${d} = ${ans}</code>` });
+      steps.push({ label: 'Check', text: `<code>${ans} × ${d} ≈ ${n}</code> ✓` });
+      spoiler = `${n}/${d} = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_percent_to_dec') {
+      const {p,ans} = q;
+      steps.push({ label: 'Percent means "per hundred"', text: `<code>${p}%</code> means <code>${p}</code> per <code>100</code>.` });
+      steps.push({ label: 'Divide by 100', text: `Move the decimal point 2 places left: <code>${p} ÷ 100 = ${ans}</code>` });
+      spoiler = `${p}% = <strong>${ans}</strong>`;
+    } else if (dop === 'dec_place_value') {
+      const {val,pl,tenths,hundredths,ans} = q;
+      const str2 = val.toFixed(2);
+      steps.push({ label: 'Read the decimal number', text: `The number is <code>${str2}</code>. After the decimal point: <code>${tenths}</code> is in the tenths, <code>${hundredths}</code> is in the hundredths.` });
+      steps.push({ label: 'Find the requested place', text: `The <strong>${pl}</strong> digit is <code>${ans}</code>.` });
+      spoiler = `The ${pl} digit in ${val} is <strong>${ans}</strong>`;
+    } else {
+      steps.push({ label: 'Work through the problem', text: `Read the question carefully and compute step by step.` });
+      spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    }
 
   } else if (mode === 'percentages') {
-    steps.push({ label: 'What does % mean?', text: `Percent means "per hundred." So <code>25%</code> means <code>25 out of 100</code>, or <code>0.25</code> as a decimal.` });
-    steps.push({ label: 'Convert to decimal', text: `Divide the percentage by 100 to get the decimal. For example: <code>30% = 30 ÷ 100 = 0.30</code>` });
-    steps.push({ label: 'Apply the operation', text: `If it's "X% of Y", multiply: <code>decimal × Y</code>. If finding the percentage: <code>(part ÷ whole) × 100</code>.` });
-    steps.push({ label: 'Check magnitude', text: `A percentage of a number should be smaller if the % is under 100%, or larger if over 100%. Does your answer feel right?` });
-    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    const pop = q.op || '';
+    if (pop === 'pct_of') {
+      const {p,whole,ans} = q;
+      const dec = r2(p/100);
+      steps.push({ label: 'Convert % to decimal', text: `<code>${p}% = ${p} ÷ 100 = ${dec}</code>` });
+      steps.push({ label: 'Multiply', text: `<code>${dec} × ${whole} = ${ans}</code>` });
+      spoiler = `${p}% of ${whole} = <strong>${ans}</strong>`;
+    } else if (pop === 'pct_what') {
+      const {part,whole,ans} = q;
+      steps.push({ label: 'Set up the formula', text: `Percentage = (part ÷ whole) × 100` });
+      steps.push({ label: 'Divide', text: `<code>${part} ÷ ${whole} = ${r2(part/whole)}</code>` });
+      steps.push({ label: 'Multiply by 100', text: `<code>${r2(part/whole)} × 100 = ${ans}%</code>` });
+      spoiler = `${part} is <strong>${ans}%</strong> of ${whole}`;
+    } else if (pop === 'pct_increase') {
+      const {p,orig,increase,ans} = q;
+      steps.push({ label: 'Find the increase amount', text: `<code>${p}% of ${orig} = ${p/100} × ${orig} = ${increase}</code>` });
+      steps.push({ label: 'Add to original', text: `<code>${orig} + ${increase} = ${ans}</code>` });
+      spoiler = `${orig} increased by ${p}% = <strong>${ans}</strong>`;
+    } else if (pop === 'pct_decrease') {
+      const {p,orig,decrease,ans} = q;
+      steps.push({ label: 'Find the decrease amount', text: `<code>${p}% of ${orig} = ${p/100} × ${orig} = ${decrease}</code>` });
+      steps.push({ label: 'Subtract from original', text: `<code>${orig} − ${decrease} = ${ans}</code>` });
+      spoiler = `${orig} decreased by ${p}% = <strong>${ans}</strong>`;
+    } else if (pop === 'pct_change') {
+      const {orig,newVal,diff,isUp,ans} = q;
+      steps.push({ label: 'Find the difference', text: `<code>|${newVal} − ${orig}| = ${diff}</code>` });
+      steps.push({ label: 'Divide by original', text: `<code>${diff} ÷ ${orig} = ${r2(diff/orig)}</code>` });
+      steps.push({ label: 'Convert to percentage', text: `<code>${r2(diff/orig)} × 100 = ${ans}%</code>` });
+      spoiler = `Percentage ${isUp?'increase':'decrease'} = <strong>${ans}%</strong>`;
+    } else if (pop === 'pct_reverse') {
+      const {p,newVal,isUp,ans} = q;
+      const multiplier = isUp ? 1+p/100 : 1-p/100;
+      steps.push({ label: 'Understand the problem', text: `After a ${p}% ${isUp?'increase':'decrease'}, the value is <code>${newVal}</code>. What was the original?` });
+      steps.push({ label: 'Set up the equation', text: `Original × <code>${multiplier}</code> = <code>${newVal}</code>` });
+      steps.push({ label: 'Divide', text: `Original = <code>${newVal} ÷ ${multiplier} = ${ans}</code>` });
+      spoiler = `Original value = <strong>${ans}</strong>`;
+    } else if (pop === 'pct_interest') {
+      const {P,R,T,ans} = q;
+      steps.push({ label: 'Simple Interest formula', text: `<code>I = P × R × T ÷ 100</code>` });
+      steps.push({ label: 'Plug in values', text: `<code>I = ${P} × ${R} × ${T} ÷ 100</code>` });
+      steps.push({ label: 'Calculate step by step', text: `<code>${P} × ${R} = ${P*R}</code><br><code>${P*R} × ${T} = ${P*R*T}</code><br><code>${P*R*T} ÷ 100 = ${ans}</code>` });
+      spoiler = `Interest = <strong>$${ans}</strong>`;
+    } else if (pop === 'pct_tax') {
+      const {p,price,type,ans} = q;
+      const amt = r2(price*p/100);
+      if (type === 'discount') {
+        steps.push({ label: 'Calculate the discount', text: `<code>${p}% of $${price} = $${amt}</code>` });
+        steps.push({ label: 'Subtract from price', text: `<code>$${price} − $${amt} = $${ans}</code>` });
+      } else {
+        steps.push({ label: `Calculate the ${type}`, text: `<code>${p}% of $${price} = $${amt}</code>` });
+        steps.push({ label: 'Add to price', text: `<code>$${price} + $${amt} = $${ans}</code>` });
+      }
+      spoiler = `Final price = <strong>$${ans}</strong>`;
+    } else {
+      steps.push({ label: 'Work through the problem', text: `Convert % to decimal, then apply the operation.` });
+      spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    }
 
   } else if (mode === 'wordproblems') {
     const { text } = q;
@@ -5135,19 +5366,268 @@ function buildSolution() {
     spoiler = `Answer: <strong>${currentAnswer}</strong>`;
 
   } else if (mode === 'geometry') {
-    steps.push({ label: 'Identify the shape', text: `Look at the question and identify which shape or measurement is involved.` });
-    steps.push({ label: 'Recall the formula', text: `Different shapes use different formulas. Area of a rectangle = <code>length × width</code>. Triangle = <code>½ × base × height</code>. Circle area = <code>π × r²</code>.` });
-    steps.push({ label: 'Plug in the values', text: `Substitute the given measurements into the formula carefully.` });
-    steps.push({ label: 'Calculate step by step', text: `Work through the arithmetic one step at a time. Don't skip steps — it's easy to make errors.` });
-    steps.push({ label: 'Check your units', text: `Area is measured in square units (cm², m²). Perimeter/length is in regular units. Make sure your answer has the right unit.` });
-    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    const gop = q.op || '';
+    const gtype = q.type || q.shape || '';
+    if (gop === 'geo_area') {
+      const shape = q.shape;
+      if (shape==='rectangle') {
+        steps.push({ label: 'Formula', text: `Area of a rectangle = <code>length × width</code>` });
+        steps.push({ label: 'Plug in values', text: `<code>A = ${q.l} × ${q.w}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>A = ${q.ans} units²</code>` });
+      } else if (shape==='triangle') {
+        steps.push({ label: 'Formula', text: `Area of a triangle = <code>½ × base × height</code>` });
+        steps.push({ label: 'Plug in values', text: `<code>A = ½ × ${q.b} × ${q.h}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>½ × ${q.b} = ${q.b/2}</code>, then <code>${q.b/2} × ${q.h} = ${q.ans} units²</code>` });
+      } else if (shape==='trapezoid') {
+        steps.push({ label: 'Formula', text: `Area of a trapezoid = <code>½ × (a + b) × h</code>` });
+        steps.push({ label: 'Add parallel sides', text: `<code>${q.a} + ${q.b} = ${q.a+q.b}</code>` });
+        steps.push({ label: 'Multiply', text: `<code>½ × ${q.a+q.b} × ${q.h} = ${(q.a+q.b)/2} × ${q.h} = ${q.ans} units²</code>` });
+      } else if (shape==='parallelogram') {
+        steps.push({ label: 'Formula', text: `Area of a parallelogram = <code>base × height</code>` });
+        steps.push({ label: 'Calculate', text: `<code>A = ${q.b} × ${q.h} = ${q.ans} units²</code>` });
+      } else {
+        steps.push({ label: 'Formula', text: `Area of a square = <code>side × side = s²</code>` });
+        steps.push({ label: 'Calculate', text: `<code>A = ${q.s} × ${q.s} = ${q.ans} units²</code>` });
+      }
+      spoiler = `Area = <strong>${q.ans} units²</strong>`;
+    } else if (gop === 'geo_perimeter') {
+      const shape = q.shape;
+      if (shape==='rectangle') {
+        steps.push({ label: 'Formula', text: `Perimeter of a rectangle = <code>2 × (length + width)</code>` });
+        steps.push({ label: 'Add length + width', text: `<code>${q.l} + ${q.w} = ${q.l+q.w}</code>` });
+        steps.push({ label: 'Multiply by 2', text: `<code>2 × ${q.l+q.w} = ${q.ans}</code> units` });
+        spoiler = `Perimeter = <strong>${q.ans} units</strong>`;
+      } else if (shape==='triangle') {
+        steps.push({ label: 'Formula', text: `Perimeter of a triangle = <code>side₁ + side₂ + side₃</code>` });
+        steps.push({ label: 'Add all sides', text: `<code>${q.a} + ${q.b} + ${q.c} = ${q.ans}</code> units` });
+        spoiler = `Perimeter = <strong>${q.ans} units</strong>`;
+      } else if (shape==='square') {
+        steps.push({ label: 'Formula', text: `Perimeter of a square = <code>4 × side</code>` });
+        steps.push({ label: 'Calculate', text: `<code>4 × ${q.s} = ${q.ans}</code> units` });
+        spoiler = `Perimeter = <strong>${q.ans} units</strong>`;
+      } else {
+        steps.push({ label: 'Formula', text: `Perimeter of a regular polygon = <code>n × side</code>` });
+        steps.push({ label: 'Calculate', text: `<code>${q.n} sides × ${q.s} each = ${q.ans}</code> units` });
+        spoiler = `Perimeter = <strong>${q.ans} units</strong>`;
+      }
+    } else if (gop === 'geo_volume') {
+      const shape = q.shape;
+      steps.push({ label: 'Formula', text: `Volume formula: <code>${q.formula}</code>` });
+      if (shape==='cube') {
+        steps.push({ label: 'Calculate', text: `<code>${q.s} × ${q.s} × ${q.s} = ${q.ans} units³</code>` });
+      } else if (shape==='cuboid') {
+        steps.push({ label: 'Calculate', text: `<code>${q.l} × ${q.w} = ${q.l*q.w}</code>, then <code>${q.l*q.w} × ${q.h} = ${q.ans} units³</code>` });
+      } else if (shape==='cylinder') {
+        steps.push({ label: 'Calculate r²', text: `<code>${q.r}² = ${q.r*q.r}</code>` });
+        steps.push({ label: 'Multiply by π and h', text: `<code>π × ${q.r*q.r} × ${q.h} = ${q.ans} units³</code>` });
+      } else if (shape==='cone') {
+        steps.push({ label: 'Calculate r²', text: `<code>${q.r}² = ${q.r*q.r}</code>` });
+        steps.push({ label: 'Multiply', text: `<code>⅓ × π × ${q.r*q.r} × ${q.h} = ${q.ans} units³</code>` });
+      } else {
+        steps.push({ label: 'Calculate r³', text: `<code>${q.r}³ = ${q.r*q.r*q.r}</code>` });
+        steps.push({ label: 'Multiply', text: `<code>4/3 × π × ${q.r*q.r*q.r} = ${q.ans} units³</code>` });
+      }
+      spoiler = `Volume = <strong>${q.ans} units³</strong>`;
+    } else if (gop === 'geo_surface') {
+      steps.push({ label: 'Formula', text: `Surface area formula: <code>${q.formula}</code>` });
+      if (q.shape==='cube') {
+        steps.push({ label: 'Calculate s²', text: `<code>${q.s}² = ${q.s*q.s}</code>` });
+        steps.push({ label: 'Multiply by 6', text: `<code>6 × ${q.s*q.s} = ${q.ans} units²</code>` });
+      } else if (q.shape==='cuboid') {
+        steps.push({ label: 'Find each face', text: `<code>lw = ${q.l*q.w}</code>, <code>wh = ${q.w*q.h}</code>, <code>lh = ${q.l*q.h}</code>` });
+        steps.push({ label: 'Sum and double', text: `<code>2 × (${q.l*q.w} + ${q.w*q.h} + ${q.l*q.h}) = 2 × ${q.l*q.w+q.w*q.h+q.l*q.h} = ${q.ans} units²</code>` });
+      } else if (q.shape==='cylinder') {
+        steps.push({ label: 'Calculate', text: `<code>2 × π × ${q.r} × (${q.r} + ${q.h}) = 2π × ${q.r} × ${q.r+q.h} = ${q.ans} units²</code>` });
+      } else {
+        steps.push({ label: 'Calculate', text: `<code>4 × π × ${q.r}² = 4π × ${q.r*q.r} = ${q.ans} units²</code>` });
+      }
+      spoiler = `Surface area = <strong>${q.ans} units²</strong>`;
+    } else if (gop === 'geo_angles') {
+      if (gtype==='supplementary') {
+        steps.push({ label: 'Supplementary angles', text: `Supplementary angles add up to <code>180°</code>.` });
+        steps.push({ label: 'Subtract', text: `<code>180° − ${q.a}° = ${q.ans}°</code>` });
+      } else if (gtype==='complementary') {
+        steps.push({ label: 'Complementary angles', text: `Complementary angles add up to <code>90°</code>.` });
+        steps.push({ label: 'Subtract', text: `<code>90° − ${q.a}° = ${q.ans}°</code>` });
+      } else if (gtype==='triangle') {
+        steps.push({ label: 'Triangle angle sum', text: `All angles in a triangle add to <code>180°</code>.` });
+        steps.push({ label: 'Subtract known angles', text: `<code>180° − ${q.a}° − ${q.b}° = ${q.ans}°</code>` });
+      } else if (gtype==='polygon') {
+        steps.push({ label: 'Interior angle formula', text: `Sum = <code>(n − 2) × 180°</code>` });
+        steps.push({ label: 'Calculate', text: `<code>(${q.n} − 2) × 180 = ${q.n-2} × 180 = ${q.ans}°</code>` });
+      } else {
+        steps.push({ label: 'Vertically opposite angles', text: `When two lines cross, opposite angles are <em>equal</em>.` });
+        steps.push({ label: 'Answer', text: `The opposite angle = <code>${q.ans}°</code>` });
+      }
+      spoiler = `Angle = <strong>${q.ans}°</strong>`;
+    } else if (gop === 'geo_pythagoras') {
+      steps.push({ label: 'Pythagorean theorem', text: `<code>a² + b² = c²</code> where c is the hypotenuse.` });
+      if (q.type==='find_hyp') {
+        steps.push({ label: 'Square each leg', text: `<code>${q.a}² = ${q.a*q.a}</code>, <code>${q.b}² = ${q.b*q.b}</code>` });
+        steps.push({ label: 'Add and take square root', text: `<code>${q.a*q.a} + ${q.b*q.b} = ${q.a*q.a+q.b*q.b}</code><br><code>√${q.a*q.a+q.b*q.b} = ${q.ans}</code>` });
+      } else if (q.type==='find_leg') {
+        steps.push({ label: 'Rearrange', text: `<code>a² = c² − b²</code>` });
+        steps.push({ label: 'Calculate', text: `<code>${q.c}² − ${q.b}² = ${q.c*q.c} − ${q.b*q.b} = ${q.c*q.c-q.b*q.b}</code><br><code>√${q.c*q.c-q.b*q.b} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Square each leg', text: `<code>${q.a}² + ${q.b}² = ${q.a*q.a} + ${q.b*q.b} = ${q.a*q.a+q.b*q.b}</code>` });
+        steps.push({ label: 'Square root', text: `<code>√${q.a*q.a+q.b*q.b} ≈ ${q.ans}</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (gop === 'geo_coordinate') {
+      if (gtype==='distance') {
+        const dx=q.x2-q.x1, dy=q.y2-q.y1;
+        steps.push({ label: 'Distance formula', text: `<code>d = √((x₂−x₁)² + (y₂−y₁)²)</code>` });
+        steps.push({ label: 'Differences', text: `<code>Δx = ${q.x2} − ${q.x1} = ${dx}</code>, <code>Δy = ${q.y2} − ${q.y1} = ${dy}</code>` });
+        steps.push({ label: 'Square, sum, root', text: `<code>${dx}² + ${dy}² = ${dx*dx} + ${dy*dy} = ${dx*dx+dy*dy}</code><br><code>√${dx*dx+dy*dy} ≈ ${q.ans}</code>` });
+      } else if (gtype==='midpoint_x') {
+        steps.push({ label: 'Midpoint formula', text: `<code>x = (x₁ + x₂) / 2</code>` });
+        steps.push({ label: 'Calculate', text: `<code>(${q.x1} + ${q.x2}) / 2 = ${q.x1+q.x2} / 2 = ${q.ans}</code>` });
+      } else if (gtype==='midpoint_y') {
+        steps.push({ label: 'Midpoint formula', text: `<code>y = (y₁ + y₂) / 2</code>` });
+        steps.push({ label: 'Calculate', text: `<code>(${q.y1} + ${q.y2}) / 2 = ${q.y1+q.y2} / 2 = ${q.ans}</code>` });
+      } else {
+        if (q.undefined) {
+          steps.push({ label: 'Vertical line', text: `Both points have x = <code>${q.x1}</code>. A vertical line has <em>undefined</em> slope.` });
+        } else {
+          steps.push({ label: 'Slope formula', text: `<code>m = (y₂ − y₁) / (x₂ − x₁)</code>` });
+          steps.push({ label: 'Calculate', text: `<code>(${q.y2} − ${q.y1}) / (${q.x2} − ${q.x1}) = ${q.y2-q.y1} / ${q.x2-q.x1} = ${q.ans}</code>` });
+        }
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (gop === 'geo_circles') {
+      steps.push({ label: 'Formula', text: `<code>${q.formula}</code>` });
+      if (gtype==='area') {
+        steps.push({ label: 'Calculate', text: `<code>π × ${q.r}² = π × ${q.r*q.r} = ${q.ans} units²</code>` });
+      } else if (gtype==='circumference') {
+        steps.push({ label: 'Calculate', text: `<code>2 × π × ${q.r} = ${q.ans}</code> units` });
+      } else if (gtype==='arc_length') {
+        steps.push({ label: 'Fraction of circle', text: `<code>${q.deg}/360 = ${r2(q.deg/360)}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>${r2(q.deg/360)} × 2π × ${q.r} = ${q.ans}</code> units` });
+      } else {
+        steps.push({ label: 'Fraction of circle', text: `<code>${q.deg}/360 = ${r2(q.deg/360)}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>${r2(q.deg/360)} × π × ${q.r}² = ${r2(q.deg/360)} × π × ${q.r*q.r} = ${q.ans} units²</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else {
+      steps.push({ label: 'Work through the problem', text: `Identify the shape and formula, then plug in the values.` });
+      spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    }
 
   } else if (mode === 'algebra') {
-    steps.push({ label: 'Find the unknown', text: `Algebra questions have an unknown (like <code>x</code>). Your goal is to isolate it on one side of the equation.` });
-    steps.push({ label: 'Do the same to both sides', text: `Whatever operation you do to one side, you must do to the other. This keeps the equation balanced.` });
-    steps.push({ label: 'Work in reverse order', text: `Undo operations in reverse order (PEMDAS/BODMAS backwards): undo addition/subtraction first, then multiplication/division.` });
-    steps.push({ label: 'Substitute back to check', text: `Once you find <code>x</code>, plug it back into the original equation and confirm both sides are equal.` });
-    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    const aop = q.op || '';
+    if (aop === 'alg_one_step') {
+      const {t,a,rhs,ans} = q;
+      if (t==='add') {
+        steps.push({ label: 'Isolate x', text: `<code>x + ${a} = ${rhs}</code>. Subtract <code>${a}</code> from both sides.` });
+        steps.push({ label: 'Solve', text: `<code>x = ${rhs} − ${a} = ${ans}</code>` });
+      } else if (t==='sub') {
+        steps.push({ label: 'Isolate x', text: `<code>x − ${a} = ${rhs}</code>. Add <code>${a}</code> to both sides.` });
+        steps.push({ label: 'Solve', text: `<code>x = ${rhs} + ${a} = ${ans}</code>` });
+      } else if (t==='mul') {
+        steps.push({ label: 'Isolate x', text: `<code>${a}x = ${rhs}</code>. Divide both sides by <code>${a}</code>.` });
+        steps.push({ label: 'Solve', text: `<code>x = ${rhs} ÷ ${a} = ${ans}</code>` });
+      } else {
+        steps.push({ label: 'Isolate x', text: `<code>x ÷ ${a} = ${rhs}</code>. Multiply both sides by <code>${a}</code>.` });
+        steps.push({ label: 'Solve', text: `<code>x = ${rhs} × ${a} = ${ans}</code>` });
+      }
+      spoiler = `x = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_two_step') {
+      const {a,b,op2,rhs,ans} = q;
+      steps.push({ label: 'Undo addition/subtraction first', text: `<code>${a}x ${op2} ${b} = ${rhs}</code>. ${op2==='+'?'Subtract':'Add'} <code>${b}</code> ${op2==='+'?'from':'to'} both sides.` });
+      const afterStep1 = op2==='+'? rhs-b : rhs+b;
+      steps.push({ label: 'Simplify', text: `<code>${a}x = ${afterStep1}</code>` });
+      steps.push({ label: 'Divide by coefficient', text: `<code>x = ${afterStep1} ÷ ${a} = ${ans}</code>` });
+      spoiler = `x = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_multi_step') {
+      const {a,b,c,rhs,ans} = q;
+      steps.push({ label: 'Subtract the constant', text: `<code>${a}(x + ${b}) + ${c} = ${rhs}</code>. Subtract <code>${c}</code>: <code>${a}(x + ${b}) = ${rhs-c}</code>` });
+      steps.push({ label: 'Divide by coefficient', text: `<code>x + ${b} = ${(rhs-c)/a}</code>` });
+      steps.push({ label: 'Subtract', text: `<code>x = ${(rhs-c)/a} − ${b} = ${ans}</code>` });
+      spoiler = `x = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_quadratic') {
+      const {r1:rv1,r2:rv2,b2,c2,ans} = q;
+      steps.push({ label: 'Factor the quadratic', text: `Find two numbers that multiply to <code>${c2}</code> and add to <code>${b2}</code>.` });
+      steps.push({ label: 'The numbers are', text: `<code>${rv1}</code> and <code>${rv2}</code> (since <code>${rv1} × ${rv2} = ${c2}</code> and <code>${rv1} + ${rv2} = ${b2}</code>)` });
+      steps.push({ label: 'Factor form', text: `<code>(x − ${rv1})(x − ${rv2}) = 0</code>` });
+      steps.push({ label: 'Solve', text: `<code>x = ${rv1}</code> or <code>x = ${rv2}</code>. Larger root = <code>${ans}</code>` });
+      spoiler = `Larger root = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_factor') {
+      const {p:pv,q:qv,b2,c2,ans} = q;
+      steps.push({ label: 'Find two numbers', text: `We need two numbers that add to <code>${b2}</code> and multiply to <code>${c2}</code>.` });
+      steps.push({ label: 'The numbers', text: `<code>${pv}</code> and <code>${qv}</code> (check: <code>${pv}+${qv}=${b2}</code>, <code>${pv}×${qv}=${c2}</code>)` });
+      steps.push({ label: 'Factor form', text: `<code>(x + ${pv})(x + ${qv})</code>` });
+      spoiler = `Larger value = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_exponent') {
+      if (q.t==='solve_x') {
+        steps.push({ label: 'Think: what power?', text: `<code>${q.base}^x = ${q.val}</code>. What power of <code>${q.base}</code> gives <code>${q.val}</code>?` });
+        let running = q.base, count = 1;
+        let chain = `${q.base}`;
+        while (running < q.val && count < q.exp) { running *= q.base; count++; chain += ` × ${q.base} = ${running}`; }
+        steps.push({ label: 'Count up', text: `<code>${chain}</code>` });
+        steps.push({ label: 'Answer', text: `<code>x = ${q.ans}</code>` });
+      } else if (q.t==='simplify_power') {
+        steps.push({ label: 'Rule', text: `When multiplying same base: <code>a^m × a^n = a^(m+n)</code>` });
+        steps.push({ label: 'Add exponents', text: `<code>${q.e1} + ${q.e2} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Negative exponent rule', text: `<code>a^(−n) = 1/a^n</code>` });
+        steps.push({ label: 'Calculate', text: `<code>${q.base}^${q.exp} = ${q.val}</code>, so <code>1/${q.val} = ${q.ans}</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_log') {
+      steps.push({ label: 'Log means "what power?"', text: `<code>log${q.base}(${q.val}) = ?</code> means: <code>${q.base}</code> to what power equals <code>${q.val}</code>?` });
+      steps.push({ label: 'Think through powers', text: `<code>${q.base}^${q.ans} = ${q.val}</code>` });
+      spoiler = `log${q.base}(${q.val}) = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_system') {
+      const {sumEq,diffEq,x,y} = q;
+      steps.push({ label: 'Add the equations', text: `<code>(x+y) + (x−y) = ${sumEq} + ${diffEq}</code><br><code>2x = ${sumEq+diffEq}</code>` });
+      steps.push({ label: 'Solve for x', text: `<code>x = ${sumEq+diffEq} ÷ 2 = ${x}</code>` });
+      steps.push({ label: 'Find y', text: `<code>y = ${sumEq} − ${x} = ${y}</code>` });
+      spoiler = `x = <strong>${x}</strong>`;
+    } else if (aop === 'alg_inequality') {
+      const {a,b,C,ans} = q;
+      steps.push({ label: 'Subtract constant', text: `<code>${a}x + ${b} > ${C}</code> → <code>${a}x > ${C} − ${b}</code> → <code>${a}x > ${C-b}</code>` });
+      steps.push({ label: 'Divide', text: `<code>x > ${(C-b)/a}</code>` });
+      steps.push({ label: 'Smallest integer', text: `The smallest integer greater than <code>${(C-b)/a}</code> is <code>${ans}</code>.` });
+      spoiler = `Smallest integer x = <strong>${ans}</strong>`;
+    } else if (aop === 'alg_sequence') {
+      if (q.seqType==='arith') {
+        steps.push({ label: 'Arithmetic formula', text: `<code>aₙ = a₁ + (n−1)d</code>` });
+        steps.push({ label: 'Plug in', text: `<code>a${q.n} = ${q.a1} + (${q.n}−1) × ${q.d}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>= ${q.a1} + ${q.n-1} × ${q.d} = ${q.a1} + ${(q.n-1)*q.d} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Geometric formula', text: `<code>aₙ = a₁ × r^(n−1)</code>` });
+        steps.push({ label: 'Plug in', text: `<code>a${q.n} = ${q.a1} × ${q.r}^${q.n-1}</code>` });
+        steps.push({ label: 'Calculate', text: `<code>= ${q.a1} × ${Math.pow(q.r,q.n-1)} = ${q.ans}</code>` });
+      }
+      spoiler = `${q.n}th term = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_function') {
+      if (q.t==='eval') {
+        steps.push({ label: 'Substitute x', text: `<code>f(${q.xv}) = ${q.a}(${q.xv})² + ${q.b<0?q.b:'+'+q.b}</code>` });
+        steps.push({ label: 'Square first', text: `<code>(${q.xv})² = ${q.xv*q.xv}</code>` });
+        steps.push({ label: 'Multiply and add', text: `<code>${q.a} × ${q.xv*q.xv} + ${q.b<0?'('+q.b+')':q.b} = ${q.a*q.xv*q.xv} + ${q.b<0?'('+q.b+')':q.b} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Find g(x) first', text: `<code>g(${q.xv}) = ${q.c}(${q.xv}) + ${q.d<0?'('+q.d+')':q.d} = ${q.gx}</code>` });
+        steps.push({ label: 'Now find f(g(x))', text: `<code>f(${q.gx}) = ${q.a}(${q.gx}) + ${q.b<0?'('+q.b+')':q.b} = ${q.ans}</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else if (aop === 'alg_poly') {
+      if (q.t==='add') {
+        steps.push({ label: 'Combine like terms', text: `<code>(${q.a1}x + ${q.b1}) + (${q.a2}x + ${q.b2})</code>` });
+        steps.push({ label: 'Add coefficients', text: `<code>${q.a1+q.a2}x + ${q.b1+q.b2}</code>` });
+        steps.push({ label: 'Evaluate at x=${q.xv}', text: `<code>${q.a1+q.a2}(${q.xv}) + ${q.b1+q.b2} = ${(q.a1+q.a2)*q.xv} + ${q.b1+q.b2} = ${q.ans}</code>` });
+      } else if (q.t==='eval') {
+        steps.push({ label: 'Substitute x=${q.xv}', text: `<code>${q.a}(${q.xv})² + ${q.b}(${q.xv}) + ${q.c}</code>` });
+        steps.push({ label: 'Calculate each term', text: `<code>${q.a} × ${q.xv*q.xv} = ${q.a*q.xv*q.xv}</code>, <code>${q.b} × ${q.xv} = ${q.b*q.xv}</code>` });
+        steps.push({ label: 'Sum', text: `<code>${q.a*q.xv*q.xv} + ${q.b*q.xv} + ${q.c} = ${q.ans}</code>` });
+      } else {
+        steps.push({ label: 'Expand', text: `<code>${q.a}x × ${q.b} = ${q.a*q.b}x</code>` });
+        steps.push({ label: 'Evaluate at x=${q.xv}', text: `<code>${q.a*q.b} × ${q.xv} = ${q.ans}</code>` });
+      }
+      spoiler = `Answer = <strong>${q.ans}</strong>`;
+    } else {
+      steps.push({ label: 'Work through the problem', text: `Isolate the variable step by step.` });
+      spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+    }
 
   } else {
     const qText3 = document.getElementById('questionText')?.textContent || '';
@@ -7114,7 +7594,7 @@ function renderLbBoard() {
     const isYou = user.uid === currentUid;
     const youClass = isYou ? ' is-you' : '';
     const youTag = isYou ? ' <span style="color:var(--primary);font-weight:800;font-size:0.7rem">(YOU)</span>' : '';
-    const crownTag = user.diamondPass ? '💎 ' : (user.premiumPass ? '👑 ' : '');
+    const crownTag = user.diamondPass ? '👑💎 ' : (user.premiumPass ? '👑 ' : '');
 
     // Get their game rank
     const gameRank = getRank(user.totalCorrect || 0);
