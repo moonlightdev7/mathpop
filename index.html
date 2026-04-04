@@ -1193,45 +1193,103 @@
     50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--correct) 0%, transparent); }
   }
 
-  /* Solution panel */
-  .solution-panel {
-    background: var(--card); border: 2px solid var(--correct);
-    border-radius: 16px; padding: 16px 18px;
-    font-family: 'Nunito', sans-serif;
-    animation: slide-in-up 0.25s ease;
-  }
-  @keyframes slide-in-up {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .solution-title {
-    font-weight: 900; font-size: 0.9rem; color: var(--correct);
-    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-  }
-  .solution-step {
-    display: flex; gap: 10px; margin-bottom: 8px;
-    align-items: flex-start;
-  }
-  .solution-step-num {
-    background: var(--primary); color: #fff;
-    border-radius: 50%; width: 20px; height: 20px; min-width: 20px;
-    font-size: 0.7rem; font-weight: 900;
+  /* ── Hint Modal ── */
+  .hint-modal-overlay {
+    position: fixed; inset: 0; z-index: 20000;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
     display: flex; align-items: center; justify-content: center;
-    margin-top: 1px;
+    padding: 16px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.22s ease;
   }
-  .solution-step-text {
-    font-size: 0.85rem; font-weight: 700; color: var(--text); line-height: 1.45;
+  .hint-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .hint-modal {
+    background: var(--card); border-radius: 24px;
+    width: 100%; max-width: 480px;
+    max-height: 88vh; overflow-y: auto;
+    padding: 24px 22px 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    transform: translateY(18px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    font-family: 'Nunito', sans-serif;
   }
-  .solution-step-text code {
-    background: color-mix(in srgb, var(--primary) 12%, var(--bg));
-    color: var(--primary); padding: 1px 5px; border-radius: 5px;
+  .hint-modal-overlay.open .hint-modal { transform: translateY(0) scale(1); }
+  .hint-modal-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .hint-modal-title {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+    color: var(--primary); display: flex; align-items: center; gap: 8px;
+  }
+  .hint-modal-close {
+    background: var(--bg); border: 2px solid var(--border);
+    border-radius: 10px; width: 32px; height: 32px;
+    font-size: 1rem; cursor: pointer; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: border-color 0.15s, color 0.15s;
+  }
+  .hint-modal-close:hover { border-color: var(--wrong); color: var(--wrong); }
+  .hint-modal-question {
+    background: var(--bg); border: 2px solid var(--border);
+    border-radius: 14px; padding: 12px 16px; margin-bottom: 18px;
+    font-size: 1.1rem; font-weight: 800; color: var(--text); text-align: center;
+  }
+  .hint-section-label {
+    font-size: 0.72rem; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+  .hint-step {
+    display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start;
+  }
+  .hint-step-bubble {
+    background: var(--primary); color: #fff;
+    border-radius: 50%; width: 26px; height: 26px; min-width: 26px;
+    font-size: 0.78rem; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px; box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+  .hint-step-body { flex: 1; }
+  .hint-step-label {
+    font-size: 0.72rem; font-weight: 800; color: var(--primary);
+    text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px;
+  }
+  .hint-step-text {
+    font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.5;
+  }
+  .hint-step-text code {
+    background: color-mix(in srgb, var(--primary) 14%, var(--bg));
+    color: var(--primary); padding: 2px 6px; border-radius: 6px;
     font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 0.88rem;
   }
-  .solution-answer {
-    margin-top: 10px; padding: 8px 12px;
-    background: color-mix(in srgb, var(--correct) 12%, var(--bg));
-    border-radius: 10px; font-weight: 900; font-size: 0.95rem;
+  .hint-step-text em { color: var(--muted); font-style: italic; }
+  .hint-divider {
+    border: none; border-top: 2px dashed var(--border);
+    margin: 16px 0;
+  }
+  /* Spoiler: peek-at-answer section */
+  .hint-spoiler-wrap { margin-top: 4px; }
+  .hint-spoiler-btn {
+    width: 100%; padding: 10px 16px; border-radius: 12px;
+    border: 2px dashed var(--border); background: transparent;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.85rem; color: var(--muted); cursor: pointer;
+    transition: all 0.18s; text-align: center;
+  }
+  .hint-spoiler-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .hint-spoiler-answer {
+    display: none; margin-top: 10px; padding: 12px 16px;
+    background: color-mix(in srgb, var(--correct) 10%, var(--bg));
+    border: 2px solid color-mix(in srgb, var(--correct) 30%, transparent);
+    border-radius: 12px; font-weight: 900; font-size: 1rem;
     color: var(--correct); text-align: center;
+  }
+  .hint-spoiler-answer.revealed { display: block; animation: slide-in-up 0.2s ease; }
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   /* ── In-game Calculator ── */
@@ -2084,6 +2142,24 @@
   </div>
 </div>
 
+<!-- ── HINT MODAL ── -->
+<div class="hint-modal-overlay" id="hintModalOverlay" onclick="closeHintModal(event)">
+  <div class="hint-modal" id="hintModal">
+    <div class="hint-modal-header">
+      <div class="hint-modal-title">💡 How to solve it</div>
+      <button class="hint-modal-close" onclick="closeHintModal()">✕</button>
+    </div>
+    <div class="hint-modal-question" id="hintModalQuestion"></div>
+    <div class="hint-section-label">Step-by-step method</div>
+    <div id="hintModalSteps"></div>
+    <hr class="hint-divider">
+    <div class="hint-spoiler-wrap">
+      <button class="hint-spoiler-btn" onclick="revealHintAnswer()">👀 Peek at the answer</button>
+      <div class="hint-spoiler-answer" id="hintSpoilerAnswer"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Premium Pass Modal -->
 <div class="modal-overlay" id="modalPremium">
   <div class="modal">
@@ -2442,8 +2518,7 @@
     </button>
   </div>
 
-  <!-- Solution panel (hidden by default) -->
-  <div class="solution-panel" id="solutionPanel" style="display:none"></div>
+  <!-- Solution panel placeholder (modal is rendered separately) -->
 
   <!-- Calculator panel (hidden by default) -->
   <div class="calc-panel" id="calcPanel" style="display:none">
@@ -4748,10 +4823,11 @@ function startHintTimer() {
   _hintSecondsLeft = 60;
   const btn = document.getElementById('hintBtn');
   const cd  = document.getElementById('hintCountdown');
-  const sol = document.getElementById('solutionPanel');
-  if (btn) { btn.disabled = true; btn.classList.remove('unlocked'); }
+  if (btn) { btn.disabled = true; btn.classList.remove('unlocked', 'active'); }
   if (cd)  cd.textContent = '(1:00)';
-  if (sol) sol.style.display = 'none';
+  // Close modal if open from previous question
+  const overlay = document.getElementById('hintModalOverlay');
+  if (overlay) overlay.classList.remove('open');
   _hintTimer = setInterval(() => {
     _hintSecondsLeft--;
     const m = Math.floor(_hintSecondsLeft / 60);
@@ -4769,142 +4845,206 @@ function stopHintTimer() {
   clearInterval(_hintTimer);
   const btn = document.getElementById('hintBtn');
   const cd  = document.getElementById('hintCountdown');
-  if (btn) { btn.disabled = true; btn.classList.remove('unlocked'); }
+  if (btn) { btn.disabled = true; btn.classList.remove('unlocked', 'active'); }
   if (cd)  cd.textContent = '(1:00)';
-  const sol = document.getElementById('solutionPanel');
-  if (sol) sol.style.display = 'none';
+  const overlay = document.getElementById('hintModalOverlay');
+  if (overlay) overlay.classList.remove('open');
 }
 
 function toggleHintPanel() {
-  const sol = document.getElementById('solutionPanel');
+  const overlay = document.getElementById('hintModalOverlay');
+  if (!overlay) return;
+  if (overlay.classList.contains('open')) { closeHintModal(); return; }
+
+  const { steps, spoiler } = buildSolution();
+  const q = _currentQuestionData;
+  const qText = document.getElementById('questionText')?.textContent || '';
+
+  // Populate modal
+  document.getElementById('hintModalQuestion').textContent = qText;
+  document.getElementById('hintModalSteps').innerHTML = steps.map((s, i) =>
+    `<div class="hint-step">
+      <div class="hint-step-bubble">${i + 1}</div>
+      <div class="hint-step-body">
+        ${s.label ? `<div class="hint-step-label">${s.label}</div>` : ''}
+        <div class="hint-step-text">${s.text}</div>
+      </div>
+    </div>`
+  ).join('');
+  document.getElementById('hintSpoilerAnswer').innerHTML = spoiler;
+  document.getElementById('hintSpoilerAnswer').classList.remove('revealed');
+
+  overlay.classList.add('open');
+  document.getElementById('hintBtn').classList.add('active');
+}
+
+function closeHintModal(e) {
+  if (e && e.target !== document.getElementById('hintModalOverlay')) return;
+  const overlay = document.getElementById('hintModalOverlay');
+  if (overlay) overlay.classList.remove('open');
   const btn = document.getElementById('hintBtn');
-  if (!sol) return;
-  if (sol.style.display !== 'none') {
-    sol.style.display = 'none';
-    btn.classList.remove('active');
-    return;
-  }
-  sol.innerHTML = buildSolution();
-  sol.style.display = 'block';
-  btn.classList.add('active');
-  sol.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (btn) btn.classList.remove('active');
+}
+
+function revealHintAnswer() {
+  document.getElementById('hintSpoilerAnswer').classList.add('revealed');
 }
 
 function buildSolution() {
   const q = _currentQuestionData;
   const mode = q.mode || currentMode;
-  const steps = [];
-  let answer = '';
+  const steps = []; // each: { label, text }
+  let spoiler = '';
 
   if (mode === 'multiply') {
     const { a, b, ans } = q;
-    answer = `${a} × ${b} = <strong>${ans}</strong>`;
-    steps.push(`We need to multiply <code>${a}</code> by <code>${b}</code>.`);
+    steps.push({ label: 'Understand the problem', text: `We need to find <code>${a} × ${b}</code>. Multiplication means adding a number to itself repeatedly.` });
     if (a <= 12 && b <= 12) {
-      steps.push(`Think of it as adding <code>${a}</code> a total of <code>${b}</code> times, or recall the <code>${a} times table</code>.`);
+      steps.push({ label: 'Use the times table', text: `Recall your <code>${a} times table</code>. Count up: <code>${a}, ${a*2}, ${a*3}…</code> up to <code>${b}</code> times.` });
+      steps.push({ label: 'Check your work', text: `You can also flip it: <code>${b} × ${a}</code> gives the same result. Does your answer make sense?` });
     } else {
       const tens = Math.floor(b / 10) * 10, ones = b % 10;
-      if (tens && ones) {
-        steps.push(`Break <code>${b}</code> into <code>${tens} + ${ones}</code>:`);
-        steps.push(`<code>${a} × ${tens} = ${a * tens}</code>&emsp;then&emsp;<code>${a} × ${ones} = ${a * ones}</code>`);
-        steps.push(`Add the parts: <code>${a * tens} + ${a * ones} = ${ans}</code>`);
-      }
+      steps.push({ label: 'Break it apart', text: `Split <code>${b}</code> into <code>${tens} + ${ones}</code> to make it easier.` });
+      steps.push({ label: 'Multiply each part', text: `<code>${a} × ${tens} = ${a * tens}</code><br><code>${a} × ${ones} = ${a * ones}</code>` });
+      steps.push({ label: 'Add the results', text: `Add both parts together: <code>${a * tens} + ${a * ones}</code>` });
     }
-    steps.push(`The answer is <code>${ans}</code>.`);
+    spoiler = `${a} × ${b} = <strong>${ans}</strong>`;
+
   } else if (mode === 'longmultiply') {
     const { a, b, ans } = q;
-    answer = `${a} × ${b} = <strong>${ans}</strong>`;
-    const aStr = String(a), bStr = String(b);
-    steps.push(`Multiply <code>${a}</code> by each digit of <code>${b}</code>, right to left.`);
+    const bStr = String(b);
+    steps.push({ label: 'Understand the method', text: `Long multiplication means multiplying <code>${a}</code> by each digit of <code>${b}</code> one at a time, from right to left.` });
     let partials = [];
     for (let i = bStr.length - 1; i >= 0; i--) {
       const digit = parseInt(bStr[i]);
       const place = bStr.length - 1 - i;
+      const placeLabel = ['ones', 'tens', 'hundreds', 'thousands'][place] || `×10^${place}`;
       const partial = a * digit * Math.pow(10, place);
       partials.push(partial);
-      steps.push(`<code>${a} × ${digit}</code> (at the ${place === 0 ? 'ones' : place === 1 ? 'tens' : 'hundreds'} place) = <code>${partial}</code>`);
+      steps.push({ label: `Multiply by the ${placeLabel} digit (${digit})`, text: `<code>${a} × ${digit} = ${a * digit}</code>. Since it's in the <em>${placeLabel} place</em>, this becomes <code>${partial}</code>.` });
     }
-    steps.push(`Sum the partial products: <code>${partials.join(' + ')} = ${ans}</code>`);
+    steps.push({ label: 'Add partial products', text: `Add all the results: <code>${partials.join(' + ')}</code>` });
+    spoiler = `${a} × ${b} = <strong>${ans}</strong>`;
+
   } else if (mode === 'shortdivide') {
     const { dividend, divisor, ans } = q;
-    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
-    steps.push(`We need to find how many times <code>${divisor}</code> goes into <code>${dividend}</code>.`);
-    steps.push(`Think: <code>${divisor} × ? = ${dividend}</code>`);
-    steps.push(`<code>${divisor} × ${ans} = ${dividend}</code> ✓`);
+    steps.push({ label: 'Understand the problem', text: `We need to find how many times <code>${divisor}</code> fits into <code>${dividend}</code>.` });
+    steps.push({ label: 'Think of it as multiplication', text: `Ask yourself: <code>${divisor} × ? = ${dividend}</code>. What number fills the blank?` });
+    steps.push({ label: 'Use estimation', text: `Try a few guesses. Is <code>${divisor} × 5</code> close? <code>${divisor} × 10</code>? Narrow it down.` });
+    steps.push({ label: 'Verify', text: `Once you have your answer, multiply it back: <code>answer × ${divisor}</code> should equal <code>${dividend}</code>.` });
+    spoiler = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
+
   } else if (mode === 'longdivide') {
     const { dividend, divisor, ans } = q;
-    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
-    steps.push(`Divide <code>${dividend}</code> by <code>${divisor}</code> using long division.`);
-    let rem = 0, quotStr = '';
-    for (const digit of String(dividend)) {
-      rem = rem * 10 + parseInt(digit);
+    const dStr = String(dividend);
+    steps.push({ label: 'Set up long division', text: `Write <code>${dividend} ÷ ${divisor}</code> in the long division bracket. Work through each digit of <code>${dividend}</code> from left to right.` });
+    let rem = 0;
+    for (let i = 0; i < dStr.length; i++) {
+      rem = rem * 10 + parseInt(dStr[i]);
       const q2 = Math.floor(rem / divisor);
-      quotStr += q2;
-      steps.push(`Bring down <code>${digit}</code> → have <code>${rem}</code>. <code>${divisor}</code> goes in <code>${q2}</code> time${q2!==1?'s':''}. Subtract <code>${q2 * divisor}</code>, remainder <code>${rem - q2 * divisor}</code>.`);
-      rem = rem - q2 * divisor;
+      const newRem = rem - q2 * divisor;
+      steps.push({ label: `Digit ${i + 1}: bring down "${dStr[i]}"`, text: `Working number is <code>${rem}</code>. Ask: how many times does <code>${divisor}</code> go into <code>${rem}</code>? → <code>${q2}</code> time${q2!==1?'s':''}. Subtract <code>${q2} × ${divisor} = ${q2*divisor}</code>. Remainder: <code>${newRem}</code>.` });
+      rem = newRem;
     }
-    steps.push(`Reading the quotient digits: <code>${parseInt(quotStr)} = ${ans}</code>`);
+    steps.push({ label: 'Read your quotient', text: `Read the digits you wrote above the bracket from left to right — that's your answer.` });
+    spoiler = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
+
   } else if (mode === 'remainderdiv') {
     const { dividend, divisor, ans, rem } = q;
-    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong> remainder <strong>${rem}</strong>`;
-    steps.push(`Find how many times <code>${divisor}</code> fits into <code>${dividend}</code>.`);
-    steps.push(`<code>${divisor} × ${ans} = ${divisor * ans}</code>`);
-    steps.push(`Subtract: <code>${dividend} − ${divisor * ans} = ${rem}</code>`);
-    steps.push(`Quotient = <code>${ans}</code>, Remainder = <code>${rem}</code>`);
+    steps.push({ label: 'Find how many times it fits', text: `Ask: how many times does <code>${divisor}</code> go into <code>${dividend}</code> without going over?` });
+    steps.push({ label: 'Multiply to check', text: `Multiply your quotient by the divisor: <code>quotient × ${divisor}</code>. This should be ≤ <code>${dividend}</code>.` });
+    steps.push({ label: 'Find the remainder', text: `Subtract: <code>${dividend} − (quotient × ${divisor})</code>. The leftover is the remainder.` });
+    steps.push({ label: 'Check your work', text: `The remainder must be less than <code>${divisor}</code>. If it's bigger, your quotient is too small!` });
+    spoiler = `${dividend} ÷ ${divisor} = <strong>${ans}</strong> remainder <strong>${rem}</strong>`;
+
   } else if (mode === 'add') {
     const { a, b, ans } = q;
-    answer = `${a} + ${b} = <strong>${ans}</strong>`;
-    steps.push(`Add <code>${a}</code> and <code>${b}</code>.`);
-    if (a > 99 || b > 99) {
-      const aOnes = a % 10, bOnes = b % 10, aTens = Math.floor(a/10)*10, bTens = Math.floor(b/10)*10;
-      steps.push(`Ones: <code>${aOnes} + ${bOnes} = ${aOnes+bOnes}</code>`);
-      steps.push(`Tens: <code>${aTens} + ${bTens} = ${aTens+bTens}</code>`);
+    steps.push({ label: 'Line up the numbers', text: `Write <code>${a}</code> and <code>${b}</code> on top of each other, aligning the ones, tens, and hundreds columns.` });
+    if (a > 9 || b > 9) {
+      const aOnes = a % 10, bOnes = b % 10;
+      const onesSum = aOnes + bOnes;
+      const aTens = Math.floor(a / 10), bTens = Math.floor(b / 10);
+      steps.push({ label: 'Add the ones column first', text: `<code>${aOnes} + ${bOnes} = ${onesSum}</code>${onesSum >= 10 ? `. Write <code>${onesSum % 10}</code> and carry the <code>1</code>.` : '.'}` });
+      if (aTens || bTens) {
+        const tensSum = aTens + bTens + (onesSum >= 10 ? 1 : 0);
+        steps.push({ label: 'Add the tens column', text: `<code>${aTens} + ${bTens}${onesSum >= 10 ? ' + 1 (carried)' : ''} = ${tensSum}</code>` });
+      }
+    } else {
+      steps.push({ label: 'Count up', text: `Start at <code>${a}</code> and count up <code>${b}</code> more. Or use your addition facts.` });
     }
-    steps.push(`Total: <code>${ans}</code>`);
+    steps.push({ label: 'Read your result', text: `Combine all the column results together to get your final answer.` });
+    spoiler = `${a} + ${b} = <strong>${ans}</strong>`;
+
   } else if (mode === 'subtract') {
     const { a, b, ans } = q;
-    answer = `${a} − ${b} = <strong>${ans}</strong>`;
-    steps.push(`Subtract <code>${b}</code> from <code>${a}</code>.`);
-    steps.push(`Count back <code>${b}</code> from <code>${a}</code>, or think: <code>${b} + ? = ${a}</code>.`);
-    steps.push(`Answer: <code>${ans}</code>`);
-  } else if (mode === 'fractions') {
-    const { a, b, op, ans, ansN, ansD } = q;
-    const opSym = {add:'+', subtract:'−', multiply:'×', divide:'÷'}[op] || op;
-    answer = `Answer: <strong>${ansN !== undefined ? ansN + '/' + ansD : ans}</strong>`;
-    steps.push(`Operation: <code>${opSym}</code> the two fractions.`);
-    if (op === 'add' || op === 'subtract') {
-      steps.push(`Find a common denominator, then ${op} the numerators.`);
-    } else if (op === 'multiply') {
-      steps.push(`Multiply numerators together and denominators together.`);
-    } else if (op === 'divide') {
-      steps.push(`Flip the second fraction and multiply.`);
+    steps.push({ label: 'Set up the problem', text: `We're taking <code>${b}</code> away from <code>${a}</code>. Think of it as: what do you add to <code>${b}</code> to reach <code>${a}</code>?` });
+    if (a > 9 || b > 9) {
+      steps.push({ label: 'Work column by column', text: `Start with the ones column. If the top digit is smaller, borrow 10 from the tens column.` });
+      steps.push({ label: 'Borrow if needed', text: `When you borrow, reduce the tens digit by 1 and add 10 to the ones digit, then subtract.` });
+    } else {
+      steps.push({ label: 'Count back', text: `Start at <code>${a}</code> and count back <code>${b}</code> steps on a number line.` });
     }
-    steps.push(`Simplify if possible. The answer is <code>${ansN !== undefined ? ansN + '/' + ansD : ans}</code>.`);
-  } else if (mode === 'decimals' || mode === 'percentages') {
-    const { text, ans } = q;
-    answer = `Answer: <strong>${ans}</strong>`;
-    steps.push(`Read the problem: <em>${text}</em>`);
-    steps.push(`Set up the calculation carefully, aligning decimal points.`);
-    steps.push(`The answer is <code>${ans}</code>.`);
+    steps.push({ label: 'Check your work', text: `Add your answer back to <code>${b}</code>. You should get <code>${a}</code>.` });
+    spoiler = `${a} − ${b} = <strong>${ans}</strong>`;
+
+  } else if (mode === 'fractions') {
+    const qText2 = document.getElementById('questionText')?.textContent || '';
+    steps.push({ label: 'Read the question', text: `Look at the two fractions and identify the operation (add, subtract, multiply, or divide).` });
+    steps.push({ label: 'Adding or subtracting?', text: `You need a <em>common denominator</em> first. Find the LCM of the two bottom numbers, then scale each fraction so they match.` });
+    steps.push({ label: 'Multiplying?', text: `Multiply the top numbers together and the bottom numbers together. Then simplify by dividing by the GCF.` });
+    steps.push({ label: 'Dividing?', text: `Flip the second fraction upside-down (take its reciprocal), then multiply. For example: <code>a/b ÷ c/d = a/b × d/c</code>` });
+    steps.push({ label: 'Simplify', text: `Divide the top and bottom of your result by their greatest common factor (GCF) to get the simplest form.` });
+    spoiler = `Answer: <strong>${currentAnswerNumerator}/${currentAnswerDenominator}</strong>`;
+
+  } else if (mode === 'decimals') {
+    const qText2 = document.getElementById('questionText')?.textContent || '';
+    steps.push({ label: 'Identify the operation', text: `Look at the question and decide: are you adding, subtracting, multiplying, or dividing decimals?` });
+    steps.push({ label: 'Adding / subtracting', text: `Line up the decimal points vertically. Add or subtract column by column, keeping the decimal in the same position.` });
+    steps.push({ label: 'Multiplying', text: `Ignore the decimals and multiply the whole numbers. Count total decimal places in both numbers, then place the decimal in your answer.` });
+    steps.push({ label: 'Dividing', text: `Move the decimal point in the divisor until it's a whole number. Move the dividend's decimal the same number of places. Then divide normally.` });
+    steps.push({ label: 'Double-check', text: `Does your answer make sense? If you divided 5.6 by 2, the answer should be around 2–3. Use estimation to verify.` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+
+  } else if (mode === 'percentages') {
+    steps.push({ label: 'What does % mean?', text: `Percent means "per hundred." So <code>25%</code> means <code>25 out of 100</code>, or <code>0.25</code> as a decimal.` });
+    steps.push({ label: 'Convert to decimal', text: `Divide the percentage by 100 to get the decimal. For example: <code>30% = 30 ÷ 100 = 0.30</code>` });
+    steps.push({ label: 'Apply the operation', text: `If it's "X% of Y", multiply: <code>decimal × Y</code>. If finding the percentage: <code>(part ÷ whole) × 100</code>.` });
+    steps.push({ label: 'Check magnitude', text: `A percentage of a number should be smaller if the % is under 100%, or larger if over 100%. Does your answer feel right?` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+
   } else if (mode === 'wordproblems') {
-    const { text, ans } = q;
-    answer = `Answer: <strong>${ans}</strong>`;
-    steps.push(`Read the problem carefully: <em>"${text}"</em>`);
-    steps.push(`Identify the key numbers and the operation needed.`);
-    steps.push(`Work through the calculation step by step.`);
-    steps.push(`The answer is <code>${ans}</code>.`);
+    const { text } = q;
+    steps.push({ label: 'Read carefully', text: `<em>"${text}"</em><br><br>Read the whole problem at least twice before solving.` });
+    steps.push({ label: 'Find the key numbers', text: `Underline or note every number mentioned in the problem.` });
+    steps.push({ label: 'Identify the operation', text: `Look for clue words: <em>total, combined, together</em> → add. <em>left, difference, fewer</em> → subtract. <em>groups of, each</em> → multiply. <em>shared, split, per</em> → divide.` });
+    steps.push({ label: 'Set up and solve', text: `Write out the equation using the numbers you found, then calculate step by step.` });
+    steps.push({ label: 'Does it make sense?', text: `Re-read the question. Is your answer in the right units? Is it a reasonable size? If not, recheck your operation.` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+
+  } else if (mode === 'geometry') {
+    steps.push({ label: 'Identify the shape', text: `Look at the question and identify which shape or measurement is involved.` });
+    steps.push({ label: 'Recall the formula', text: `Different shapes use different formulas. Area of a rectangle = <code>length × width</code>. Triangle = <code>½ × base × height</code>. Circle area = <code>π × r²</code>.` });
+    steps.push({ label: 'Plug in the values', text: `Substitute the given measurements into the formula carefully.` });
+    steps.push({ label: 'Calculate step by step', text: `Work through the arithmetic one step at a time. Don't skip steps — it's easy to make errors.` });
+    steps.push({ label: 'Check your units', text: `Area is measured in square units (cm², m²). Perimeter/length is in regular units. Make sure your answer has the right unit.` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+
+  } else if (mode === 'algebra') {
+    steps.push({ label: 'Find the unknown', text: `Algebra questions have an unknown (like <code>x</code>). Your goal is to isolate it on one side of the equation.` });
+    steps.push({ label: 'Do the same to both sides', text: `Whatever operation you do to one side, you must do to the other. This keeps the equation balanced.` });
+    steps.push({ label: 'Work in reverse order', text: `Undo operations in reverse order (PEMDAS/BODMAS backwards): undo addition/subtraction first, then multiplication/division.` });
+    steps.push({ label: 'Substitute back to check', text: `Once you find <code>x</code>, plug it back into the original equation and confirm both sides are equal.` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
+
   } else {
-    // Generic fallback
-    const qText = document.getElementById('questionText')?.textContent || '';
-    answer = `Answer: <strong>${currentAnswer}</strong>`;
-    steps.push(`Question: <em>${qText}</em>`);
-    steps.push(`The answer is <code>${currentAnswer}</code>.`);
+    const qText3 = document.getElementById('questionText')?.textContent || '';
+    steps.push({ label: 'Read the question', text: `Look at: <em>${qText3}</em>` });
+    steps.push({ label: 'Think through the steps', text: `Break the problem into smaller pieces. What do you know, and what are you trying to find?` });
+    steps.push({ label: 'Work it out', text: `Use the scratch pad below to try different approaches. Check your work when done.` });
+    spoiler = `Answer: <strong>${currentAnswer}</strong>`;
   }
 
-  const stepsHtml = steps.map((s, i) =>
-    `<div class="solution-step"><div class="solution-step-num">${i+1}</div><div class="solution-step-text">${s}</div></div>`
-  ).join('');
-  return `<div class="solution-title">💡 How to solve it</div>${stepsHtml}<div class="solution-answer">✅ ${answer}</div>`;
+  return { steps, spoiler };
 }
 
 // ── CALCULATOR ──
@@ -5091,9 +5231,9 @@ function nextQuestion() {
   setAnswerMode('integer');
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
-  // Hide solution panel between questions (calc stays open)
-  const sol = document.getElementById('solutionPanel');
-  if (sol) sol.style.display = 'none';
+  // Close hint modal between questions (calc stays open)
+  const overlay = document.getElementById('hintModalOverlay');
+  if (overlay) overlay.classList.remove('open');
   const hBtn = document.getElementById('hintBtn');
   if (hBtn) hBtn.classList.remove('active');
 }
