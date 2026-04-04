@@ -139,13 +139,17 @@
   }
 
   #signedOut { display: flex; align-items: center; gap: 6px; }
-  #signedIn  { display: none; align-items: center; gap: 8px; flex: 1; }
+  #signedIn  { display: none; align-items: center; gap: 4px; flex: 1; }
+  /* Left cluster: avatar + streak star */
+  .nav-left-cluster {
+    display: flex; align-items: center; gap: 2px;
+    margin-right: auto;
+  }
   .settings-tap-area {
     display: flex; align-items: center; gap: 6px;
     cursor: pointer; padding: 6px 10px; border-radius: 12px;
     -webkit-tap-highlight-color: transparent;
     min-height: 38px;
-    margin-right: auto;
   }
   .settings-tap-area:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); }
 
@@ -1079,11 +1083,16 @@
     display: none; max-width: 700px; margin: 0 auto; padding-top: 56px; padding-bottom: 40px;
   }
   .ach-back-btn {
-    background: transparent; border: none; color: var(--primary);
-    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
-    cursor: pointer; padding: 8px 0; margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 16px;
+    font-family: 'Fredoka One', cursive; font-size: 1.05rem; font-weight: 400;
+    cursor: pointer; padding: 10px 22px; margin-bottom: 20px;
+    box-shadow: 0 3px 10px color-mix(in srgb, var(--primary) 35%, transparent);
+    transition: opacity 0.15s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .ach-back-btn:hover { text-decoration: underline; }
+  .ach-back-btn:hover { opacity: 0.88; transform: scale(1.02); }
 
   /* quest screen header card */
   .quest-header-card {
@@ -1144,24 +1153,121 @@
   .ach-toast-sub  { font-size: 0.75rem; color: var(--muted); }
   .ach-toast.warn { border-color: var(--primary); }
 
-  /* ── Streak star in nav ── */
+  /* ── Streak star in nav — matches trophy-btn style ── */
   .streak-star-btn {
+    background: transparent; border: none; font-size: 1.3rem;
+    cursor: pointer; padding: 6px 10px; border-radius: 12px;
+    transition: background 0.15s, transform 0.15s; line-height: 1;
     display: flex; align-items: center; gap: 4px;
-    background: none; border: none; cursor: default;
-    font-size: 1.1rem; font-family: 'Nunito', sans-serif;
-    font-weight: 800; color: var(--text);
-    padding: 4px 8px; border-radius: 20px;
-    margin-right: auto;
-    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
+  .streak-star-btn:hover { background: color-mix(in srgb, #f59e0b 15%, transparent); transform: scale(1.03); }
   .streak-star-btn .streak-count {
-    font-size: 0.88rem; font-weight: 800; color: var(--text);
-    min-width: 14px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.72rem;
+    color: var(--muted); letter-spacing: 0.3px;
   }
-  .streak-star-btn.streak-active {
-    background: color-mix(in srgb, #f59e0b 15%, transparent);
+  .streak-star-btn.streak-active .streak-count { color: #f59e0b; }
+  .streak-star-btn.streak-broken { opacity: 0.45; }
+
+  /* ── Hint & Calculator toolbar below question card ── */
+  .game-tools-bar {
+    display: flex; gap: 8px; align-items: center; justify-content: center;
+    flex-wrap: wrap; margin-top: -4px;
   }
-  .streak-star-btn.streak-broken { opacity: 0.5; }
+  .game-tool-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: 12px; padding: 7px 14px;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.8rem; color: var(--muted);
+    cursor: pointer; transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .game-tool-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .game-tool-btn.unlocked { border-color: var(--correct); color: var(--correct); animation: hint-pulse 1.5s ease-in-out 2; }
+  .game-tool-btn.active   { border-color: var(--primary); color: var(--primary); background: color-mix(in srgb, var(--primary) 8%, var(--card)); }
+  .game-tool-btn:disabled { opacity: 0.45; cursor: default; }
+  .hint-countdown { font-size: 0.7rem; font-weight: 700; color: var(--muted); opacity: 0.8; }
+  @keyframes hint-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--correct) 30%, transparent); }
+    50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--correct) 0%, transparent); }
+  }
+
+  /* Solution panel */
+  .solution-panel {
+    background: var(--card); border: 2px solid var(--correct);
+    border-radius: 16px; padding: 16px 18px;
+    font-family: 'Nunito', sans-serif;
+    animation: slide-in-up 0.25s ease;
+  }
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .solution-title {
+    font-weight: 900; font-size: 0.9rem; color: var(--correct);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .solution-step {
+    display: flex; gap: 10px; margin-bottom: 8px;
+    align-items: flex-start;
+  }
+  .solution-step-num {
+    background: var(--primary); color: #fff;
+    border-radius: 50%; width: 20px; height: 20px; min-width: 20px;
+    font-size: 0.7rem; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .solution-step-text {
+    font-size: 0.85rem; font-weight: 700; color: var(--text); line-height: 1.45;
+  }
+  .solution-step-text code {
+    background: color-mix(in srgb, var(--primary) 12%, var(--bg));
+    color: var(--primary); padding: 1px 5px; border-radius: 5px;
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+  }
+  .solution-answer {
+    margin-top: 10px; padding: 8px 12px;
+    background: color-mix(in srgb, var(--correct) 12%, var(--bg));
+    border-radius: 10px; font-weight: 900; font-size: 0.95rem;
+    color: var(--correct); text-align: center;
+  }
+
+  /* ── In-game Calculator ── */
+  .calc-panel {
+    background: var(--card); border: 2px solid var(--border);
+    border-radius: 16px; padding: 12px;
+    animation: slide-in-up 0.2s ease;
+  }
+  .calc-display {
+    background: var(--bg); border: 2px solid var(--border);
+    border-radius: 10px; padding: 8px 12px; margin-bottom: 10px;
+    text-align: right; font-family: 'Nunito', sans-serif;
+    font-size: 1.4rem; font-weight: 800; color: var(--text);
+    min-height: 44px; word-break: break-all; line-height: 1.2;
+  }
+  .calc-display .calc-expr {
+    font-size: 0.72rem; color: var(--muted); min-height: 14px; text-align: right;
+  }
+  .calc-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+  }
+  .calc-key {
+    padding: 11px 4px; border-radius: 10px;
+    border: 2px solid var(--border); background: var(--bg);
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.9rem; color: var(--text); cursor: pointer;
+    transition: all 0.12s; text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .calc-key:hover { border-color: var(--primary); color: var(--primary); }
+  .calc-key:active { transform: scale(0.94); }
+  .calc-key.op  { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 40%, var(--border)); }
+  .calc-key.eq  { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .calc-key.eq:hover { opacity: 0.9; }
+  .calc-key.clr { color: var(--wrong); border-color: color-mix(in srgb, var(--wrong) 40%, var(--border)); }
+  .calc-key.span2 { grid-column: span 2; }
 
   /* ── Daily check-in section ── */
   .checkin-grid {
@@ -1504,15 +1610,17 @@
       Sign Up / Log In
     </button>
   </div>
-  <!-- Signed-in: account left, nav right -->
+  <!-- Signed-in: account + streak left, nav buttons right -->
   <div id="signedIn">
-    <button class="streak-star-btn" id="streakStarBtn" onclick="showQuests()" title="Daily Streak — check in on the Achievements page!">
-      ⭐ <span class="streak-count" id="streakStarCount">0</span>
-    </button>
-    <div class="settings-tap-area" id="settingsTapArea">
-      <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
-      <img class="user-avatar" id="userAvatar" src="" alt="avatar">
-      <span class="user-name" id="userName"></span>
+    <div class="nav-left-cluster">
+      <div class="settings-tap-area" id="settingsTapArea">
+        <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
+        <img class="user-avatar" id="userAvatar" src="" alt="avatar">
+        <span class="user-name" id="userName"></span>
+      </div>
+      <button class="streak-star-btn" id="streakStarBtn" onclick="showQuests()" title="Daily Streak — check in on the Achievements page!">
+        ⭐ <span class="streak-count" id="streakStarCount">0 day streak</span>
+      </button>
     </div>
     <button class="trophy-btn" id="leaderboardBtn" onclick="showLeaderboard()" title="Leaderboards">🥇 <span class="trophy-label">Leaderboards</span></button>
     <button class="trophy-btn" id="gamepassBtn" onclick="showGamepasses()" title="Gamepasses">🛒 <span class="trophy-label">Gamepasses</span></button>
@@ -1797,7 +1905,7 @@
 
 <!-- ── ACHIEVEMENTS ── -->
 <div id="achievement-screen">
-  <button class="ach-back-btn" onclick="hideQuests()">← Back</button>
+  <button class="ach-back-btn" onclick="hideQuests()">← Back to Homepage</button>
 
   <div class="quest-header-card">
     <div class="quest-header-title">🌸 Ranks, Quests &amp; Titles</div>
@@ -1863,7 +1971,7 @@
 
 <!-- ── LEADERBOARDS ── -->
 <div id="leaderboard-screen">
-  <button class="ach-back-btn" onclick="hideLeaderboard()">← Back</button>
+  <button class="ach-back-btn" onclick="hideLeaderboard()">← Back to Homepage</button>
 
   <div class="lb-header-card">
     <div class="lb-header-title">🥇 Leaderboards</div>
@@ -1887,7 +1995,7 @@
 
 <!-- ── GAMEPASSES ── -->
 <div id="gamepass-screen">
-  <button class="ach-back-btn" onclick="hideGamepasses()">← Back</button>
+  <button class="ach-back-btn" onclick="hideGamepasses()">← Back to Homepage</button>
 
   <div class="lb-header-card">
     <div class="lb-header-title">🛒 Gamepasses</div>
@@ -1991,7 +2099,7 @@
 
 <!-- ── SETTINGS ── -->
 <div id="settings-screen">
-  <button class="ach-back-btn" onclick="hideSettings()">← Back</button>
+  <button class="ach-back-btn" onclick="hideSettings()">← Back to Homepage</button>
 
   <div class="settings-header">
     <div class="settings-avatar-wrap">
@@ -2323,6 +2431,48 @@
     </div>
     <button class="submit-btn" onclick="checkAnswer()">Check ✓</button>
   </div>
+
+  <!-- ── Game tools bar: hint + calculator ── -->
+  <div class="game-tools-bar">
+    <button class="game-tool-btn" id="hintBtn" onclick="toggleHintPanel()" disabled title="Unlocks after 1 minute on this question">
+      💡 How to solve? <span class="hint-countdown" id="hintCountdown">(1:00)</span>
+    </button>
+    <button class="game-tool-btn" id="calcBtn" onclick="toggleCalcPanel()">
+      🧮 Calculator
+    </button>
+  </div>
+
+  <!-- Solution panel (hidden by default) -->
+  <div class="solution-panel" id="solutionPanel" style="display:none"></div>
+
+  <!-- Calculator panel (hidden by default) -->
+  <div class="calc-panel" id="calcPanel" style="display:none">
+    <div class="calc-display">
+      <div class="calc-expr" id="calcExpr"></div>
+      <div id="calcVal">0</div>
+    </div>
+    <div class="calc-grid">
+      <button class="calc-key clr span2" onclick="calcClear()">AC</button>
+      <button class="calc-key clr" onclick="calcBackspace()">⌫</button>
+      <button class="calc-key op" onclick="calcOp('/')">÷</button>
+      <button class="calc-key" onclick="calcDigit('7')">7</button>
+      <button class="calc-key" onclick="calcDigit('8')">8</button>
+      <button class="calc-key" onclick="calcDigit('9')">9</button>
+      <button class="calc-key op" onclick="calcOp('*')">×</button>
+      <button class="calc-key" onclick="calcDigit('4')">4</button>
+      <button class="calc-key" onclick="calcDigit('5')">5</button>
+      <button class="calc-key" onclick="calcDigit('6')">6</button>
+      <button class="calc-key op" onclick="calcOp('-')">−</button>
+      <button class="calc-key" onclick="calcDigit('1')">1</button>
+      <button class="calc-key" onclick="calcDigit('2')">2</button>
+      <button class="calc-key" onclick="calcDigit('3')">3</button>
+      <button class="calc-key op" onclick="calcOp('+')">+</button>
+      <button class="calc-key" onclick="calcDigit('.')">.</button>
+      <button class="calc-key" onclick="calcDigit('0')">0</button>
+      <button class="calc-key eq span2" onclick="calcEquals()">=</button>
+    </div>
+  </div>
+
   <div class="whiteboard-wrap" id="whiteboardWrap" style="display:none">
     <div class="wb-toolbar">
       <div class="wb-tool-group">
@@ -4503,6 +4653,13 @@ function setQuestion(text) {
     const len = text.length;
     el.style.fontSize = len > 20 ? '1.8rem' : len > 13 ? '2.4rem' : '3.2rem';
   }
+  // Start the 1-minute hint unlock timer on each new question
+  _currentQuestionText = text;
+  // Fallback data for modes that don't pre-populate _currentQuestionData
+  if (!_currentQuestionData || _currentQuestionData.mode !== currentMode) {
+    _currentQuestionData = { mode: currentMode, text, ans: currentAnswer };
+  }
+  startHintTimer();
 }
 
 // ── TABLE GRID ──
@@ -4580,6 +4737,254 @@ function updateStartBtn() {
 }
 
 // ── GAME ──
+// ── HINT SYSTEM ──
+let _hintTimer = null;
+let _hintSecondsLeft = 60;
+let _currentQuestionText = '';
+let _currentQuestionData = {}; // extra context for solution building
+
+function startHintTimer() {
+  clearInterval(_hintTimer);
+  _hintSecondsLeft = 60;
+  const btn = document.getElementById('hintBtn');
+  const cd  = document.getElementById('hintCountdown');
+  const sol = document.getElementById('solutionPanel');
+  if (btn) { btn.disabled = true; btn.classList.remove('unlocked'); }
+  if (cd)  cd.textContent = '(1:00)';
+  if (sol) sol.style.display = 'none';
+  _hintTimer = setInterval(() => {
+    _hintSecondsLeft--;
+    const m = Math.floor(_hintSecondsLeft / 60);
+    const s = _hintSecondsLeft % 60;
+    if (cd) cd.textContent = '(' + m + ':' + String(s).padStart(2,'0') + ')';
+    if (_hintSecondsLeft <= 0) {
+      clearInterval(_hintTimer);
+      if (btn) { btn.disabled = false; btn.classList.add('unlocked'); }
+      if (cd)  cd.textContent = '';
+    }
+  }, 1000);
+}
+
+function stopHintTimer() {
+  clearInterval(_hintTimer);
+  const btn = document.getElementById('hintBtn');
+  const cd  = document.getElementById('hintCountdown');
+  if (btn) { btn.disabled = true; btn.classList.remove('unlocked'); }
+  if (cd)  cd.textContent = '(1:00)';
+  const sol = document.getElementById('solutionPanel');
+  if (sol) sol.style.display = 'none';
+}
+
+function toggleHintPanel() {
+  const sol = document.getElementById('solutionPanel');
+  const btn = document.getElementById('hintBtn');
+  if (!sol) return;
+  if (sol.style.display !== 'none') {
+    sol.style.display = 'none';
+    btn.classList.remove('active');
+    return;
+  }
+  sol.innerHTML = buildSolution();
+  sol.style.display = 'block';
+  btn.classList.add('active');
+  sol.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function buildSolution() {
+  const q = _currentQuestionData;
+  const mode = q.mode || currentMode;
+  const steps = [];
+  let answer = '';
+
+  if (mode === 'multiply') {
+    const { a, b, ans } = q;
+    answer = `${a} × ${b} = <strong>${ans}</strong>`;
+    steps.push(`We need to multiply <code>${a}</code> by <code>${b}</code>.`);
+    if (a <= 12 && b <= 12) {
+      steps.push(`Think of it as adding <code>${a}</code> a total of <code>${b}</code> times, or recall the <code>${a} times table</code>.`);
+    } else {
+      const tens = Math.floor(b / 10) * 10, ones = b % 10;
+      if (tens && ones) {
+        steps.push(`Break <code>${b}</code> into <code>${tens} + ${ones}</code>:`);
+        steps.push(`<code>${a} × ${tens} = ${a * tens}</code>&emsp;then&emsp;<code>${a} × ${ones} = ${a * ones}</code>`);
+        steps.push(`Add the parts: <code>${a * tens} + ${a * ones} = ${ans}</code>`);
+      }
+    }
+    steps.push(`The answer is <code>${ans}</code>.`);
+  } else if (mode === 'longmultiply') {
+    const { a, b, ans } = q;
+    answer = `${a} × ${b} = <strong>${ans}</strong>`;
+    const aStr = String(a), bStr = String(b);
+    steps.push(`Multiply <code>${a}</code> by each digit of <code>${b}</code>, right to left.`);
+    let partials = [];
+    for (let i = bStr.length - 1; i >= 0; i--) {
+      const digit = parseInt(bStr[i]);
+      const place = bStr.length - 1 - i;
+      const partial = a * digit * Math.pow(10, place);
+      partials.push(partial);
+      steps.push(`<code>${a} × ${digit}</code> (at the ${place === 0 ? 'ones' : place === 1 ? 'tens' : 'hundreds'} place) = <code>${partial}</code>`);
+    }
+    steps.push(`Sum the partial products: <code>${partials.join(' + ')} = ${ans}</code>`);
+  } else if (mode === 'shortdivide') {
+    const { dividend, divisor, ans } = q;
+    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
+    steps.push(`We need to find how many times <code>${divisor}</code> goes into <code>${dividend}</code>.`);
+    steps.push(`Think: <code>${divisor} × ? = ${dividend}</code>`);
+    steps.push(`<code>${divisor} × ${ans} = ${dividend}</code> ✓`);
+  } else if (mode === 'longdivide') {
+    const { dividend, divisor, ans } = q;
+    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong>`;
+    steps.push(`Divide <code>${dividend}</code> by <code>${divisor}</code> using long division.`);
+    let rem = 0, quotStr = '';
+    for (const digit of String(dividend)) {
+      rem = rem * 10 + parseInt(digit);
+      const q2 = Math.floor(rem / divisor);
+      quotStr += q2;
+      steps.push(`Bring down <code>${digit}</code> → have <code>${rem}</code>. <code>${divisor}</code> goes in <code>${q2}</code> time${q2!==1?'s':''}. Subtract <code>${q2 * divisor}</code>, remainder <code>${rem - q2 * divisor}</code>.`);
+      rem = rem - q2 * divisor;
+    }
+    steps.push(`Reading the quotient digits: <code>${parseInt(quotStr)} = ${ans}</code>`);
+  } else if (mode === 'remainderdiv') {
+    const { dividend, divisor, ans, rem } = q;
+    answer = `${dividend} ÷ ${divisor} = <strong>${ans}</strong> remainder <strong>${rem}</strong>`;
+    steps.push(`Find how many times <code>${divisor}</code> fits into <code>${dividend}</code>.`);
+    steps.push(`<code>${divisor} × ${ans} = ${divisor * ans}</code>`);
+    steps.push(`Subtract: <code>${dividend} − ${divisor * ans} = ${rem}</code>`);
+    steps.push(`Quotient = <code>${ans}</code>, Remainder = <code>${rem}</code>`);
+  } else if (mode === 'add') {
+    const { a, b, ans } = q;
+    answer = `${a} + ${b} = <strong>${ans}</strong>`;
+    steps.push(`Add <code>${a}</code> and <code>${b}</code>.`);
+    if (a > 99 || b > 99) {
+      const aOnes = a % 10, bOnes = b % 10, aTens = Math.floor(a/10)*10, bTens = Math.floor(b/10)*10;
+      steps.push(`Ones: <code>${aOnes} + ${bOnes} = ${aOnes+bOnes}</code>`);
+      steps.push(`Tens: <code>${aTens} + ${bTens} = ${aTens+bTens}</code>`);
+    }
+    steps.push(`Total: <code>${ans}</code>`);
+  } else if (mode === 'subtract') {
+    const { a, b, ans } = q;
+    answer = `${a} − ${b} = <strong>${ans}</strong>`;
+    steps.push(`Subtract <code>${b}</code> from <code>${a}</code>.`);
+    steps.push(`Count back <code>${b}</code> from <code>${a}</code>, or think: <code>${b} + ? = ${a}</code>.`);
+    steps.push(`Answer: <code>${ans}</code>`);
+  } else if (mode === 'fractions') {
+    const { a, b, op, ans, ansN, ansD } = q;
+    const opSym = {add:'+', subtract:'−', multiply:'×', divide:'÷'}[op] || op;
+    answer = `Answer: <strong>${ansN !== undefined ? ansN + '/' + ansD : ans}</strong>`;
+    steps.push(`Operation: <code>${opSym}</code> the two fractions.`);
+    if (op === 'add' || op === 'subtract') {
+      steps.push(`Find a common denominator, then ${op} the numerators.`);
+    } else if (op === 'multiply') {
+      steps.push(`Multiply numerators together and denominators together.`);
+    } else if (op === 'divide') {
+      steps.push(`Flip the second fraction and multiply.`);
+    }
+    steps.push(`Simplify if possible. The answer is <code>${ansN !== undefined ? ansN + '/' + ansD : ans}</code>.`);
+  } else if (mode === 'decimals' || mode === 'percentages') {
+    const { text, ans } = q;
+    answer = `Answer: <strong>${ans}</strong>`;
+    steps.push(`Read the problem: <em>${text}</em>`);
+    steps.push(`Set up the calculation carefully, aligning decimal points.`);
+    steps.push(`The answer is <code>${ans}</code>.`);
+  } else if (mode === 'wordproblems') {
+    const { text, ans } = q;
+    answer = `Answer: <strong>${ans}</strong>`;
+    steps.push(`Read the problem carefully: <em>"${text}"</em>`);
+    steps.push(`Identify the key numbers and the operation needed.`);
+    steps.push(`Work through the calculation step by step.`);
+    steps.push(`The answer is <code>${ans}</code>.`);
+  } else {
+    // Generic fallback
+    const qText = document.getElementById('questionText')?.textContent || '';
+    answer = `Answer: <strong>${currentAnswer}</strong>`;
+    steps.push(`Question: <em>${qText}</em>`);
+    steps.push(`The answer is <code>${currentAnswer}</code>.`);
+  }
+
+  const stepsHtml = steps.map((s, i) =>
+    `<div class="solution-step"><div class="solution-step-num">${i+1}</div><div class="solution-step-text">${s}</div></div>`
+  ).join('');
+  return `<div class="solution-title">💡 How to solve it</div>${stepsHtml}<div class="solution-answer">✅ ${answer}</div>`;
+}
+
+// ── CALCULATOR ──
+let _calcExpr = '';
+let _calcCurrent = '0';
+let _calcJustEvaled = false;
+let _calcPendingOp = null;
+let _calcPrevVal = null;
+
+function calcUpdateDisplay() {
+  const val = document.getElementById('calcVal');
+  const expr = document.getElementById('calcExpr');
+  if (val) val.textContent = _calcCurrent;
+  if (expr) expr.textContent = _calcExpr;
+}
+
+function calcDigit(d) {
+  if (_calcJustEvaled) { _calcCurrent = '0'; _calcJustEvaled = false; }
+  if (d === '.' && _calcCurrent.includes('.')) return;
+  if (_calcCurrent === '0' && d !== '.') _calcCurrent = d;
+  else _calcCurrent += d;
+  calcUpdateDisplay();
+}
+
+function calcOp(op) {
+  const opLabel = {'+':'+', '-':'−', '*':'×', '/':'÷'}[op] || op;
+  if (_calcPendingOp && !_calcJustEvaled) {
+    // Chain: evaluate current expression first
+    _calcPrevVal = _applyCalcOp(_calcPrevVal, parseFloat(_calcCurrent), _calcPendingOp);
+    _calcCurrent = String(_calcPrevVal);
+  } else {
+    _calcPrevVal = parseFloat(_calcCurrent);
+  }
+  _calcPendingOp = op;
+  _calcExpr = _calcCurrent + ' ' + opLabel;
+  _calcCurrent = '0';
+  _calcJustEvaled = false;
+  calcUpdateDisplay();
+}
+
+function _applyCalcOp(a, b, op) {
+  if (op === '+') return Math.round((a + b) * 1e10) / 1e10;
+  if (op === '-') return Math.round((a - b) * 1e10) / 1e10;
+  if (op === '*') return Math.round((a * b) * 1e10) / 1e10;
+  if (op === '/') return b === 0 ? 0 : Math.round((a / b) * 1e10) / 1e10;
+  return b;
+}
+
+function calcEquals() {
+  if (_calcPendingOp === null) return;
+  const b = parseFloat(_calcCurrent);
+  const result = _applyCalcOp(_calcPrevVal, b, _calcPendingOp);
+  _calcExpr = _calcExpr + ' ' + _calcCurrent + ' =';
+  _calcCurrent = String(result);
+  _calcPendingOp = null;
+  _calcJustEvaled = true;
+  calcUpdateDisplay();
+}
+
+function calcClear() {
+  _calcExpr = ''; _calcCurrent = '0';
+  _calcPendingOp = null; _calcPrevVal = null; _calcJustEvaled = false;
+  calcUpdateDisplay();
+}
+
+function calcBackspace() {
+  if (_calcJustEvaled) { calcClear(); return; }
+  _calcCurrent = _calcCurrent.length > 1 ? _calcCurrent.slice(0, -1) : '0';
+  calcUpdateDisplay();
+}
+
+function toggleCalcPanel() {
+  const panel = document.getElementById('calcPanel');
+  const btn   = document.getElementById('calcBtn');
+  if (!panel) return;
+  const visible = panel.style.display !== 'none';
+  panel.style.display = visible ? 'none' : 'block';
+  btn.classList.toggle('active', !visible);
+}
+
 function startGame() {
   correct=0; wrong=0; total=0;
   // Reset per-session achievement tracking
@@ -4602,14 +5007,14 @@ function nextQuestion() {
     const table = tables[Math.floor(Math.random() * tables.length)];
     const mult = rnd(2, 12);
     currentAnswer = table * mult;
-
+    _currentQuestionData = { mode:'multiply', a:table, b:mult, ans:currentAnswer };
     setQuestion(`${table} × ${mult} = ?`);
   } else if (currentMode === 'shortdivide') {
     const divArr = Array.from(selectedDivisors);
     const d = divArr[Math.floor(Math.random() * divArr.length)];
     const mult = rnd(2, 12);
     currentAnswer = mult;
-
+    _currentQuestionData = { mode:'shortdivide', dividend:d*mult, divisor:d, ans:mult };
     setQuestion(`${d * mult} ÷ ${d} = ?`);
   } else if (currentMode === 'longdivide') {
     const ids = Array.from(selectedLongDiv);
@@ -4617,7 +5022,7 @@ function nextQuestion() {
     const cfg = LONG_DIV_CONFIGS.find(c => c.id === cfgId);
     const { dividend, divisor, quotient } = genLongDiv(cfg);
     currentAnswer = quotient;
-
+    _currentQuestionData = { mode:'longdivide', dividend, divisor, ans:quotient };
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'remainderdiv') {
@@ -4627,7 +5032,7 @@ function nextQuestion() {
     const { dividend, divisor, quotient, remainder } = genRemainderDiv(cfg);
     currentAnswer   = quotient;
     currentRemainder = remainder;
-
+    _currentQuestionData = { mode:'remainderdiv', dividend, divisor, ans:quotient, rem:remainder };
     setQuestion(`${fmtN(dividend)} ÷ ${fmtN(divisor)} = ?`);
     clearWhiteboard();
     document.getElementById('remainderInput').value = '';
@@ -4638,13 +5043,14 @@ function nextQuestion() {
     const cfg = LONG_MUL_CONFIGS.find(c => c.id === cfgId);
     const a = rnd(cfg.aMin, cfg.aMax), b = rnd(cfg.bMin, cfg.bMax);
     currentAnswer = a * b;
-
+    _currentQuestionData = { mode:'longmultiply', a, b, ans:currentAnswer };
     setQuestion(`${fmtN(a)} × ${fmtN(b)} = ?`);
     clearWhiteboard();
   } else if (currentMode === 'wordproblems') {
     const wp = generateWordProblem();
     currentAnswer = wp.answer;
     currentWordProblemRemainder = wp.remainder;
+    _currentQuestionData = { mode:'wordproblems', text:wp.text, ans:wp.answer };
     // Show remainder input only for remainder word problems
     const isRemWP = wp.op === 'wp_remdiv';
     document.getElementById('remainderWrap').style.display = isRemWP ? 'flex' : 'none';
@@ -4674,17 +5080,22 @@ function nextQuestion() {
       if (a === b) b = Math.max(cfg.bMin, b - rnd(1, Math.max(1, Math.floor(b * 0.3)))); // avoid answer = 0
       _lastQA = a; _lastQB = b;
       currentAnswer = a - b;
-
+      _currentQuestionData = { mode:'subtract', a, b, ans:currentAnswer };
       setQuestion(`${fmtN(a)} − ${fmtN(b)} = ?`);
     } else {
       currentAnswer = a + b;
-
+      _currentQuestionData = { mode:'add', a, b, ans:currentAnswer };
       setQuestion(`${fmtN(a)} + ${fmtN(b)} = ?`);
     }
   }
   setAnswerMode('integer');
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
+  // Hide solution panel between questions (calc stays open)
+  const sol = document.getElementById('solutionPanel');
+  if (sol) sol.style.display = 'none';
+  const hBtn = document.getElementById('hintBtn');
+  if (hBtn) hBtn.classList.remove('active');
 }
 
 function handleKey(e) {
@@ -4759,7 +5170,7 @@ function checkAnswer() {
     }
   }
 
-  if (ok) onCorrectAnswer(); else onWrongAnswer();
+  if (ok) { stopHintTimer(); onCorrectAnswer(); } else onWrongAnswer();
   if (total >= 20 && wrong === 0) userData.perfectSession = true;
   updateScore();
   const longDelay = ['longdivide','longmultiply','remainderdiv','wordproblems','fractions','decimals','percentages','geometry','algebra'];
@@ -5610,7 +6021,7 @@ function updateStreakStar() {
   const count = document.getElementById('streakStarCount');
   if (!btn || !count) return;
   const n = userData.dailyStreak || 0;
-  count.textContent = n;
+  count.textContent = n + ' day streak';
   const broken = checkIfStreakBroken() || userData.streakBroken;
   btn.classList.toggle('streak-active', n > 0 && !broken);
   btn.classList.toggle('streak-broken', n > 0 && broken);
