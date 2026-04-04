@@ -330,6 +330,10 @@
     transition: opacity 0.15s, transform 0.15s;
   }
   .premium-congrats-btn:hover { opacity: 0.9; transform: scale(1.03); }
+  /* Premium Plus variant — purple gradient top stripe */
+  .premium-congrats-box.premium-plus-variant::before {
+    background: linear-gradient(90deg, #63b3ed, #a855f7, #63b3ed);
+  }
 
   /* ── AVATAR CROP MODAL ── */
   .crop-overlay {
@@ -1673,6 +1677,7 @@
     <div class="nav-left-cluster">
       <div class="settings-tap-area" id="settingsTapArea">
         <span id="crownBadge" style="display:none;font-size:0.9rem;">👑</span>
+        <span id="diamondBadge" style="display:none;font-size:0.9rem;">💎</span>
         <img class="user-avatar" id="userAvatar" src="" alt="avatar">
         <span class="user-name" id="userName"></span>
       </div>
@@ -2370,6 +2375,16 @@
   </div>
 </div>
 
+<!-- ── PREMIUM PLUS CONGRATS ── -->
+<div class="premium-congrats-overlay" id="premiumPlusCongratsOverlay">
+  <div class="premium-congrats-box premium-plus-variant">
+    <div class="premium-congrats-crown">💎</div>
+    <h2 style="background:linear-gradient(90deg,#63b3ed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Diamond Champion!</h2>
+    <p id="premiumPlusCongratsMsg">You now have access to every feature Math Pop has to offer. You're a true champion!</p>
+    <button class="premium-congrats-btn" style="background:linear-gradient(90deg,#63b3ed,#a855f7);" onclick="hidePremiumPlusCongrats()">Let's Go!</button>
+  </div>
+</div>
+
 <!-- ── TUTORIAL ── -->
 <div id="tutorial-screen">
   <button class="tutorial-back-btn" onclick="hideTutorials()">← Back to Homepage</button>
@@ -2934,6 +2949,7 @@
           stats: ud.stats || {},
           earnedQuests: ud.earnedQuests || [],
           premiumPass: !!data.premiumPass,
+          diamondPass: !!data.diamondPass,
         });
       });
       return users;
@@ -2982,7 +2998,8 @@
 
       // Step 1c: Restore premium/customization from localStorage instantly
       try {
-        if (localStorage.getItem('mathpop_premium') === '1') window.unlockPremium(true);
+        if (localStorage.getItem('mathpop_premium_plus') === '1') window.unlockPremiumPlus(true);
+        else if (localStorage.getItem('mathpop_premium') === '1') window.unlockPremium(true);
         if (localStorage.getItem('mathpop_customization') === '1') window.unlockCustomization(true);
       } catch(e) {}
 
@@ -2994,7 +3011,8 @@
           if (data.customizationPass) window.unlockCustomization(true);
           if (data.colorWheel)  window.unlockWheel(true);
           if (data.neonPack)    window.unlockNeon(true);
-          if (data.premiumPass) window.unlockPremium(true);
+          if (data.diamondPass) window.unlockPremiumPlus(true);
+          else if (data.premiumPass) window.unlockPremium(true);
           if (data.theme && window.applyThemeFromFirestore) window.applyThemeFromFirestore(data.theme);
           if (data.userData && window.loadUserData) window.loadUserData(data.userData);
           // Restore custom display name / photo if user changed them in settings
@@ -3378,11 +3396,15 @@ function hidePremiumCongrats() {
 }
 
 window.lockPremiumOnSignOut = function() {
+  if (window.isPremiumPlus) window.lockPremiumPlus();
   window.lockWheel();
   window.lockNeon();
   window.lockPremium();
   // Always reset to default theme on sign-out (user theme is already saved to user-keyed key)
-  try { localStorage.removeItem('mathpop_theme'); } catch(e) {}
+  try {
+    localStorage.removeItem('mathpop_theme');
+    localStorage.removeItem('mathpop_premium_plus');
+  } catch(e) {}
   setTheme('dark', 'blue');
 };
 
@@ -3448,26 +3470,117 @@ function hideCustomizationCongrats() {
   goHome();
 }
 
+// Update the crown/diamond badge on the 5 Premium Plus math category buttons
+function updatePremiumModeButtons() {
+  const badge = window.isPremiumPlus ? '💎' : '👑';
+  const premiumModes = ['fractions', 'decimals', 'percentages', 'geometry', 'algebra'];
+  premiumModes.forEach(mode => {
+    const btn = document.getElementById('modeBtn-' + mode);
+    if (!btn) return;
+    // Replace the trailing badge (👑 or 💎)
+    btn.textContent = btn.textContent.replace(/[👑💎]\s*$/, '').trimEnd() + ' ' + badge;
+  });
+}
+
 window.unlockPremiumPlus = function(silent = false) {
   // Premium Plus includes everything in Premium
   window.isPremiumPlus = true;
   window.isPremium = true;
-  try { localStorage.setItem('mathpop_premium_plus', '1'); localStorage.setItem('mathpop_premium', '1'); } catch(e) {}
+  try {
+    localStorage.setItem('mathpop_premium_plus', '1');
+    localStorage.setItem('mathpop_premium', '1');
+  } catch(e) {}
+
+  // Gamepass UI: hide buy btn, show owned state
   const btn = document.getElementById('gpPremiumPlusBtn');
   const owned = document.getElementById('gpPremiumPlusOwned');
   if (btn) btn.style.display = 'none';
   if (owned) owned.style.display = 'block';
-  // Also activate premium perks
+
+  // Also ensure Premium pass shows as active
+  const premBtn = document.getElementById('gpPremiumBtn');
+  const premOwned = document.getElementById('gpPremiumOwned');
+  if (premBtn) premBtn.style.display = 'none';
+  if (premOwned) premOwned.style.display = 'block';
+
+  // Show diamond badge in nav (and crown)
   const crownEl = document.getElementById('crownBadge');
   if (crownEl) crownEl.style.display = 'inline';
+  const diamondEl = document.getElementById('diamondBadge');
+  if (diamondEl) diamondEl.style.display = 'inline';
+
+  // Unlock premium math categories
   const lockedMsg = document.getElementById('premiumLockedMsg');
   if (lockedMsg) lockedMsg.style.display = 'none';
+
+  // Update subscription section
+  const subStatus = document.getElementById('subStatus');
+  if (subStatus) subStatus.innerHTML = '<span style="color:var(--correct);font-weight:800;">✅ Premium Plus Active</span>';
+
+  // Update category buttons to show 💎
+  updatePremiumModeButtons();
+
+  // Auto-grant Diamond Champion exclusive title
+  if (userData && !userData.earnedQuests.includes('diamond_champion')) {
+    userData.earnedQuests.push('diamond_champion');
+    if (!userData.selectedTitles) userData.selectedTitles = [];
+    // Add as first selected title if none selected
+    if (userData.selectedTitles.length === 0) userData.selectedTitles.push('diamond_champion');
+    saveUserData();
+  }
+
   if (!silent) {
     closeModals();
-    showQuestToast('💎', 'Premium Plus activated!', 'All features are now unlocked. Enjoy!');
-    goHome();
+    // Save diamond + premium pass to Firestore
+    if (window.savePurchase) {
+      window.savePurchase('premiumPass');
+      window.savePurchase('diamondPass');
+    }
+    showPremiumPlusCongrats();
   }
 };
+
+window.lockPremiumPlus = function() {
+  window.isPremiumPlus = false;
+  try { localStorage.removeItem('mathpop_premium_plus'); } catch(e) {}
+
+  // Gamepass UI: show buy btn, hide owned state
+  const btn = document.getElementById('gpPremiumPlusBtn');
+  const owned = document.getElementById('gpPremiumPlusOwned');
+  if (btn) btn.style.display = '';
+  if (owned) owned.style.display = 'none';
+
+  // Hide diamond badge in nav
+  const diamondEl = document.getElementById('diamondBadge');
+  if (diamondEl) diamondEl.style.display = 'none';
+
+  // Revert category buttons back to 👑
+  updatePremiumModeButtons();
+
+  // Revoke Diamond Champion title from earned quests + selected titles
+  if (userData) {
+    userData.earnedQuests = userData.earnedQuests.filter(id => id !== 'diamond_champion');
+    userData.selectedTitles = (userData.selectedTitles || []).filter(id => id !== 'diamond_champion');
+    saveUserData();
+  }
+};
+
+function showPremiumPlusCongrats() {
+  const nameEl = document.getElementById('userName');
+  const name = nameEl ? nameEl.textContent : '';
+  const msg = document.getElementById('premiumPlusCongratsMsg');
+  if (msg) msg.textContent = name
+    ? `Welcome to Diamond tier, ${name}! Every Math Pop feature is now yours.`
+    : 'You now have access to every feature Math Pop has to offer. You\'re a true champion!';
+  const overlay = document.getElementById('premiumPlusCongratsOverlay');
+  if (overlay) overlay.classList.add('visible');
+}
+
+function hidePremiumPlusCongrats() {
+  const overlay = document.getElementById('premiumPlusCongratsOverlay');
+  if (overlay) overlay.classList.remove('visible');
+  goHome();
+}
 
 function openWheel() {
   if (wheelUnlocked) {
@@ -5994,6 +6107,8 @@ const QUESTS = [
   { id:'streak_120', emoji:'🌈', name:'Rainbow Streak',    desc:'Check in 120 days in a row.', streakReq:120 },
   { id:'streak_180', emoji:'🚀', name:'Half-Year Hero',    desc:'Check in 180 days in a row.', streakReq:180 },
   { id:'streak_365', emoji:'👑', name:'Streak Legend',     desc:'Check in every day for a full year.', streakReq:365 },
+  // ── Premium Plus exclusive title ──
+  { id:'diamond_champion', emoji:'💎', name:'Diamond Champion', desc:'Exclusive title for Premium Plus members.', premiumPlusOnly:true },
 ];
 
 // ── USER DATA (quests + selected title, synced to Firestore) ──
@@ -6307,6 +6422,8 @@ function checkQuests() {
     if (userData.earnedQuests.includes(q.id)) continue;
     // Streak quests are handled by checkStreakTitles() — skip here
     if (q.streakReq) continue;
+    // Premium Plus exclusive titles are managed by unlockPremiumPlus/lockPremiumPlus — skip here
+    if (q.premiumPlusOnly) continue;
     // For category quests, only check the one matching the current mode
     const questMode = QUEST_MODE_MAP[q.id];
     if (questMode && questMode !== currentMode) continue;
@@ -6795,8 +6912,8 @@ function renderQuestScreen() {
 
   // Quest list — split into normal and hidden quests with tabs
   // Streak quests are shown in the check-in section, not here
-  const normalQuests = QUESTS.filter(q => !q.secret && !q.streakReq);
-  const hiddenQuests = QUESTS.filter(q => q.secret && !q.streakReq);
+  const normalQuests = QUESTS.filter(q => !q.secret && !q.streakReq && !q.premiumPlusOnly);
+  const hiddenQuests = QUESTS.filter(q => q.secret && !q.streakReq && !q.premiumPlusOnly);
 
   const renderQuestList = (quests, elementId) => {
     const qList = document.getElementById(elementId);
@@ -6997,7 +7114,7 @@ function renderLbBoard() {
     const isYou = user.uid === currentUid;
     const youClass = isYou ? ' is-you' : '';
     const youTag = isYou ? ' <span style="color:var(--primary);font-weight:800;font-size:0.7rem">(YOU)</span>' : '';
-    const crownTag = user.premiumPass ? '👑 ' : '';
+    const crownTag = user.diamondPass ? '💎 ' : (user.premiumPass ? '👑 ' : '');
 
     // Get their game rank
     const gameRank = getRank(user.totalCorrect || 0);
